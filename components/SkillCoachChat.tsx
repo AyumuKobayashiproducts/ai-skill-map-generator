@@ -21,7 +21,10 @@ export function SkillCoachChat({ result }: SkillCoachChatProps) {
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
-    const nextMessages = [...messages, { role: "user", content: input }];
+    const nextMessages: ChatMessage[] = [
+      ...messages,
+      { role: "user" as const, content: input }
+    ];
     setMessages(nextMessages);
     setInput("");
     setLoading(true);
@@ -47,13 +50,16 @@ export function SkillCoachChat({ result }: SkillCoachChatProps) {
           roadmap90: result.roadmap90
         }
       });
-      setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant" as const, content: data.reply }
+      ]);
     } catch (e) {
       console.error(e);
       setMessages((prev) => [
         ...prev,
         {
-          role: "assistant",
+          role: "assistant" as const,
           content: "エラーが発生しました。しばらくしてからもう一度試してください。"
         }
       ]);
