@@ -11,8 +11,7 @@ import {
   LineElement,
   Filler,
   Tooltip,
-  Legend,
-  type ChartData
+  Legend
 } from "chart.js";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
@@ -57,21 +56,22 @@ export function CareerRiskSection({ result }: CareerRiskSectionProps) {
     }
   };
 
-  const chartData: ChartData<"radar"> | null = risk
-    ? {
-        labels: ["陳腐化リスク", "属人化リスク", "自動化リスク"],
-        datasets: [
-          {
-            label: "キャリアリスク",
-            data: [risk.obsolescence, risk.busFactor, risk.automation],
-            backgroundColor: "rgba(248, 113, 113, 0.2)",
-            borderColor: "rgba(248, 113, 113, 1)",
-            borderWidth: 2,
-            pointBackgroundColor: "rgba(248, 113, 113, 1)"
-          }
-        ]
-      }
-    : null;
+  // Chart.js の型定義と readonly 配列の相性が良くないため、ここは any として扱う
+  const chartData: any =
+    risk &&
+    {
+      labels: ["陳腐化リスク", "属人化リスク", "自動化リスク"],
+      datasets: [
+        {
+          label: "キャリアリスク",
+          data: [risk.obsolescence, risk.busFactor, risk.automation],
+          backgroundColor: "rgba(248, 113, 113, 0.2)",
+          borderColor: "rgba(248, 113, 113, 1)",
+          borderWidth: 2,
+          pointBackgroundColor: "rgba(248, 113, 113, 1)"
+        }
+      ]
+    };
 
   const chartOptions = {
     responsive: true,
