@@ -104,10 +104,10 @@ export default function DeleteAccountPage() {
         </label>
         <Button
           type="button"
-          variant="destructive"
+          variant="outline"
           disabled={loading || !email || !confirm}
           onClick={handleDelete}
-          className="w-full"
+          className="w-full border-red-300 text-red-700 hover:bg-red-50"
         >
           {loading ? "削除中..." : "このアプリの保存データを削除する"}
         </Button>
