@@ -75,3 +75,4 @@ export function useIntersectionObserver<T extends Element = HTMLDivElement>(
   return { ref, isVisible, entry };
 }
 
+
