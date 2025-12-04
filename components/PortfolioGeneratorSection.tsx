@@ -24,6 +24,7 @@ export function PortfolioGeneratorSection() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<PortfolioGeneratorResult | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const updateItem = (index: number, field: keyof InputItem, value: string) => {
     setItems((prev) =>
@@ -33,6 +34,11 @@ export function PortfolioGeneratorSection() {
 
   const addItem = () => {
     setItems((prev) => [...prev, { title: "", url: "", description: "" }]);
+  };
+
+  const removeItem = (index: number) => {
+    if (items.length <= 1) return;
+    setItems((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleGenerate = async () => {
@@ -77,108 +83,195 @@ export function PortfolioGeneratorSection() {
   const copyMarkdown = async () => {
     if (!result?.markdown) return;
     await navigator.clipboard.writeText(result.markdown);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>ポートフォリオ棚卸しジェネレーター</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4 text-sm leading-relaxed">
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          自分のプロジェクト（GitHub / 作品サイトなど）を入力すると、
-          ポートフォリオに載せるべき案件 TOP3 と紹介文を自動生成します。
-        </p>
+    <div className="space-y-6 animate-fade-in-up stagger-1">
+      {/* Input section */}
+      <Card>
+        <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50">
+          <CardTitle className="flex items-center gap-2">
+            <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-md text-sm">
+              ✍️
+            </span>
+            プロジェクトを入力
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4 pt-4">
+          <p className="text-xs text-slate-600 leading-relaxed">
+            自分のプロジェクト（GitHub / 作品サイトなど）を入力すると、
+            ポートフォリオに載せるべき案件 TOP3 と紹介文を自動生成します。
+          </p>
 
-        <div className="space-y-3">
-          {items.map((item, index) => (
-            <div
-              key={index}
-              className="rounded-md border border-dashed p-3 space-y-2"
-            >
-              <p className="text-xs font-semibold text-muted-foreground">
-                プロジェクト {index + 1}
-              </p>
-              <input
-                type="text"
-                className="w-full rounded-md border border-input bg-background px-2 py-1 text-xs shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                placeholder="タイトル（例：AI Skill Map Generator）"
-                value={item.title}
-                onChange={(e) => updateItem(index, "title", e.target.value)}
-              />
-              <input
-                type="url"
-                className="w-full rounded-md border border-input bg-background px-2 py-1 text-xs shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                placeholder="URL（例：https://github.com/username/project）"
-                value={item.url}
-                onChange={(e) => updateItem(index, "url", e.target.value)}
-              />
-              <textarea
-                className="w-full rounded-md border border-input bg-background px-2 py-1 text-xs shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                placeholder="簡単な説明や使用技術などがあれば入力（任意）"
-                value={item.description}
-                onChange={(e) =>
-                  updateItem(index, "description", e.target.value)
-                }
-              />
-            </div>
-          ))}
-          <Button type="button" size="sm" variant="outline" onClick={addItem}>
+          <div className="space-y-3">
+            {items.map((item, index) => (
+              <div
+                key={index}
+                className="group relative rounded-xl border-2 border-dashed border-slate-200 p-4 space-y-3 hover:border-amber-300 transition-colors animate-fade-in"
+              >
+                {items.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeItem(index)}
+                    className="absolute top-2 right-2 w-6 h-6 rounded-full bg-slate-100 hover:bg-red-100 text-slate-400 hover:text-red-500 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"
+                  >
+                    ✕
+                  </button>
+                )}
+                
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white text-xs font-bold">
+                    {index + 1}
+                  </span>
+                  <span className="text-xs font-semibold text-slate-700">
+                    プロジェクト {index + 1}
+                  </span>
+                </div>
+                
+                <input
+                  type="text"
+                  className="w-full rounded-lg border-2 border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition-all duration-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 focus:outline-none"
+                  placeholder="タイトル（例：AI Skill Map Generator）"
+                  value={item.title}
+                  onChange={(e) => updateItem(index, "title", e.target.value)}
+                />
+                <input
+                  type="url"
+                  className="w-full rounded-lg border-2 border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition-all duration-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 focus:outline-none"
+                  placeholder="URL（例：https://github.com/username/project）"
+                  value={item.url}
+                  onChange={(e) => updateItem(index, "url", e.target.value)}
+                />
+                <textarea
+                  className="w-full rounded-lg border-2 border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition-all duration-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 focus:outline-none resize-none"
+                  placeholder="簡単な説明や使用技術などがあれば入力（任意）"
+                  rows={2}
+                  value={item.description}
+                  onChange={(e) =>
+                    updateItem(index, "description", e.target.value)
+                  }
+                />
+              </div>
+            ))}
+          </div>
+
+          <Button 
+            type="button" 
+            size="sm" 
+            variant="outline" 
+            onClick={addItem}
+            className="w-full border-dashed"
+          >
+            <span>➕</span>
             プロジェクトを追加
           </Button>
-        </div>
 
-        {error && <ErrorAlert message={error} />}
+          {error && <ErrorAlert message={error} />}
 
-        <Button
-          type="button"
-          size="sm"
-          onClick={handleGenerate}
-          disabled={loading}
-        >
-          {loading ? "AI が整理中..." : "ポートフォリオ案を生成する"}
-        </Button>
+          <Button
+            type="button"
+            onClick={handleGenerate}
+            disabled={loading}
+            className="w-full"
+          >
+            {loading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                AI が整理中...
+              </>
+            ) : (
+              <>
+                <span>✨</span>
+                ポートフォリオ案を生成する
+              </>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
 
-        {result && (
-          <div className="space-y-3 border-t pt-3">
-            <div className="space-y-2">
-              <p className="text-xs font-semibold text-muted-foreground">
-                選ばれた案件TOP3
-              </p>
+      {/* Result section */}
+      {result && (
+        <div className="space-y-4 animate-fade-in-up">
+          <Card>
+            <CardHeader className="bg-gradient-to-r from-emerald-50 to-teal-50">
+              <CardTitle className="flex items-center gap-2">
+                <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white shadow-md text-sm">
+                  🏆
+                </span>
+                選ばれた案件 TOP3
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-4">
               {result.items.map((item: PortfolioItemSummary, index: number) => (
-                <div key={index} className="rounded-md border p-2 space-y-1">
-                  <p className="text-xs font-semibold">{item.title}</p>
-                  {item.url && (
-                    <a
-                      href={item.url}
-                      className="text-[11px] text-primary underline break-all"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {item.url}
-                    </a>
-                  )}
-                  <p className="text-[11px] whitespace-pre-wrap">
+                <div 
+                  key={index} 
+                  className="rounded-xl border border-slate-200 p-4 space-y-3 card-hover animate-fade-in-up"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold shadow-md ${
+                      index === 0 ? "bg-gradient-to-br from-amber-400 to-orange-500" :
+                      index === 1 ? "bg-gradient-to-br from-slate-400 to-slate-500" :
+                      "bg-gradient-to-br from-amber-600 to-amber-700"
+                    }`}>
+                      {index + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-slate-900">{item.title}</p>
+                      {item.url && (
+                        <a
+                          href={item.url}
+                          className="text-xs text-sky-600 hover:text-sky-700 underline break-all"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {item.url}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">
                     {item.summary}
                   </p>
-                  <p className="text-[11px] whitespace-pre-wrap">
-                    <span className="font-semibold">アピールポイント:</span>{" "}
-                    {item.sellingPoints}
-                  </p>
-                  <p className="text-[11px] whitespace-pre-wrap">
-                    <span className="font-semibold">振り返り:</span>{" "}
-                    {item.reflection}
-                  </p>
+                  
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-100">
+                      <p className="text-xs font-semibold text-emerald-700 flex items-center gap-1.5 mb-1">
+                        <span>💪</span>
+                        アピールポイント
+                      </p>
+                      <p className="text-xs text-slate-700 whitespace-pre-wrap">
+                        {item.sellingPoints}
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-sky-50 border border-sky-100">
+                      <p className="text-xs font-semibold text-sky-700 flex items-center gap-1.5 mb-1">
+                        <span>💭</span>
+                        振り返り
+                      </p>
+                      <p className="text-xs text-slate-700 whitespace-pre-wrap">
+                        {item.reflection}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               ))}
-            </div>
+            </CardContent>
+          </Card>
 
-            {result.markdown && (
-              <div className="space-y-2">
-                <p className="text-xs font-semibold text-muted-foreground">
+          {result.markdown && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <span>📄</span>
                   Markdown 出力
-                </p>
-                <pre className="max-h-48 overflow-y-auto rounded-md border bg-muted p-2 text-[11px] whitespace-pre-wrap">
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <pre className="max-h-64 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-700 whitespace-pre-wrap font-mono">
                   {result.markdown}
                 </pre>
                 <Button
@@ -187,15 +280,23 @@ export function PortfolioGeneratorSection() {
                   variant="outline"
                   onClick={copyMarkdown}
                 >
-                  Markdown をコピー
+                  {copied ? (
+                    <>
+                      <span className="text-emerald-500">✓</span>
+                      コピーしました！
+                    </>
+                  ) : (
+                    <>
+                      <span>📋</span>
+                      Markdown をコピー
+                    </>
+                  )}
                 </Button>
-              </div>
-            )}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
-
-

@@ -60,25 +60,33 @@ export default function AuthLoginPage() {
     }
   };
 
+  const [resetEmail, setResetEmail] = useState("");
+
   const handleResetPassword = async () => {
     setError(null);
     setInfo(null);
 
-    if (!email.trim()) {
-      setError("先にパスワードを再設定したいメールアドレスを入力してください。");
+    const targetEmail = (resetEmail || email).trim();
+
+    if (!targetEmail) {
+      setError(
+        "パスワードを再設定したいメールアドレスを、下の入力欄に入力してください。"
+      );
       return;
     }
 
     setLoading(true);
     try {
       const supabase = getSupabaseBrowserClient();
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      const { error } = await supabase.auth.resetPasswordForEmail(targetEmail, {
         redirectTo: `${window.location.origin}/auth/reset`
       });
       if (error) {
         throw error;
       }
-      setInfo("パスワード再設定用のメールを送信しました。メールボックスを確認してください。");
+      setInfo(
+        "パスワード再設定用のメールを送信しました。メールボックス（迷惑メールフォルダも含む）を確認してください。"
+      );
     } catch (e) {
       console.error(e);
       setError(
@@ -165,7 +173,23 @@ export default function AuthLoginPage() {
         </Button>
       </form>
 
-      <div className="space-y-1 text-[11px] text-slate-600">
+      <div className="space-y-2 text-[11px] text-slate-600">
+        <div className="space-y-1">
+          <label className="block text-[11px] font-medium">
+            パスワード再設定用メールアドレス
+          </label>
+          <input
+            type="email"
+            className="w-full rounded-md border border-input bg-background px-3 py-1.5 text-[11px] shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            value={resetEmail}
+            onChange={(e) => setResetEmail(e.target.value)}
+            placeholder="再設定メールを受け取りたいアドレス"
+          />
+          <p className="text-[11px] text-muted-foreground">
+            上のメールアドレスと同じでよければ、入力を省略して構いません。
+          </p>
+        </div>
+
         <button
           type="button"
           onClick={handleResetPassword}

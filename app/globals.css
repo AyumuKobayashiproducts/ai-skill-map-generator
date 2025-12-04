@@ -1,11 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  color: #020617; /* slate-950 に近い濃いテキスト色 */
+  font-family: "DM Sans", "Noto Sans JP", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #0f172a;
   font-weight: 500;
   line-height: 1.7;
 }
@@ -14,4 +15,243 @@ p {
   line-height: 1.8;
 }
 
+/* ============================
+   アニメーション定義
+   ============================ */
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+  }
+}
+
+@keyframes progress-fill {
+  from {
+    width: 0%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* ============================
+   アニメーションユーティリティ
+   ============================ */
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+.animate-progress-fill {
+  animation: progress-fill 1s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* staggered animation delays */
+.stagger-1 { animation-delay: 0.1s; opacity: 0; }
+.stagger-2 { animation-delay: 0.2s; opacity: 0; }
+.stagger-3 { animation-delay: 0.3s; opacity: 0; }
+.stagger-4 { animation-delay: 0.4s; opacity: 0; }
+.stagger-5 { animation-delay: 0.5s; opacity: 0; }
+.stagger-6 { animation-delay: 0.6s; opacity: 0; }
+
+/* ============================
+   カスタムコンポーネントスタイル
+   ============================ */
+
+/* プログレスバー */
+.progress-bar {
+  @apply relative h-2 rounded-full bg-slate-200 overflow-hidden;
+}
+
+.progress-bar-fill {
+  @apply absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-400;
+  animation: progress-fill 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.progress-bar-shimmer {
+  @apply absolute inset-0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* カード hover エフェクト */
+.card-hover {
+  @apply transition-all duration-300;
+}
+
+.card-hover:hover {
+  @apply shadow-lg shadow-slate-200/80 -translate-y-0.5;
+}
+
+/* グラデーションテキスト */
+.gradient-text {
+  @apply bg-gradient-to-r from-sky-600 via-indigo-600 to-emerald-500 bg-clip-text text-transparent;
+}
+
+/* グラスモーフィズム効果 */
+.glass {
+  @apply bg-white/70 backdrop-blur-md border border-white/20;
+}
+
+/* タブ active indicator */
+.tab-active {
+  @apply relative;
+}
+
+.tab-active::after {
+  content: '';
+  @apply absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-sky-500;
+}
+
+/* スコアリング */
+.score-circle {
+  @apply relative w-24 h-24 rounded-full flex items-center justify-center;
+  background: conic-gradient(
+    from 0deg,
+    #38bdf8 0%,
+    #6366f1 50%,
+    #10b981 100%
+  );
+}
+
+.score-circle::before {
+  content: '';
+  @apply absolute inset-1 rounded-full bg-white;
+}
+
+.score-circle-value {
+  @apply relative z-10 text-2xl font-bold text-slate-900;
+}
+
+/* セクション区切り */
+.section-divider {
+  @apply relative h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent my-8;
+}
+
+/* バッジ with glow */
+.badge-glow {
+  @apply relative;
+}
+
+.badge-glow::before {
+  content: '';
+  @apply absolute inset-0 rounded-full bg-sky-400/20 blur-md -z-10;
+}
+
+/* フォーカス状態の改善 */
+input:focus,
+textarea:focus,
+select:focus {
+  @apply outline-none ring-2 ring-sky-400/50 border-sky-400;
+}
+
+/* スケルトンローダー */
+.skeleton {
+  @apply bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 bg-[length:200%_100%] animate-shimmer rounded;
+}
+
+/* ツールチップ */
+.tooltip {
+  @apply invisible opacity-0 absolute z-50 px-2 py-1 text-xs text-white bg-slate-800 rounded transition-all duration-200;
+}
+
+.tooltip-trigger:hover .tooltip {
+  @apply visible opacity-100;
+}

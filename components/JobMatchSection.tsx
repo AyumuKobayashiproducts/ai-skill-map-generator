@@ -12,6 +12,56 @@ interface JobMatchSectionProps {
   result: SkillMapResult;
 }
 
+function ScoreGauge({ score }: { score: number }) {
+  const circumference = 2 * Math.PI * 40;
+  const strokeDashoffset = circumference - (score / 100) * circumference;
+  
+  const getColor = (s: number) => {
+    if (s >= 70) return { gradient: "from-emerald-400 to-teal-500", text: "text-emerald-600" };
+    if (s >= 40) return { gradient: "from-amber-400 to-orange-500", text: "text-amber-600" };
+    return { gradient: "from-red-400 to-rose-500", text: "text-red-600" };
+  };
+  
+  const color = getColor(score);
+  
+  return (
+    <div className="relative w-24 h-24">
+      <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          fill="none"
+          stroke="#e2e8f0"
+          strokeWidth="10"
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          fill="none"
+          stroke="url(#matchGradient)"
+          strokeWidth="10"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          className="transition-all duration-1000 ease-out"
+        />
+        <defs>
+          <linearGradient id="matchGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={score >= 70 ? "#34d399" : score >= 40 ? "#fbbf24" : "#f87171"} />
+            <stop offset="100%" stopColor={score >= 70 ? "#14b8a6" : score >= 40 ? "#f97316" : "#e11d48"} />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className={`text-2xl font-bold ${color.text}`}>{score}</span>
+        <span className="text-[10px] text-slate-500">/ 100</span>
+      </div>
+    </div>
+  );
+}
+
 export function JobMatchSection({ result }: JobMatchSectionProps) {
   const [jdText, setJdText] = useState("");
   const [jobUrl, setJobUrl] = useState("");
@@ -81,7 +131,6 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
   const fillJobSample = () => {
     const next = (sampleIndex + 1) % jobSamples.length;
     setSampleIndex(next);
-    // TypeScript 上は undefined になる可能性があるので空文字をフォールバック
     setJdText(jobSamples[next] ?? "");
   };
 
@@ -118,40 +167,53 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>求人票マッチングスコア</CardTitle>
+    <Card className="overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50">
+        <CardTitle className="flex items-center gap-2">
+          <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-md">
+            💼
+          </span>
+          求人票マッチングスコア
+        </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4 text-sm leading-relaxed">
-        <p className="text-xs text-muted-foreground leading-relaxed">
+      <CardContent className="space-y-4 text-sm leading-relaxed pt-4">
+        <p className="text-xs text-slate-600 leading-relaxed">
           気になる求人票のテキスト or URL を貼ると、このスキルマップとのマッチング度合いと不足スキル、専用ロードマップを表示します。
         </p>
 
-        <div className="space-y-1">
-          <label className="block text-xs font-medium">
-            求人票テキスト（職務内容・必須/歓迎スキルなど）
+        <div className="space-y-2">
+          <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-900">
+            <span>📄</span>
+            求人票テキスト
           </label>
-          <textarea
-            className="w-full min-h-[120px] rounded-md border border-input bg-background px-3 py-2 text-xs shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            placeholder="求人票の本文をそのまま貼り付けてください。"
-            value={jdText}
-            onChange={(e) => setJdText(e.target.value)}
-            onKeyDown={(e) => {
-              if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                e.preventDefault();
-                void handleMatch();
-              }
-            }}
-          />
+          <div className="relative">
+            <textarea
+              className="w-full min-h-[140px] rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm shadow-sm transition-all duration-200 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 focus:outline-none resize-none"
+              placeholder="求人票の本文をそのまま貼り付けてください（職務内容・必須/歓迎スキルなど）"
+              value={jdText}
+              onChange={(e) => setJdText(e.target.value)}
+              onKeyDown={(e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                  e.preventDefault();
+                  void handleMatch();
+                }
+              }}
+            />
+            <div className="absolute bottom-2 right-2 text-[10px] text-slate-400">
+              ⌘+Enter で実行
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-1">
-          <label className="block text-xs font-medium">
-            求人URL（任意・テキストの代わり）
+        <div className="space-y-2">
+          <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-900">
+            <span>🔗</span>
+            求人URL
+            <span className="font-normal text-slate-500">（任意）</span>
           </label>
           <input
             type="url"
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-xs shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm transition-all duration-200 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 focus:outline-none"
             placeholder="例）https://example.com/job/frontend-engineer"
             value={jobUrl}
             onChange={(e) => setJobUrl(e.target.value)}
@@ -163,11 +225,20 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
-            size="sm"
             onClick={handleMatch}
             disabled={loading}
           >
-            {loading ? "AI がマッチング中..." : "この求人とマッチングしてみる"}
+            {loading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                AI がマッチング中...
+              </>
+            ) : (
+              <>
+                <span>✨</span>
+                この求人とマッチングしてみる
+              </>
+            )}
           </Button>
           <Button
             type="button"
@@ -176,35 +247,39 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
             onClick={fillJobSample}
             disabled={loading}
           >
-            サンプル求人を入れてみる
+            💡 サンプル求人を入れてみる
           </Button>
         </div>
 
         {match && (
-          <div className="mt-4 space-y-3 border-t pt-3">
-            <div>
-              <p className="text-xs font-semibold text-muted-foreground">
-                マッチングスコア
-              </p>
-              <p className="text-2xl font-bold">
-                {match.score}
-                <span className="text-base font-normal text-muted-foreground">
-                  {" "}
-                  / 100
-                </span>
-              </p>
+          <div className="mt-6 space-y-4 border-t border-slate-100 pt-6 animate-fade-in-up">
+            {/* Score display */}
+            <div className="flex items-center gap-6 p-4 rounded-xl bg-gradient-to-r from-slate-50 to-purple-50/50">
+              <ScoreGauge score={match.score} />
+              <div className="flex-1">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                  マッチングスコア
+                </p>
+                <p className="text-sm text-slate-700 mt-1">
+                  {match.score >= 70 && "この求人との相性は良好です！"}
+                  {match.score >= 40 && match.score < 70 && "いくつかのスキルを補強すると良さそうです"}
+                  {match.score < 40 && "現時点では少しギャップがありそうです"}
+                </p>
+              </div>
             </div>
 
+            {/* Matched skills */}
             {!!match.matchedSkills.length && (
-              <div>
-                <p className="text-xs font-semibold text-muted-foreground">
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                  <span className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-[10px]">✓</span>
                   マッチしているスキル
                 </p>
-                <div className="flex flex-wrap gap-2 mt-1">
+                <div className="flex flex-wrap gap-2">
                   {match.matchedSkills.map((s) => (
                     <span
                       key={s}
-                      className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700"
+                      className="inline-flex items-center rounded-full bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 px-3 py-1 text-xs font-medium text-emerald-700"
                     >
                       {s}
                     </span>
@@ -213,16 +288,18 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
               </div>
             )}
 
+            {/* Missing skills */}
             {!!match.missingSkills.length && (
-              <div>
-                <p className="text-xs font-semibold text-muted-foreground">
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                  <span className="w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center text-[10px]">!</span>
                   不足している/弱いスキル
                 </p>
-                <div className="flex flex-wrap gap-2 mt-1">
+                <div className="flex flex-wrap gap-2">
                   {match.missingSkills.map((s) => (
                     <span
                       key={s}
-                      className="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700"
+                      className="inline-flex items-center rounded-full bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 px-3 py-1 text-xs font-medium text-amber-700"
                     >
                       {s}
                     </span>
@@ -231,21 +308,27 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
               </div>
             )}
 
+            {/* Summary */}
             {match.summary && (
-              <div>
-                <p className="text-xs font-semibold text-muted-foreground">
+              <div className="p-4 rounded-xl bg-slate-50 space-y-2">
+                <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                  <span>📋</span>
                   マッチングの要約
                 </p>
-                <p className="text-xs whitespace-pre-wrap">{match.summary}</p>
+                <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">
+                  {match.summary}
+                </p>
               </div>
             )}
 
+            {/* Roadmap */}
             {match.roadmapForJob && (
-              <div>
-                <p className="text-xs font-semibold text-muted-foreground">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-100 space-y-2">
+                <p className="text-xs font-semibold text-purple-700 flex items-center gap-1.5">
+                  <span>🛤️</span>
                   この求人に寄せるためのロードマップ
                 </p>
-                <p className="text-xs whitespace-pre-wrap">
+                <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
                   {match.roadmapForJob}
                 </p>
               </div>
@@ -256,5 +339,3 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
     </Card>
   );
 }
-
-
