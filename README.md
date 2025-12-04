@@ -20,17 +20,17 @@
 <p align="center">
   <a href="https://ai-skill-map-generator.vercel.app">🌐 Live Demo</a>
   ・
-  <a href="#features">✨ Features</a>
+  <a href="#-features">✨ Features</a>
   ・
-  <a href="#tech-stack">🛠 Tech Stack</a>
+  <a href="#-tech-stack">🛠 Tech Stack</a>
   ・
-  <a href="#getting-started">🚀 Getting Started</a>
+  <a href="#-getting-started">🚀 Getting Started</a>
 </p>
 
 ---
 
 <p align="center">
-  <img src="./public/screenshot-hero.png" alt="AI Skill Map Generator - ホーム画面" width="800" />
+  <img src="./public/screenshots/home.png" alt="AI Skill Map Generator - ホーム画面" width="800" />
 </p>
 
 ---
@@ -51,26 +51,35 @@
 
 <table>
   <tr>
-    <td align="center" width="33%">
-      <img src="./public/screenshot-hero.png" alt="スキル入力" width="280" />
+    <td align="center" width="50%">
+      <img src="./public/screenshots/home.png" alt="ホーム画面" width="400" />
       <br />
       <strong>🎯 3ステップで診断</strong>
       <br />
       <small>ゴール選択 → スキル入力 → 結果確認</small>
     </td>
-    <td align="center" width="33%">
-      <img src="./public/screenshot-dashboard.png" alt="ダッシュボード" width="280" />
+    <td align="center" width="50%">
+      <img src="./public/screenshots/dashboard.png" alt="ダッシュボード" width="400" />
       <br />
       <strong>📊 履歴ダッシュボード</strong>
       <br />
       <small>過去の診断結果を一覧表示</small>
     </td>
-    <td align="center" width="33%">
-      <img src="./public/screenshot-about.png" alt="このアプリについて" width="280" />
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./public/screenshots/about.png" alt="このアプリについて" width="400" />
       <br />
       <strong>ℹ️ 技術スタック紹介</strong>
       <br />
       <small>アプリの設計意図を解説</small>
+    </td>
+    <td align="center" width="50%">
+      <img src="./public/screenshots/portfolio.png" alt="ポートフォリオ整理" width="400" />
+      <br />
+      <strong>📁 ポートフォリオ整理</strong>
+      <br />
+      <small>案件TOP3を自動選定</small>
     </td>
   </tr>
 </table>
@@ -126,6 +135,7 @@ flowchart LR
     GEN[/api/generate/]
     MATCH[/api/job-match/]
     RISK[/api/risk/]
+    READY[/api/readiness/]
   end
 
   subgraph External["🌐 External"]
@@ -221,14 +231,17 @@ Total Score = SkillScore + JobScore + RiskScore + PrepScore
 
 ## 🎯 このプロジェクトのポイント
 
-1. **AI × キャリアの具体的なプロダクト設計**
-   - 転職活動の実務フローをストーリーとして落とし込み
+### 1. AI × キャリアの具体的なプロダクト設計
+- エンジニア転職の実務フロー（スキル棚卸し → ロードマップ → 求人マッチ → 面接準備）を1つのアプリにストーリーとして落とし込み
+- 「転職準備スコア」「キャリアリスクレーダー」「求人マッチング」など、実務で意思決定に使える指標設計
 
-2. **型安全・テストまで含めたフルスタック実装**
-   - Zod バリデーション、Vitest/Playwright テスト、CI/CD
+### 2. 型安全・テストまで含めたフルスタック実装
+- Next.js（App Router）+ TypeScript + Supabase + OpenAI で、フロント〜API〜DB まで一通り自分で設計・実装
+- Zod による API 入力バリデーション、純粋関数に切り出したスコア計算、Vitest + Playwright によるテスト
 
-3. **ポートフォリオとしての読みやすさ**
-   - 3分で一周できるUI設計、モバイル対応
+### 3. ポートフォリオとしての読みやすさ
+- 「3分で一周できるフロー」を意識した画面構成・タブ・ボタン文言
+- モバイル対応、情報カードの統一感、使いやすい UI/UX
 
 ---
 
