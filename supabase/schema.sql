@@ -57,5 +57,21 @@ create table if not exists public.usage_logs (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- interview_sessions テーブル（面接練習セッションの履歴）
+create table if not exists public.interview_sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid,
+  skill_map_id uuid references public.skill_maps(id) on delete set null,
+  interview_type text not null, -- 'general' | 'technical' | 'behavioral'
+  question_count integer not null,
+  overall_score integer, -- 1-5
+  strong_points jsonb, -- string[]
+  improvement_points jsonb, -- string[]
+  next_steps jsonb, -- string[]
+  summary text,
+  exchanges jsonb, -- { question, answer, feedback }[]
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
 
 

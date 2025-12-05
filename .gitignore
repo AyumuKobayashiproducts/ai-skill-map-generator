@@ -4,6 +4,3 @@ node_modules
 .vscode
 .DS_Store
 .vercel
-
-# Build info
-*.tsbuildinfo

@@ -17,21 +17,20 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "group inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 disabled:pointer-events-none active:scale-[0.97]";
+    "inline-flex items-center justify-center rounded-md text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98]";
 
   const variants: Record<string, string> = {
     default:
-      "relative bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-400 text-white font-semibold shadow-lg shadow-sky-500/25 hover:shadow-xl hover:shadow-sky-500/30 hover:-translate-y-0.5 before:absolute before:inset-0 before:rounded-lg before:bg-white/20 before:opacity-0 hover:before:opacity-100 before:transition-opacity overflow-hidden",
+      "bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-400 text-primary-foreground shadow-md shadow-sky-500/30 hover:brightness-110",
     outline:
-      "border-2 border-slate-200 bg-white text-slate-700 hover:border-sky-300 hover:bg-sky-50/50 hover:text-sky-700 shadow-sm",
-    ghost: 
-      "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+      "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+    ghost: "hover:bg-accent hover:text-accent-foreground"
   };
 
   const sizes: Record<string, string> = {
-    default: "h-10 px-5",
+    default: "h-9 px-4",
     sm: "h-8 px-3 text-xs",
-    lg: "h-12 px-8 text-base"
+    lg: "h-10 px-6 text-base"
   };
 
   return (
@@ -39,9 +38,9 @@ export function Button({
       className={cn(base, variants[variant], sizes[size], className)}
       {...props}
     >
-      <span className="relative z-10 flex items-center gap-2">
-        {children}
-      </span>
+      {children}
     </button>
   );
 }
+
+

@@ -63,17 +63,21 @@ export const RiskRequestSchema = z.object({
   skillMapId: UuidSchema
 });
 
-// --------- oneonone ----------
+// --------- oneonone (転職面接練習) ----------
+
+export const InterviewTypeSchema = z.enum(["general", "technical", "behavioral"]);
 
 export const OneOnOneQuestionsRequestSchema = z.object({
-  skillMapId: UuidSchema
+  skillMapId: UuidSchema,
+  interviewType: InterviewTypeSchema.optional().default("general")
 });
 
 export const OneOnOneFeedbackRequestSchema = z.object({
   question: z.string().min(1),
   answer: z.string().min(1),
   strengths: z.string().optional(),
-  weaknesses: z.string().optional()
+  weaknesses: z.string().optional(),
+  interviewType: InterviewTypeSchema.optional().default("general")
 });
 
 // --------- time-simulate ----------
