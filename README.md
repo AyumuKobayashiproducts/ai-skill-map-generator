@@ -18,6 +18,7 @@
   <img src="https://img.shields.io/badge/TypeScript-5.6-blue?style=flat-square&logo=typescript" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Supabase-Postgres-3ECF8E?style=flat-square&logo=supabase" alt="Supabase" />
   <img src="https://img.shields.io/badge/OpenAI-API-412991?style=flat-square&logo=openai" alt="OpenAI" />
+  <img src="https://img.shields.io/badge/coverage-50%25-brightgreen?style=flat-square" alt="Test Coverage ~50%" />
 </p>
 
 <p align="center">
@@ -247,6 +248,19 @@ Total Score = SkillScore + JobScore + RiskScore + PrepScore
 ### 3. ポートフォリオとしての読みやすさ
 - 「3分で一周できるフロー」を意識した画面構成・タブ・ボタン文言
 - モバイル対応、情報カードの統一感、使いやすい UI/UX
+
+---
+
+## 🧠 このプロジェクトで学んだこと・工夫した設計
+
+- **AI × キャリアの意思決定支援**
+  - 「スキル棚卸し → 学習ロードマップ → 求人マッチング → 面接準備」という転職フローを一連のユーザーストーリーとして整理し、単発の診断ツールではなく **“転職意思決定を支えるプロダクト”** を意識して設計しました。
+- **型安全なドメインロジック**
+  - スコア計算やマッピング処理を `lib/` 配下の純粋関数として切り出し、`types/` で定義した型とユニットテストで壊れにくい構造にしています。
+- **実運用を見据えたデータ設計**
+  - Supabase の Row Level Security を前提にテーブル設計とクエリを組み立て、認証まわりの誤設定でユーザーデータが漏れないようにしました。
+- **開発プロセスの見える化**
+  - GitHub Actions で type-check / lint / test / build を自動化し、PR ベースで安全に機能追加できるパイプラインを構築しています。ポートフォリオとして「コード」だけでなく「開発プロセス」も示せるようにしました。
 
 ---
 

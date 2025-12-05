@@ -10,6 +10,8 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
+      // ドメインロジックの見える化を重視し、lib/ と hooks/ を主なカバレッジ対象とする
+      include: ["lib/**", "hooks/**"],
       exclude: [
         "node_modules",
         ".next",
