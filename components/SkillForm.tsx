@@ -1,13 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
 import { postJson } from "@/lib/apiClient";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowserClient";
 import { logUsage } from "@/lib/usageLogger";
+
+const goalOptions = [
+  { value: "frontend_specialist", label: "フロントエンド特化", emoji: "🎨", desc: "UI/UXに集中" },
+  { value: "fullstack", label: "フルスタック", emoji: "🌐", desc: "幅広く対応" },
+  { value: "backend_api", label: "バックエンド / API 中心", emoji: "⚙️", desc: "ロジック重視" },
+  { value: "tech_lead", label: "テックリード候補", emoji: "👑", desc: "リーダーシップ" },
+  { value: "unsure", label: "まだ特に決めていない", emoji: "🤔", desc: "探索中" }
+];
 
 export function SkillForm() {
   const [text, setText] = useState("");
@@ -46,14 +53,12 @@ export function SkillForm() {
   ];
 
   const fillSample = () => {
-    // サンプル文をローテーションで切り替える
     const next = (sampleIndex + 1) % samples.length;
     setSampleIndex(next);
     setText(samples[next] ?? "");
   };
 
   useEffect(() => {
-    // ログインしていれば Supabase のユーザーIDを拾っておく（デモ用途）
     const supabase = getSupabaseBrowserClient();
     supabase.auth
       .getUser()
@@ -108,7 +113,8 @@ export function SkillForm() {
   // ログイン確認中
   if (!userLoaded) {
     return (
-      <div className="text-xs text-muted-foreground">
+      <div className="flex items-center gap-2 text-sm text-slate-600">
+        <div className="w-4 h-4 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
         ログイン状態を確認しています…
       </div>
     );
@@ -117,17 +123,22 @@ export function SkillForm() {
   // 未ログイン時はフォーム全体をロック
   if (!userId) {
     return (
-      <div className="space-y-3 text-xs text-slate-700">
-        <p className="font-semibold text-slate-900">ログインが必要です</p>
-        <p className="leading-relaxed">
-          このツールでスキルマップを生成・保存するには、右上の「ログイン」から
-          サインアップ / ログインしてください。
-        </p>
+      <div className="space-y-4 p-4 rounded-xl bg-gradient-to-br from-slate-50 to-sky-50 border border-slate-200">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center text-white text-lg">
+            🔐
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900">ログインが必要です</p>
+            <p className="text-xs text-slate-600">
+              スキルマップを生成・保存するにはログインしてください
+            </p>
+          </div>
+        </div>
         <Button
           type="button"
-          size="sm"
-          className="mt-1"
           onClick={() => router.push("/auth/login")}
+          className="w-full"
         >
           ログイン / 新規登録画面を開く
         </Button>
@@ -137,71 +148,116 @@ export function SkillForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* スキル入力 */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium">
+        <label className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+          <span className="text-base">✍️</span>
           あなたのスキル・職務経歴
         </label>
-        <p className="text-xs text-muted-foreground leading-relaxed">
+        <p className="text-xs text-slate-600 leading-relaxed">
           希望するポジション（例: フロントエンドエンジニア）や使っている技術、担当業務などをできるだけ具体的に書いてください。
         </p>
-        <textarea
-          className="mt-1 w-full min-h-[200px] rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          placeholder="例）フロントエンドエンジニアとして3年勤務。React / TypeScript / Next.js を中心にSPA開発を担当。バックエンドはNode.jsでAPIの実装経験あり。インフラはVercelとSupabaseを主に利用している。"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
+        <div className="relative">
+          <textarea
+            className="w-full min-h-[180px] rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm shadow-sm transition-all duration-200 focus:border-sky-400 focus:ring-4 focus:ring-sky-100 focus:outline-none resize-none"
+            placeholder="例）フロントエンドエンジニアとして3年勤務。React / TypeScript / Next.js を中心にSPA開発を担当。バックエンドはNode.jsでAPIの実装経験あり。インフラはVercelとSupabaseを主に利用している。"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <div className="absolute bottom-3 right-3 text-xs text-slate-400">
+            {text.length} 文字
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={fillSample}
+          disabled={loading}
+          className="inline-flex items-center gap-1.5 text-xs text-sky-600 hover:text-sky-700 font-medium transition-colors"
+        >
+          <span>💡</span>
+          サンプル文を入れてみる
+        </button>
       </div>
-      <div className="space-y-2">
-        <label className="block text-sm font-medium">
+
+      {/* キャリアゴール選択 */}
+      <div className="space-y-3">
+        <label className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+          <span className="text-base">🎯</span>
           目指したいキャリアの方向性
         </label>
-        <select
-          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          value={goal}
-          onChange={(e) => setGoal(e.target.value)}
-        >
-          <option value="frontend_specialist">フロントエンド特化</option>
-          <option value="fullstack">フルスタック</option>
-          <option value="backend_api">バックエンド / API 中心</option>
-          <option value="tech_lead">テックリード候補</option>
-          <option value="unsure">まだ特に決めていない</option>
-        </select>
-        <p className="text-xs text-muted-foreground leading-relaxed">
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {goalOptions.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => setGoal(option.value)}
+              className={`group relative p-3 rounded-xl border-2 text-left transition-all duration-200 ${
+                goal === option.value
+                  ? "border-sky-400 bg-sky-50 shadow-md shadow-sky-100"
+                  : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <span className={`text-lg transition-transform duration-200 ${goal === option.value ? "scale-110" : "group-hover:scale-105"}`}>
+                  {option.emoji}
+                </span>
+                <div>
+                  <p className={`text-sm font-medium ${goal === option.value ? "text-sky-700" : "text-slate-900"}`}>
+                    {option.label}
+                  </p>
+                  <p className="text-[10px] text-slate-500">{option.desc}</p>
+                </div>
+              </div>
+              {goal === option.value && (
+                <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-sky-500 flex items-center justify-center">
+                  <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-slate-500 leading-relaxed">
           いま一番近づきたいイメージに近いものを選んでください。AI がスキルマップとロードマップを少しその方向に寄せてくれます。
         </p>
       </div>
+
+      {/* GitHub URL */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium">
-          GitHub リポジトリ URL（任意）
+        <label className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+          <span className="text-base">🔗</span>
+          GitHub リポジトリ URL
+          <span className="text-xs font-normal text-slate-500">（任意）</span>
         </label>
         <input
           type="url"
-          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm transition-all duration-200 focus:border-sky-400 focus:ring-4 focus:ring-sky-100 focus:outline-none"
           placeholder="例）https://github.com/username/portfolio"
           value={repoUrl}
           onChange={(e) => setRepoUrl(e.target.value)}
         />
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          ポートフォリオ用リポジトリなどがあれば入力すると、AI が技術スタックのヒントとして活用します（中身を直接読むわけではありません）。
+        <p className="text-xs text-slate-500 leading-relaxed">
+          ポートフォリオ用リポジトリなどがあれば入力すると、AI が技術スタックのヒントとして活用します。
         </p>
       </div>
+
       {error && <ErrorAlert message={error} />}
-      <div className="flex flex-wrap gap-3 items-center">
-        <Button type="submit" disabled={loading} className="px-6">
-          {loading ? "AI が分析中..." : "AI にスキルマップを生成してもらう"}
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={fillSample}
-          disabled={loading}
-        >
-          サンプル文を入れてみる
-        </Button>
-      </div>
+
+      {/* 送信ボタン */}
+      <Button type="submit" disabled={loading} className="w-full" size="lg">
+        {loading ? (
+          <>
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            AI が分析中...
+          </>
+        ) : (
+          <>
+            <span>✨</span>
+            AI にスキルマップを生成してもらう
+          </>
+        )}
+      </Button>
     </form>
   );
 }
-
-

@@ -3,33 +3,59 @@
 import { useState } from "react";
 import type { CareerRiskResult, SkillMapResult } from "@/types/skill";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Radar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend
-} from "chart.js";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
 import { postJson } from "@/lib/apiClient";
 import { logUsage } from "@/lib/usageLogger";
 
-// Chart.js でレーダーチャートを使うための登録
-ChartJS.register(
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend
-);
-
 interface CareerRiskSectionProps {
   result: SkillMapResult;
+}
+
+interface RiskBarProps {
+  label: string;
+  value: number;
+  icon: string;
+  color: string;
+  description: string;
+}
+
+function RiskBar({ label, value, icon, color, description }: RiskBarProps) {
+  const getLevel = (v: number) => {
+    if (v >= 70) return { text: "高リスク", bg: "bg-red-500" };
+    if (v >= 40) return { text: "中リスク", bg: "bg-amber-500" };
+    return { text: "低リスク", bg: "bg-emerald-500" };
+  };
+  
+  const level = getLevel(value);
+  
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-lg">{icon}</span>
+          <span className="text-sm font-medium text-slate-900">{label}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className={`text-xs px-2 py-0.5 rounded-full ${
+            value >= 70 ? "bg-red-100 text-red-700" :
+            value >= 40 ? "bg-amber-100 text-amber-700" :
+            "bg-emerald-100 text-emerald-700"
+          }`}>
+            {level.text}
+          </span>
+          <span className="text-sm font-bold text-slate-900">{value}</span>
+        </div>
+      </div>
+      <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
+        <div 
+          className={`h-full rounded-full ${color} transition-all duration-1000 ease-out`}
+          style={{ width: `${value}%` }}
+        />
+      </div>
+      <p className="text-xs text-slate-500">{description}</p>
+    </div>
+  );
 }
 
 export function CareerRiskSection({ result }: CareerRiskSectionProps) {
@@ -57,92 +83,137 @@ export function CareerRiskSection({ result }: CareerRiskSectionProps) {
     }
   };
 
-  // Chart.js の型と readonly 配列の相性が良くないため、ここは any で扱う
-  const chartData: any =
-    risk &&
+  const riskItems = risk ? [
     {
-      labels: ["陳腐化リスク", "属人化リスク", "自動化リスク"],
-      datasets: [
-        {
-          label: "キャリアリスク",
-          data: [risk.obsolescence, risk.busFactor, risk.automation],
-          backgroundColor: "rgba(248, 113, 113, 0.2)",
-          borderColor: "rgba(248, 113, 113, 1)",
-          borderWidth: 2,
-          pointBackgroundColor: "rgba(248, 113, 113, 1)"
-        }
-      ]
-    };
-
-  const chartOptions = {
-    responsive: true,
-    scales: {
-      r: {
-        suggestedMin: 0,
-        suggestedMax: 100,
-        ticks: {
-          stepSize: 20,
-          color: "#9CA3AF",
-          backdropColor: "transparent"
-        },
-        grid: { color: "rgba(148, 163, 184, 0.3)" },
-        angleLines: { color: "rgba(148, 163, 184, 0.4)" },
-        pointLabels: {
-          color: "#4B5563",
-          font: { size: 11 }
-        }
-      }
+      label: "陳腐化リスク",
+      value: risk.obsolescence,
+      icon: "📉",
+      color: "bg-gradient-to-r from-red-400 to-rose-500",
+      description: "技術トレンドの変化により、スキルの価値が下がるリスク"
     },
-    plugins: {
-      legend: {
-        display: false
-      }
+    {
+      label: "属人化リスク",
+      value: risk.busFactor,
+      icon: "👤",
+      color: "bg-gradient-to-r from-amber-400 to-orange-500",
+      description: "特定の環境やチームに依存しすぎているリスク"
+    },
+    {
+      label: "自動化リスク",
+      value: risk.automation,
+      icon: "🤖",
+      color: "bg-gradient-to-r from-purple-400 to-violet-500",
+      description: "AI やツールによって代替される可能性のリスク"
     }
-  } as const;
+  ] : [];
+
+  const overallRisk = risk 
+    ? Math.round((risk.obsolescence + risk.busFactor + risk.automation) / 3)
+    : 0;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>キャリアリスクレーダー</CardTitle>
+    <Card className="overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-red-50 to-orange-50">
+        <CardTitle className="flex items-center gap-2">
+          <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white shadow-md">
+            ⚠️
+          </span>
+          キャリアリスク分析
+        </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4 text-sm leading-relaxed">
-        <p className="text-xs text-muted-foreground leading-relaxed">
+      <CardContent className="space-y-4 text-sm leading-relaxed pt-4">
+        <p className="text-xs text-slate-600 leading-relaxed">
           現在のスキル構成から、
           「技術の陳腐化」「属人化」「自動化される」リスクをスコア化し、
           どこを補強すると良いかを可視化します。
         </p>
 
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          onClick={handleAnalyze}
-          disabled={loading}
-        >
-          {loading ? "AI が分析中..." : "キャリアリスクを分析する"}
-        </Button>
+        {!risk && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleAnalyze}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
+                AI が分析中...
+              </>
+            ) : (
+              <>
+                <span>🔍</span>
+                キャリアリスクを分析する
+              </>
+            )}
+          </Button>
+        )}
 
         {error && <ErrorAlert message={error} />}
 
-        {risk && chartData && (
-          <div className="space-y-3">
-            <div className="w-full max-w-md mx-auto">
-              {/* 型の都合で any を使っているため、ここだけ型チェックを無視する */}
-              {/* @ts-ignore */}
-              <Radar data={chartData} options={chartOptions} />
+        {risk && (
+          <div className="space-y-6 animate-fade-in-up">
+            {/* Overall risk indicator */}
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-slate-50 to-red-50/50">
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl ${
+                overallRisk >= 70 ? "bg-gradient-to-br from-red-500 to-rose-600" :
+                overallRisk >= 40 ? "bg-gradient-to-br from-amber-500 to-orange-600" :
+                "bg-gradient-to-br from-emerald-500 to-teal-600"
+              }`}>
+                {overallRisk}
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                  総合リスクスコア
+                </p>
+                <p className="text-sm text-slate-700 mt-1">
+                  {overallRisk >= 70 && "いくつかの領域で対策を検討することをおすすめします"}
+                  {overallRisk >= 40 && overallRisk < 70 && "バランスは取れていますが、改善の余地があります"}
+                  {overallRisk < 40 && "全体的にリスクは低めです"}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs font-semibold text-muted-foreground">
+
+            {/* Individual risk bars */}
+            <div className="space-y-4">
+              {riskItems.map((item) => (
+                <RiskBar key={item.label} {...item} />
+              ))}
+            </div>
+
+            {/* Summary */}
+            <div className="p-4 rounded-xl bg-slate-50 space-y-2">
+              <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                <span>📋</span>
                 リスクの要約
               </p>
-              <p className="text-xs whitespace-pre-wrap">{risk.summary}</p>
+              <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">
+                {risk.summary}
+              </p>
             </div>
-            <div>
-              <p className="text-xs font-semibold text-muted-foreground">
+
+            {/* Actions */}
+            <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 space-y-2">
+              <p className="text-xs font-semibold text-emerald-700 flex items-center gap-1.5">
+                <span>💡</span>
                 具体的なアクション
               </p>
-              <p className="text-xs whitespace-pre-wrap">{risk.actions}</p>
+              <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+                {risk.actions}
+              </p>
             </div>
+
+            {/* Re-analyze button */}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleAnalyze}
+              disabled={loading}
+            >
+              <span>🔄</span>
+              再分析する
+            </Button>
           </div>
         )}
       </CardContent>

@@ -1,0 +1,35 @@
+name: AI Code Reviewer
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches:
+      - main
+
+jobs:
+  ai-code-review:
+    name: AI Code Review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run AI Code Reviewer
+        uses: hashimotonobuaki123-cmyk/ai-code-reviewer@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          # 必要に応じて以下のオプションを調整してください
+          provider: openai
+          model: gpt-4o
+          language: ja
+          review_level: normal
+          max_files: 10
+          max_cost_usd: 0.5
+          fail_on_critical: false
+
+

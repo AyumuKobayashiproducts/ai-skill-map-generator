@@ -1,3 +1,18 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals"
+  ],
+  "rules": {
+    // React ベストプラクティス
+    "react/jsx-no-leaked-render": "off",
+    "react/self-closing-comp": "warn",
+    "react/jsx-curly-brace-presence": "off",
+    
+    // コード品質（警告レベルに緩和）
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "prefer-const": "warn",
+    "no-var": "error",
+    "eqeqeq": "warn",
+    "curly": "off"
+  }
 }

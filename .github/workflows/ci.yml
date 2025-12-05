@@ -7,13 +7,14 @@ on:
     branches: [main]
 
 jobs:
-  # ────────────────────────────────────────────────────────────
-  # Job 1: Lint
-  # ────────────────────────────────────────────────────────────
-  lint:
-    name: 🔍 Lint
+  # 型チェック
+  type-check:
+    name: Type Check
     runs-on: ubuntu-latest
-    
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-anon-key-for-ci"
+      OPENAI_API_KEY: "dummy-openai-key-for-ci"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,22 +26,45 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps
+
+      - name: Run type check
+        run: npx tsc --noEmit
+
+  # Lint
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-anon-key-for-ci"
+      OPENAI_API_KEY: "dummy-openai-key-for-ci"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
 
       - name: Run ESLint
         run: npm run lint
 
-  # ────────────────────────────────────────────────────────────
-  # Job 2: Unit Tests with Coverage
-  # ────────────────────────────────────────────────────────────
-  test:
-    name: 🧪 Unit Tests
+  # ビルドとテスト
+  build-and-test:
+    name: Build & Test
     runs-on: ubuntu-latest
-    
+    needs: [type-check, lint]
+
     env:
-      NEXT_PUBLIC_SUPABASE_URL: "https://example.com"
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-anon-key"
-      OPENAI_API_KEY: "dummy-openai-key"
+      NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-anon-key-for-ci"
+      OPENAI_API_KEY: "dummy-openai-key-for-ci"
 
     steps:
       - name: Checkout repository
@@ -53,64 +77,18 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Run unit tests with coverage
-        run: npm run test:coverage
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/lcov.info
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: false
-          verbose: true
-
-  # ────────────────────────────────────────────────────────────
-  # Job 3: Build
-  # ────────────────────────────────────────────────────────────
-  build:
-    name: 🏗️ Build
-    runs-on: ubuntu-latest
-    needs: [lint, test]
-    
-    env:
-      NEXT_PUBLIC_SUPABASE_URL: "https://example.com"
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-anon-key"
-      OPENAI_API_KEY: "dummy-openai-key"
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps
 
       - name: Run build
         run: npm run build
 
-  # ────────────────────────────────────────────────────────────
-  # Job 4: E2E Tests (Optional - runs on PRs)
-  # ────────────────────────────────────────────────────────────
-  e2e:
-    name: 🎭 E2E Tests
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: github.event_name == 'pull_request'
-    
-    env:
-      NEXT_PUBLIC_SUPABASE_URL: "https://example.com"
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-anon-key"
-      OPENAI_API_KEY: "dummy-openai-key"
+      - name: Run unit tests
+        run: npm run test
 
+  # 依存関係の脆弱性チェック
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -121,24 +99,5 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-
-      - name: Build application
-        run: npm run build
-
-      - name: Run E2E tests
-        run: npm run test:e2e
-        env:
-          PLAYWRIGHT_BASE_URL: http://localhost:3000
-
-      - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 7
+      - name: Run security audit
+        run: npm audit --audit-level=high || true

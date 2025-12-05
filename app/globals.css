@@ -1,11 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  color: #020617; /* slate-950 に近い濃いテキスト色 */
+  font-family: "DM Sans", "Noto Sans JP", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #0f172a;
   font-weight: 500;
   line-height: 1.7;
 }
@@ -14,39 +15,371 @@ p {
   line-height: 1.8;
 }
 
-/* モバイル対応: タップターゲットの最小サイズ確保 */
-@layer utilities {
-  .touch-target {
-    min-height: 44px;
-    min-width: 44px;
+/* ============================
+   アニメーション定義
+   ============================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* フォーカス表示の強化（アクセシビリティ） */
-@layer base {
-  :focus-visible {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
-/* スキップリンク（キーボードナビゲーション用） */
-.skip-link {
-  position: absolute;
-  top: -100%;
-  left: 0;
-  background: #1e293b;
-  color: white;
-  padding: 0.5rem 1rem;
-  z-index: 100;
-  transition: top 0.2s;
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.skip-link:focus {
-  top: 0;
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-/* 減速モーション設定時のアニメーション無効化 */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+  }
+}
+
+@keyframes progress-fill {
+  from {
+    width: 0%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* ============================
+   アニメーションユーティリティ
+   ============================ */
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+.animate-progress-fill {
+  animation: progress-fill 1s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* staggered animation delays */
+.stagger-1 { animation-delay: 0.1s; opacity: 0; }
+.stagger-2 { animation-delay: 0.2s; opacity: 0; }
+.stagger-3 { animation-delay: 0.3s; opacity: 0; }
+.stagger-4 { animation-delay: 0.4s; opacity: 0; }
+.stagger-5 { animation-delay: 0.5s; opacity: 0; }
+.stagger-6 { animation-delay: 0.6s; opacity: 0; }
+
+/* ============================
+   カスタムコンポーネントスタイル
+   ============================ */
+
+/* プログレスバー */
+.progress-bar {
+  @apply relative h-2 rounded-full bg-slate-200 overflow-hidden;
+}
+
+.progress-bar-fill {
+  @apply absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-400;
+  animation: progress-fill 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.progress-bar-shimmer {
+  @apply absolute inset-0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* カード hover エフェクト */
+.card-hover {
+  @apply transition-all duration-300;
+}
+
+.card-hover:hover {
+  @apply shadow-lg shadow-slate-200/80 -translate-y-0.5;
+}
+
+/* グラデーションテキスト */
+.gradient-text {
+  @apply bg-gradient-to-r from-sky-600 via-indigo-600 to-emerald-500 bg-clip-text text-transparent;
+}
+
+/* グラスモーフィズム効果 */
+.glass {
+  @apply bg-white/70 backdrop-blur-md border border-white/20;
+}
+
+/* タブ active indicator */
+.tab-active {
+  @apply relative;
+}
+
+.tab-active::after {
+  content: '';
+  @apply absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-sky-500;
+}
+
+/* スコアリング */
+.score-circle {
+  @apply relative w-24 h-24 rounded-full flex items-center justify-center;
+  background: conic-gradient(
+    from 0deg,
+    #38bdf8 0%,
+    #6366f1 50%,
+    #10b981 100%
+  );
+}
+
+.score-circle::before {
+  content: '';
+  @apply absolute inset-1 rounded-full bg-white;
+}
+
+.score-circle-value {
+  @apply relative z-10 text-2xl font-bold text-slate-900;
+}
+
+/* セクション区切り */
+.section-divider {
+  @apply relative h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent my-8;
+}
+
+/* バッジ with glow */
+.badge-glow {
+  @apply relative;
+}
+
+.badge-glow::before {
+  content: '';
+  @apply absolute inset-0 rounded-full bg-sky-400/20 blur-md -z-10;
+}
+
+/* フォーカス状態の改善 */
+input:focus,
+textarea:focus,
+select:focus {
+  @apply outline-none ring-2 ring-sky-400/50 border-sky-400;
+}
+
+/* スケルトンローダー */
+.skeleton {
+  @apply bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 bg-[length:200%_100%] animate-shimmer rounded;
+}
+
+/* ツールチップ */
+.tooltip {
+  @apply invisible opacity-0 absolute z-50 px-2 py-1 text-xs text-white bg-slate-800 rounded transition-all duration-200;
+}
+
+.tooltip-trigger:hover .tooltip {
+  @apply visible opacity-100;
+}
+
+/* ============================
+   スクロールアニメーション
+   ============================ */
+
+/* スムーズスクロール */
+html {
+  scroll-behavior: smooth;
+}
+
+/* スクロールで表示されるアニメーション */
+@keyframes scrollReveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scroll-reveal {
+  opacity: 0;
+  animation: scrollReveal 0.6s ease-out forwards;
+  animation-play-state: paused;
+}
+
+.scroll-reveal.is-visible {
+  animation-play-state: running;
+}
+
+/* ============================
+   インタラクティブ要素
+   ============================ */
+
+/* リンクホバーアンダーライン */
+.link-underline {
+  @apply relative;
+}
+
+.link-underline::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-0 h-0.5 bg-sky-500 transition-all duration-300;
+}
+
+.link-underline:hover::after {
+  @apply w-full;
+}
+
+/* ボタンリップルエフェクト */
+.ripple {
+  @apply relative overflow-hidden;
+}
+
+.ripple::after {
+  content: '';
+  @apply absolute inset-0 bg-white/30 scale-0 rounded-full transition-transform duration-500;
+}
+
+.ripple:active::after {
+  @apply scale-150;
+  transition: transform 0s;
+}
+
+/* グロー効果 */
+.glow-on-hover {
+  @apply relative;
+}
+
+.glow-on-hover::before {
+  content: '';
+  @apply absolute -inset-1 bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-500 rounded-xl opacity-0 blur-lg transition-opacity duration-300 -z-10;
+}
+
+.glow-on-hover:hover::before {
+  @apply opacity-50;
+}
+
+/* ============================
+   カスタムスクロールバー
+   ============================ */
+
+/* Webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full transition-colors;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* ============================
+   セレクション
+   ============================ */
+
+::selection {
+  @apply bg-sky-200 text-sky-900;
+}
+
+/* ============================
+   アクセシビリティ
+   ============================ */
+
+/* フォーカスリングの改善 */
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-sky-500;
+}
+
+/* モーション軽減対応 */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -56,15 +389,3 @@ p {
     transition-duration: 0.01ms !important;
   }
 }
-
-/* ハイコントラストモード対応 */
-@media (prefers-contrast: high) {
-  .border-slate-200 {
-    border-color: #475569;
-  }
-  .text-slate-500 {
-    color: #1e293b;
-  }
-}
-
-

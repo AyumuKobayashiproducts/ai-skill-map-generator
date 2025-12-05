@@ -1,0 +1,12 @@
+# AI Skill Map Generator - robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://ai-skill-map-generator.vercel.app/sitemap.xml
+
+# Disallow API routes
+Disallow: /api/
+
+
+

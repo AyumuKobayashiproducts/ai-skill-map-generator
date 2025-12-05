@@ -204,3 +204,5 @@ describe("scoreToLabel - 全パターン", () => {
   });
 });
 
+
+
