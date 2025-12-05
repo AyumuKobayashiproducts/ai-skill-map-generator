@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SkillForm } from "@/components/SkillForm";
 
 export default function HomePage() {
@@ -66,6 +67,31 @@ export default function HomePage() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* はじめての方へガイド */}
+      <section className="animate-fade-in-up stagger-3">
+        <div className="rounded-xl border border-slate-200 bg-gradient-to-r from-sky-50 via-white to-emerald-50 px-4 py-3 text-xs md:text-sm text-slate-700 shadow-sm">
+          <p className="font-semibold text-slate-900 mb-1 flex items-center gap-2">
+            <span className="text-base">👋</span>
+            はじめての方へ（このアプリの使い方）
+          </p>
+          <ul className="list-disc list-inside space-y-1">
+            <li>このアプリは、あなたの職務経歴とスキルから「スキルマップ」「学習ロードマップ」「求人マッチ」「面接練習プラン」をまとめて提案します。</li>
+            <li>最初の 1 回は、右側のフォームで「サンプル文を入れてみる」を押してからそのまま送信し、結果画面で全体の流れをつかむのがおすすめです。</li>
+            <li>
+              2 回目以降は、実際の職務経歴を書き込んで診断し、結果は
+              <Link href="/dashboard" className="underline underline-offset-2 text-sky-700 mx-1">
+                ダッシュボード
+              </Link>
+              からいつでも振り返れます。アプリの背景や技術スタックは
+              <Link href="/about" className="underline underline-offset-2 text-sky-700 mx-1">
+                このアプリについて
+              </Link>
+              で確認できます。
+            </li>
+          </ul>
         </div>
       </section>
 

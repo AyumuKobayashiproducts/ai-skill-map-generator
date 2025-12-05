@@ -77,6 +77,60 @@ export default async function ResultPage({ params }: ResultPageProps) {
         </div>
       </div>
 
+      {/* 次の一歩ガイド */}
+      <section className="animate-fade-in-up">
+        <div className="grid gap-3 md:grid-cols-3 text-xs md:text-sm">
+          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <p className="font-semibold text-slate-900 flex items-center gap-2 mb-1.5">
+              <span>📚</span>
+              学習ロードマップを進める
+            </p>
+            <p className="text-slate-600 leading-relaxed">
+              ロードマップの中から「今週やること」を 1 つだけ選んで着手してみましょう。取り組んだら、もう一度診断してスコアの変化を確認できます。
+            </p>
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <p className="font-semibold text-slate-900 flex items-center gap-2 mb-1.5">
+              <span>💼</span>
+              求人マッチングを試す
+            </p>
+            <p className="text-slate-600 leading-relaxed">
+              気になる求人票を貼り付けて、マッチ度と不足スキルを確認してみましょう。「どの求人がいまの自分に合いそうか」が見えやすくなります。
+            </p>
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <p className="font-semibold text-slate-900 flex items-center gap-2 mb-1.5">
+              <span>🎤</span>
+              面接練習でアウトプットする
+            </p>
+            <p className="text-slate-600 leading-relaxed">
+              スキルマップの内容をもとに 1on1 練習で回答を作ってみましょう。STAR 法に沿ったフィードバックで、転職準備スコアの「準備」の部分を底上げできます。
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-3 text-xs md:text-sm">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-600 text-white font-medium shadow-sm hover:bg-sky-700 transition-colors"
+          >
+            📊 ダッシュボードで履歴を見る
+          </Link>
+          <Link
+            href="/admin/usage"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-white font-medium shadow-sm hover:bg-slate-800 transition-colors"
+          >
+            📈 自分の使い方を振り返る
+          </Link>
+          <Link
+            href="/about"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 transition-colors"
+          >
+            ℹ️ アプリの背景を読む
+          </Link>
+        </div>
+      </section>
+
       <SkillResultView
         result={result}
         previousCategories={previousCategories ?? undefined}
