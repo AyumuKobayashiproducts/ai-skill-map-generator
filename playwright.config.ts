@@ -11,7 +11,13 @@ export default defineConfig({
       name: "Chromium",
       use: { ...devices["Desktop Chrome"] }
     }
-  ]
+  ],
+  // CI / ローカルどちらでも、テスト前に Next.js アプリを自動起動する
+  webServer: {
+    command: "npm run dev",
+    port: 3000,
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000
+  }
 });
-
 

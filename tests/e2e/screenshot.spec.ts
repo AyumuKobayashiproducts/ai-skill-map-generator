@@ -1,5 +1,12 @@
 import { test } from "@playwright/test";
 
+// CI では認証フローや AI 呼び出しを含むフルシナリオは重いためスキップし、
+// 手元で `npm run screenshot` を実行したときだけ動かす。
+test.skip(
+  !!process.env.CI,
+  "CI ではスクリーンショット生成用の長いシナリオはスキップします"
+);
+
 // PLAYWRIGHT_BASE_URL があればそれを、なければ http://localhost:3000 を使う
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
 
