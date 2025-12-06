@@ -23,7 +23,10 @@
   - `npm run lint`（ESLint）
   - `npm run build`（Next.js ビルド）
   - `npm run test:coverage`（Vitest のカバレッジ付きテスト）
-- テスト実行後、`coverage/` ディレクトリを **Artifacts としてアップロード**し、必要に応じて HTML レポートをダウンロードして確認できるようにしています。
+  - `npm run test:e2e`（Playwright による E2E テスト）
+- テスト実行後、次の成果物を **Artifacts としてアップロード**し、必要に応じてダウンロードして確認できるようにしています。
+  - `coverage/` ディレクトリ（ユニットテストの HTML レポートなど）
+  - `test-results/` ディレクトリ（Playwright のスクリーンショットやトレース）
 
 ## 今後の拡張余地
 
