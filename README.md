@@ -140,6 +140,14 @@
 
 テスト戦略の詳細は [docs/testing.md](docs/testing.md) を参照してください。
 
+### Docs
+
+- 設計・アーキテクチャ: [docs/architecture.md](docs/architecture.md), [docs/design-notes.md](docs/design-notes.md)
+- テスト戦略: [docs/testing.md](docs/testing.md)
+- アクセシビリティ: [docs/accessibility.md](docs/accessibility.md)
+- パフォーマンス / 運用: [docs/performance.md](docs/performance.md)
+- 面接 Q&A: [docs/interview-qa.md](docs/interview-qa.md)
+
 ---
 
 ## 🏗 Architecture
