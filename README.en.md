@@ -1,6 +1,6 @@
 ## AI Skill Map Generator
 
-[![Build Status](https://github.com/your-username/ai-skill-map-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/ai-skill-map-generator/actions/workflows/ci.yml)
+[![Build Status](https://github.com/AyumuKobayashiproducts/ai-skill-map-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/AyumuKobayashiproducts/ai-skill-map-generator/actions/workflows/ci.yml)
 [![Test](https://img.shields.io/badge/test-vitest%20%2B%20playwright-6E9F18)](https://vitest.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
@@ -25,6 +25,14 @@ Enter your skills and work experience to get **skill radar charts, learning road
 | ⚠️ **Career Risk Radar** | Visualize obsolescence / over-specialization / automation risks |
 | 🎤 **Interview Practice** | AI-powered mock interviews with 3 types (General, Technical, Behavioral) |
 | 📋 **Portfolio Generator** | Auto-generate portfolio summaries in Markdown/JSON format |
+
+---
+
+### Who is this for?
+
+- **Early-career web engineers** preparing for their **first or next job change**
+- Engineers who want a **clear picture of their skills and gaps**, not just a long CV
+- Mentors / career coaches who need a simple tool to **visualize mentees’ growth**
 
 ---
 
@@ -74,7 +82,7 @@ CI/CD:      GitHub Actions
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/ai-skill-map-generator.git
+git clone https://github.com/AyumuKobayashiproducts/ai-skill-map-generator.git
 cd ai-skill-map-generator
 
 # Install dependencies
@@ -82,9 +90,10 @@ npm install
 
 # Set up environment variables
 cp .env.example .env.local
-# Edit .env.local with your Supabase and OpenAI API keys
+# Then edit .env.local and set your Supabase + OpenAI API keys
 
-# Run database migrations (see docs/infra.md for Supabase setup)
+# (Optional) Set up Supabase locally
+# See docs/infra.md for schema and RLS configuration
 
 # Start development server
 npm run dev
@@ -162,6 +171,7 @@ MIT License - see [LICENSE](./LICENSE) for details.
 Built as a portfolio project to demonstrate full-stack development skills with AI integration.
 
 If you find this useful, please consider giving it a ⭐!
+
 
 
 

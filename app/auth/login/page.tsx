@@ -145,6 +145,60 @@ export default function AuthLoginPage() {
           </button>
         </div>
 
+        {/* Social login */}
+        <div className="space-y-3">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full bg-white"
+            disabled={loading}
+            onClick={async () => {
+              setError(null);
+              setInfo(null);
+              setLoading(true);
+              try {
+                const supabase = getSupabaseBrowserClient();
+                const { error } = await supabase.auth.signInWithOAuth({
+                  provider: "google",
+                  options: {
+                    redirectTo: `${window.location.origin}/auth/callback`
+                  }
+                });
+                if (error) {
+                  throw error;
+                }
+                // 実際のリダイレクトは Supabase 側で行われる
+              } catch (e) {
+                console.error(e);
+                setError(
+                  "Google ログインに失敗しました。時間をおいてから、もう一度お試しください。"
+                );
+              } finally {
+                setLoading(false);
+              }
+            }}
+          >
+            <span className="text-lg" aria-hidden="true">
+              🌐
+            </span>
+            <span className="text-sm font-medium">
+              Google アカウントでログイン / 登録
+            </span>
+          </Button>
+          <p className="text-[11px] text-slate-500 text-center">
+            Google ログインを使うと、メールアドレスと紐づいたアカウントが自動で作成されます。
+          </p>
+        </div>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 pt-2">
+          <div className="h-px flex-1 bg-slate-200" />
+          <span className="text-[11px] text-slate-400">
+            または メールアドレスでログイン
+          </span>
+          <div className="h-px flex-1 bg-slate-200" />
+        </div>
+
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">

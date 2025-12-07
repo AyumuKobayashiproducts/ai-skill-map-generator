@@ -11,13 +11,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hashimotonobuaki123-cmyk/ai-skill-map-generator/actions/workflows/ci.yml">
-    <img src="https://github.com/hashimotonobuaki123-cmyk/ai-skill-map-generator/actions/workflows/ci.yml/badge.svg" alt="CI" />
+  <a href="https://github.com/AyumuKobayashiproducts/ai-skill-map-generator/actions/workflows/ci.yml">
+    <img src="https://github.com/AyumuKobayashiproducts/ai-skill-map-generator/actions/workflows/ci.yml/badge.svg" alt="CI" />
   </a>
   <img src="https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js" alt="Next.js 15" />
   <img src="https://img.shields.io/badge/TypeScript-5.6-blue?style=flat-square&logo=typescript" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Supabase-Postgres-3ECF8E?style=flat-square&logo=supabase" alt="Supabase" />
   <img src="https://img.shields.io/badge/OpenAI-API-412991?style=flat-square&logo=openai" alt="OpenAI" />
+  <img src="https://img.shields.io/badge/coverage-50%25-brightgreen?style=flat-square" alt="Test Coverage ~50%" />
 </p>
 
 <p align="center">
@@ -47,6 +48,17 @@
 - 💼 **求人マッチング**（マッチ度スコア・不足スキル分析）
 - 🎯 **転職準備スコア**（0-100点の総合評価）
 - 📝 **ポートフォリオ整理**（案件TOP3とMarkdown出力）
+
+---
+
+## 🧩 Use Cases（どんなときに使うか）
+
+- **駆け出し〜1年目エンジニアが「まず何を勉強すべきか」を整理したいとき**
+  - サンプル文をベースに自分の経歴を書き換えて診断すると、「いまのスキル分布」と「30日 / 90日でやるべきこと」が具体的に見えます。
+  - ダッシュボードで履歴を残しておくことで、数ヶ月単位での成長を振り返ることができます。
+- **フルスタック志望で、どの領域をどこまで伸ばすか迷っているとき**
+  - ゴールを「フルスタック」に設定して診断することで、Frontend / Backend / Infra / AI / Tools のどこが強くてどこが弱いかを一目で把握できます。
+  - 気になる求人票を Job Match に貼り付けると、「この求人に近づくにはどのスキルを優先して伸ばすべきか」が分かります。
 
 ---
 
@@ -126,6 +138,16 @@
 - **ESLint** + **Prettier** (コード品質)
 - **GitHub Actions** (CI/CD)
 
+テスト戦略の詳細は [docs/testing.md](docs/testing.md) を参照してください。
+
+### Docs
+
+- 設計・アーキテクチャ: [docs/architecture.md](docs/architecture.md), [docs/design-notes.md](docs/design-notes.md)
+- テスト戦略: [docs/testing.md](docs/testing.md)
+- アクセシビリティ: [docs/accessibility.md](docs/accessibility.md)
+- パフォーマンス / 運用: [docs/performance.md](docs/performance.md)
+- 面接 Q&A: [docs/interview-qa.md](docs/interview-qa.md)
+
 ---
 
 ## 🏗 Architecture
@@ -168,7 +190,7 @@ flowchart LR
 
 ```bash
 # リポジトリをクローン
-git clone https://github.com/hashimotonobuaki123-cmyk/ai-skill-map-generator.git
+git clone https://github.com/AyumuKobayashiproducts/ai-skill-map-generator.git
 cd ai-skill-map-generator
 
 # 依存関係をインストール
@@ -250,6 +272,19 @@ Total Score = SkillScore + JobScore + RiskScore + PrepScore
 
 ---
 
+## 🧠 このプロジェクトで学んだこと・工夫した設計
+
+- **AI × キャリアの意思決定支援**
+  - 「スキル棚卸し → 学習ロードマップ → 求人マッチング → 面接準備」という転職フローを一連のユーザーストーリーとして整理し、単発の診断ツールではなく **“転職意思決定を支えるプロダクト”** を意識して設計しました。
+- **型安全なドメインロジック**
+  - スコア計算やマッピング処理を `lib/` 配下の純粋関数として切り出し、`types/` で定義した型とユニットテストで壊れにくい構造にしています。
+- **実運用を見据えたデータ設計**
+  - Supabase の Row Level Security を前提にテーブル設計とクエリを組み立て、認証まわりの誤設定でユーザーデータが漏れないようにしました。
+- **開発プロセスの見える化**
+  - GitHub Actions で type-check / lint / test / build を自動化し、PR ベースで安全に機能追加できるパイプラインを構築しています。ポートフォリオとして「コード」だけでなく「開発プロセス」も示せるようにしました。
+
+---
+
 ## 📝 License
 
 MIT License - see the [LICENSE](LICENSE) file for details.
@@ -257,5 +292,5 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/hashimotonobuaki123-cmyk">hashimotonobuaki123-cmyk</a>
+  Made with ❤️ by <a href="https://github.com/AyumuKobayashiproducts">AyumuKobayashiproducts</a>
 </p>

@@ -2,6 +2,7 @@
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { reportError } from "@/lib/errorReporter";
 
 interface Props {
   children: ReactNode;
@@ -28,8 +29,11 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   override componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // エラーログをコンソールに出力（本番環境ではエラー追跡サービスに送信）
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    // エラートラッキングフックへ送信
+    reportError(error, {
+      source: "ErrorBoundary",
+      componentStack: errorInfo.componentStack
+    });
   }
 
   handleReset = (): void => {

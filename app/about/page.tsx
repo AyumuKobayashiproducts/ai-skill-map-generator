@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 const techStack = [
@@ -162,6 +163,38 @@ export default function AboutPage() {
               「このアプリを通して、自分がどう考え、どう設計・実装したか」を説明するための解説ページとして用意しています。
               実際の画面をお見せしながら、技術的な深掘りや設計の意図についてお話しできればと思っています。
             </p>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Feedback */}
+      <section className="animate-fade-in-up stagger-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-sm md:text-base">
+              <span>🗣️</span>
+              フィードバック・改善アイデアはこちら
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-xs md:text-sm text-slate-700">
+            <p>
+              「ここが分かりづらかった」「こういう機能が欲しい」などのフィードバックがあれば、ぜひ教えてください。
+              実務でも使えるプロダクトに近づけていきたいと考えています。
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="https://github.com/AyumuKobayashiproducts/ai-skill-map-generator/discussions"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs md:text-sm font-medium shadow-sm hover:bg-sky-700 transition-colors"
+              >
+                💬 GitHub Discussions を開く
+              </Link>
+              <Link
+                href="https://github.com/AyumuKobayashiproducts/ai-skill-map-generator/issues/new/choose"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs md:text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                🐛 Issue / Feature リクエストを作成
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </section>

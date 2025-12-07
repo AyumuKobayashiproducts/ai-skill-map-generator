@@ -1,0 +1,120 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "メインコンテンツへスキップ" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link "AI Skill Map Generator ホームページ" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - heading "AI Skill Map Generator" [level=1] [ref=e9]
+        - generic [ref=e10]:
+          - navigation "メインナビゲーション" [ref=e11]:
+            - link "ホーム" [ref=e12] [cursor=pointer]:
+              - /url: /
+            - link "ダッシュボード" [ref=e13] [cursor=pointer]:
+              - /url: /dashboard
+            - link "このアプリについて" [ref=e14] [cursor=pointer]:
+              - /url: /about
+            - link "ポートフォリオ整理" [ref=e15] [cursor=pointer]:
+              - /url: /portfolio
+            - link "利用について" [ref=e16] [cursor=pointer]:
+              - /url: /legal
+          - link "ログイン / 登録" [ref=e17] [cursor=pointer]:
+            - /url: /auth/login
+            - button "ログイン / 登録" [ref=e18]:
+              - generic [ref=e20]: ログイン / 登録
+    - main [ref=e21]:
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - paragraph [ref=e27]: For your first career move
+          - heading "スキルとキャリアを 一枚のマップに。" [level=2] [ref=e28]:
+            - text: スキルとキャリアを
+            - generic [ref=e29]: 一枚のマップ
+            - text: に。
+          - paragraph [ref=e30]:
+            - text: 職務経歴やスキルセットを日本語で入力するだけで、 AI がスキルマップ・学習ロードマップ・求人マッチング・面接練習までまとめて用意します。
+            - text: 「何から始めればいいか」を、一緒にゆっくり整理していきましょう。
+        - generic [ref=e31]:
+          - paragraph [ref=e32]: まずはこの 3 ステップだけで OK です。
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - generic [ref=e35]: "1"
+              - generic [ref=e36]:
+                - paragraph [ref=e37]:
+                  - generic [ref=e38]: 🎯
+                  - text: ゴールを選ぶ
+                - paragraph [ref=e39]: 「フロントエンド特化」「フルスタック」など、いま近づきたいキャリアのイメージを一つだけ選びます。
+            - generic [ref=e40]:
+              - generic [ref=e41]: "2"
+              - generic [ref=e42]:
+                - paragraph [ref=e43]:
+                  - generic [ref=e44]: ✍️
+                  - text: スキル・職務経歴を入力
+                - paragraph [ref=e45]: いままでやってきたことを日本語でそのまま書きます。サンプル文をベースに少し書き換えるだけでも大丈夫です。
+            - generic [ref=e46]:
+              - generic [ref=e47]: "3"
+              - generic [ref=e48]:
+                - paragraph [ref=e49]:
+                  - generic [ref=e50]: 📊
+                  - text: 結果で全体像をつかむ
+                - paragraph [ref=e51]: スキルマップと転職準備スコアを見て、どこを伸ばせば良いか・どんな求人が合いそうかを一緒に確認します。
+        - generic [ref=e53]:
+          - paragraph [ref=e54]:
+            - generic [ref=e55]: 👋
+            - text: はじめての方へ（このアプリの使い方）
+          - list [ref=e56]:
+            - listitem [ref=e57]: このアプリは、あなたの職務経歴とスキルから「スキルマップ」「学習ロードマップ」「求人マッチ」「面接練習プラン」をまとめて提案します。
+            - listitem [ref=e58]: 最初の 1 回は、右側のフォームで「サンプル文を入れてみる」を押してからそのまま送信し、結果画面で全体の流れをつかむのがおすすめです。
+            - listitem [ref=e59]:
+              - text: 2 回目以降は、実際の職務経歴を書き込んで診断し、結果は
+              - link "ダッシュボード" [ref=e60] [cursor=pointer]:
+                - /url: /dashboard
+              - text: からいつでも振り返れます。アプリの背景や技術スタックは
+              - link "このアプリについて" [ref=e61] [cursor=pointer]:
+                - /url: /about
+              - text: で確認できます。
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - paragraph [ref=e64]: このツールでできること
+            - list [ref=e65]:
+              - listitem [ref=e66]:
+                - generic [ref=e67]: 🗺️
+                - generic [ref=e68]: スキルマップと「あなたのクラス（ジョブ）」を自動生成
+              - listitem [ref=e69]:
+                - generic [ref=e70]: 📅
+                - generic [ref=e71]: 30日 / 90日ロードマップと今日やることの提案
+              - listitem [ref=e72]:
+                - generic [ref=e73]: 💼
+                - generic [ref=e74]: 気になる求人とのマッチングスコアと不足スキルの可視化
+              - listitem [ref=e75]:
+                - generic [ref=e76]: 🎤
+                - generic [ref=e77]: 評価面談を想定した 1on1 練習とフィードバック
+              - listitem [ref=e78]:
+                - generic [ref=e79]: 📄
+                - generic [ref=e80]: 転職用ポートフォリオの棚卸しと Markdown 出力
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - generic [ref=e83]: スキル入力フォーム
+              - generic [ref=e84]: AI Ready
+            - generic [ref=e87]:
+              - generic [ref=e88]:
+                - generic [ref=e89]: 🔐
+                - generic [ref=e90]:
+                  - paragraph [ref=e91]: ログインが必要です
+                  - paragraph [ref=e92]: スキルマップを生成・保存するにはログインしてください
+              - button "ログイン / 新規登録画面を開く" [ref=e93] [cursor=pointer]:
+                - generic [ref=e94]: ログイン / 新規登録画面を開く
+    - contentinfo [ref=e95]:
+      - generic [ref=e97]:
+        - generic [ref=e98]:
+          - generic [ref=e101]: AI Skill Map Generator
+          - link "GitHubリポジトリを開く（新しいタブ）" [ref=e102] [cursor=pointer]:
+            - /url: https://github.com/AyumuKobayashiproducts/ai-skill-map-generator
+            - img [ref=e103]
+            - text: GitHub
+        - paragraph [ref=e105]: © 2025 All rights reserved.
+  - alert [ref=e106]
+```

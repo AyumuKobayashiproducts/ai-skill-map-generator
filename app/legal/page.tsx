@@ -117,7 +117,7 @@ export default function LegalPage() {
                 アカウント削除
               </Link>
               <a
-                href="https://github.com/hashimotonobuaki123-cmyk/ai-skill-map-generator/issues"
+                href="https://github.com/AyumuKobayashiproducts/ai-skill-map-generator/issues"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-900 text-sm text-white hover:bg-slate-800 transition-colors"

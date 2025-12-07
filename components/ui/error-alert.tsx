@@ -42,7 +42,7 @@ export function ErrorAlert({
   return (
     <div
       className={cn(
-        "flex items-start gap-3 rounded-xl border p-4 animate-fade-in-up",
+        "flex items-start gap-4 rounded-2xl border-2 p-5 shadow-lg animate-fade-in-up",
         styles.container,
         className
       )}
@@ -51,20 +51,32 @@ export function ErrorAlert({
       {...props}
     >
       <div className={cn(
-        "flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm",
+        "flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-sm",
         styles.icon
       )}>
         {styles.emoji}
       </div>
       <div className="flex-1 min-w-0">
-        <p className={cn("text-sm font-medium", styles.text)}>
+        <p className={cn("text-base font-bold mb-1", styles.text)}>
           {variant === "error" && "エラーが発生しました"}
-          {variant === "warning" && "注意"}
+          {variant === "warning" && "ご注意ください"}
           {variant === "info" && "お知らせ"}
         </p>
-        <p className={cn("mt-1 text-xs leading-relaxed", styles.text, "opacity-90")}>
+        <p className={cn("text-sm leading-relaxed", styles.text, "opacity-90")}>
           {message}
         </p>
+        {variant === "error" && (
+          <div className="mt-3 pt-3 border-t border-current/10">
+            <p className="text-xs opacity-75">
+              💡 問題が解決しない場合は、以下をお試しください：
+            </p>
+            <ul className="mt-1 text-xs opacity-75 space-y-0.5 list-disc list-inside">
+              <li>ページを再読み込みする</li>
+              <li>しばらく時間をおいてから再度お試しください</li>
+              <li>問題が続く場合は、GitHubのIssuesでご報告ください</li>
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

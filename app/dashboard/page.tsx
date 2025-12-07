@@ -97,13 +97,26 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="animate-fade-in-up">
-        <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-          <span>📊</span>
-          スキルマップ履歴
-        </h2>
-        <p className="text-sm text-slate-600 mt-1">
-          直近の解析結果から、あなたのスキルバランスの変化をざっくり振り返ることができます。
-        </p>
+        <div className="flex items-center justify-between flex-wrap gap-4 mb-4">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center text-white text-xl shadow-md">
+                📊
+              </div>
+              スキルマップ履歴
+            </h2>
+            <p className="text-sm text-slate-600 mt-2">
+              直近の解析結果から、あなたのスキルバランスの変化をざっくり振り返ることができます。
+            </p>
+          </div>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500 text-white text-sm font-bold shadow-lg shadow-sky-500/25 hover:shadow-xl hover:-translate-y-0.5 transition-all"
+          >
+            <span className="text-lg">✨</span>
+            新しく診断する
+          </Link>
+        </div>
         {user && (
           <p className="text-xs text-slate-500 mt-2 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
@@ -117,12 +130,20 @@ export default function DashboardPage() {
           </p>
         )}
         {tagline.text && (
-          <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-sky-50 via-white to-indigo-50 border border-sky-100">
-            <p className="text-sm font-medium text-slate-700 flex items-center gap-2">
-              <span className="text-lg">{tagline.emoji}</span>
-              今のあなたを一言で表すと:
-              <span className="gradient-text font-semibold">{tagline.text}</span>
-            </p>
+          <div className="mt-4 p-5 rounded-2xl bg-gradient-to-br from-sky-50 via-indigo-50 to-purple-50 border-2 border-sky-200 shadow-sm">
+            <div className="flex items-start gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center text-white text-2xl shadow-md flex-shrink-0">
+                {tagline.emoji}
+              </div>
+              <div className="flex-1 pt-1">
+                <p className="text-xs font-semibold text-sky-700 uppercase tracking-wider mb-1">
+                  あなたのキャリアタイプ
+                </p>
+                <p className="text-base font-bold text-slate-900 leading-relaxed">
+                  {tagline.text}
+                </p>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -136,17 +157,59 @@ export default function DashboardPage() {
           ))}
         </div>
       ) : items.length === 0 ? (
-        <div className="text-center py-12 animate-fade-in">
-          <div className="text-4xl mb-3">📝</div>
-          <p className="text-sm text-slate-600">
+        <div className="text-center py-16 animate-fade-in">
+          <div className="relative inline-block mb-6">
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-sky-100 via-indigo-100 to-purple-100 flex items-center justify-center">
+              <div className="text-6xl">📝</div>
+            </div>
+            <div className="absolute -bottom-2 -right-2 w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 flex items-center justify-center text-white text-2xl shadow-lg animate-bounce">
+              ✨
+            </div>
+          </div>
+          <h3 className="text-2xl font-bold text-slate-900 mb-3">
+            さあ、最初の診断を始めましょう
+          </h3>
+          <p className="text-base text-slate-600 mb-2 max-w-md mx-auto leading-relaxed">
             まだスキルマップが生成されていません。
+            <br />
+            たった60秒で、あなただけのキャリアマップが完成します。
           </p>
-          <Link
-            href="/"
-            className="inline-block mt-4 px-4 py-2 rounded-lg bg-gradient-to-r from-sky-500 to-indigo-500 text-white text-sm font-medium shadow-lg shadow-sky-500/25 hover:shadow-xl hover:-translate-y-0.5 transition-all"
-          >
-            ホーム画面から新規作成
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8 max-w-md mx-auto">
+            <Link
+              href="/"
+              className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-500 text-white text-base font-bold shadow-xl shadow-sky-500/30 hover:shadow-2xl hover:-translate-y-1 transition-all"
+            >
+              <span className="text-xl group-hover:scale-110 transition-transform">🚀</span>
+              診断を始める
+            </Link>
+            <Link
+              href="/about"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border-2 border-slate-300 bg-white text-slate-700 text-base font-semibold hover:bg-slate-50 hover:border-slate-400 transition-all"
+            >
+              <span className="text-xl">ℹ️</span>
+              使い方を見る
+            </Link>
+          </div>
+          <div className="mt-10 grid grid-cols-3 gap-4 max-w-lg mx-auto text-xs text-slate-600">
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-lg">
+                ⚡
+              </div>
+              <span>60秒で完了</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-lg">
+                🔒
+              </div>
+              <span>データは安全</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-lg">
+                💯
+              </div>
+              <span>完全無料</span>
+            </div>
+          </div>
         </div>
       ) : (
         <ul className="space-y-3">
@@ -175,7 +238,7 @@ export default function DashboardPage() {
               >
                 <Link
                   href={`/result/${item.id}`}
-                  className="group block rounded-xl border border-slate-200 bg-white p-4 shadow-sm card-hover"
+                  className="group block rounded-2xl border-2 border-slate-200 bg-white p-5 shadow-sm card-hover hover:border-sky-300 hover:shadow-xl hover:shadow-sky-100 transition-all duration-300"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">

@@ -9,50 +9,52 @@ import Link from "next/link";
 // メタデータ（OGP対応）
 export const metadata: Metadata = {
   title: {
-    default: "AI Skill Map Generator",
+    default: "AI Skill Map Generator - 職務経歴から転職準備を60秒で完成",
     template: "%s | AI Skill Map Generator"
   },
   description:
-    "AI がスキルを分析し、学習ロードマップを自動生成。転職準備スコア、求人マッチング、1on1練習まで、キャリアアップを総合的にサポートします。",
+    "職務経歴を入力するだけで、スキルマップ・学習ロードマップ・求人マッチング・面接練習を60秒で一括生成。AI × キャリア診断で、転職準備をもっと楽しく、もっと確実に。",
   keywords: [
     "スキルマップ",
-    "キャリア",
     "転職",
+    "キャリア診断",
     "AI",
-    "エンジニア",
-    "ロードマップ",
+    "職務経歴",
+    "学習ロードマップ",
     "求人マッチング",
-    "ポートフォリオ"
+    "面接練習",
+    "エンジニア転職",
+    "キャリアプラン",
+    "転職準備",
+    "スキル分析"
   ],
-  authors: [{ name: "AI Skill Map Generator" }],
-  creator: "AI Skill Map Generator",
+  authors: [{ name: "Nobuaki Hashimoto" }],
+  creator: "Nobuaki Hashimoto",
   publisher: "AI Skill Map Generator",
   robots: {
     index: true,
-    follow: true
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   openGraph: {
     type: "website",
     locale: "ja_JP",
     url: "https://ai-skill-map-generator.vercel.app",
     siteName: "AI Skill Map Generator",
-    title: "AI Skill Map Generator - スキルとキャリアを一枚のマップに",
+    title: "AI Skill Map Generator - 職務経歴から転職準備を60秒で完成",
     description:
-      "AI がスキルを分析し、学習ロードマップを自動生成。転職準備スコア、求人マッチング、1on1練習まで、キャリアアップを総合的にサポート。",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "AI Skill Map Generator"
-      }
-    ]
+      "職務経歴を入力するだけで、スキルマップ・学習ロードマップ・求人マッチング・面接練習を60秒で一括生成。AI × キャリア診断で、転職準備をもっと楽しく。",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Skill Map Generator",
-    description: "AI がスキルを分析し、学習ロードマップを自動生成",
-    images: ["/og-image.png"]
+    title: "AI Skill Map Generator - 職務経歴から転職準備を60秒で完成",
+    description: "職務経歴を入力するだけで、スキルマップ・学習ロードマップ・求人マッチング・面接練習を60秒で一括生成。",
   },
   icons: {
     icon: [
@@ -191,7 +193,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                         </span>
                       </div>
                       <a
-                        href="https://github.com/hashimotonobuaki123-cmyk/ai-skill-map-generator"
+                        href="https://github.com/AyumuKobayashiproducts/ai-skill-map-generator"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-400 rounded"

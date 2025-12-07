@@ -1,46 +1,38 @@
 import { MetadataRoute } from "next";
 
-/**
- * 動的なサイトマップ生成
- * SEO向上のため、主要なページをリスト
- */
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://ai-skill-map-generator.vercel.app";
-  const lastModified = new Date();
 
   return [
     {
       url: baseUrl,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 1.0
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 1,
     },
     {
       url: `${baseUrl}/dashboard`,
-      lastModified,
+      lastModified: new Date(),
       changeFrequency: "daily",
-      priority: 0.8
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/about`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.5
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
     },
     {
       url: `${baseUrl}/portfolio`,
-      lastModified,
+      lastModified: new Date(),
       changeFrequency: "weekly",
-      priority: 0.7
+      priority: 0.6,
     },
     {
       url: `${baseUrl}/legal`,
-      lastModified,
+      lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.3
-    }
+      priority: 0.5,
+    },
   ];
 }
-
-
-
