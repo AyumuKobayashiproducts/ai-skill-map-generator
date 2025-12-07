@@ -12,11 +12,23 @@ export default function AuthCallbackPage() {
     const handleAuth = async () => {
       try {
         const supabase = getSupabaseBrowserClient();
+        // すでに Supabase 側でセッションが作られているか確認
+        const { data } = await supabase.auth.getUser();
+
+        if (data.user) {
+          setMessage("ログインに成功しました。画面を戻ります...");
+          setTimeout(() => {
+            router.push("/");
+          }, 1500);
+          return;
+        }
+
+        // 古いフローで code パラメータ付きで遷移してきた場合のフォールバック
         const url = new URL(window.location.href);
         const code = url.searchParams.get("code");
 
         if (!code) {
-          setMessage("コードが見つかりませんでした。ログインに失敗しました。");
+          setMessage("ログインに失敗しました。もう一度お試しください。");
           return;
         }
 
