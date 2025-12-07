@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend
 } from "chart.js";
+import { useTranslations } from "next-intl";
 import type { SkillCategories } from "@/types/skill";
 
 ChartJS.register(
@@ -35,6 +36,7 @@ const labelMap: Record<string, { label: string; emoji: string }> = {
 };
 
 export function ComparisonChart({ current, previous }: ComparisonChartProps) {
+  const t = useTranslations("result.overview");
   const keys = ["frontend", "backend", "infra", "ai", "tools"];
   const labels = keys.map((k) => `${labelMap[k]?.emoji} ${labelMap[k]?.label}`);
 
@@ -57,7 +59,7 @@ export function ComparisonChart({ current, previous }: ComparisonChartProps) {
     labels,
     datasets: [
       {
-        label: "今回",
+        label: t("currentLabel"),
         data: currentValues,
         backgroundColor: "rgba(59, 130, 246, 0.2)",
         borderColor: "#3b82f6",
@@ -69,7 +71,7 @@ export function ComparisonChart({ current, previous }: ComparisonChartProps) {
         pointHoverRadius: 6
       },
       {
-        label: "前回",
+        label: t("previousLabel"),
         data: previousValues,
         backgroundColor: "rgba(16, 185, 129, 0.1)",
         borderColor: "#10b981",
@@ -137,11 +139,15 @@ export function ComparisonChart({ current, previous }: ComparisonChartProps) {
       <div className="flex justify-center gap-4">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-blue-500" />
-          <span className="text-xs text-slate-600">今回</span>
+          <span className="text-xs text-slate-600">
+            {t("currentLabel")}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-emerald-500 opacity-60" />
-          <span className="text-xs text-slate-600">前回</span>
+          <span className="text-xs text-slate-600">
+            {t("previousLabel")}
+          </span>
         </div>
       </div>
 

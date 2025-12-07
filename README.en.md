@@ -14,6 +14,7 @@ Enter your skills and work experience (in Japanese) and get **skill radar charts
 - 🌐 **Live demo**: <https://ai-skill-map-generator.vercel.app>
 - 📱 **PWA**: installable on Android / iOS home screen (Add to Home Screen)
 - 🔐 **Auth**: email & password + Google Sign-In (Supabase Auth)
+- 🌏 **i18n**: fully bilingual UI (Japanese / English) with locale-aware routing and metadata
 - 📖 **Japanese README**: [README.md](./README.md)
 
 ---
@@ -47,9 +48,47 @@ Backend:    Next.js API Routes + OpenAI API
 Database:   Supabase (PostgreSQL)
 Validation: Zod
 Testing:    Vitest (unit) + Playwright (E2E)
+I18n:       next-intl (App Router, locale-based routing)
 Styling:    Tailwind CSS
 CI/CD:      GitHub Actions
 ```
+
+---
+
+### Production-readiness (What this project demonstrates)
+
+This project is intentionally built to look and feel like a **small real-world product**, not just a toy demo:
+
+- **Authentication & Data Safety**
+  - Supabase Auth with email/password + Google Sign-In
+  - User-specific skill maps and interview sessions stored in Supabase with RLS (Row Level Security)
+  - Clear separation between public demo behavior and logged-in user data
+
+- **Testing & CI Pipeline**
+  - Vitest unit tests for core logic (readiness scoring, answer evaluation, etc.)
+  - Playwright E2E tests for the main flow (Home → Diagnose → Result)
+  - GitHub Actions CI running both unit + E2E tests on pull requests
+  - Test coverage and Playwright artifacts (screenshots / traces) uploaded as CI artifacts
+
+- **Usage Logging & Simple Metrics**
+  - Usage logs stored in the database for key events (diagnosis, interview practice, etc.)
+  - `/admin/usage` dashboard to inspect:
+    - Recent events list
+    - Event names by feature (diagnosis, job match, 1on1 practice, etc.)
+  - Designed as a starting point for data-driven product improvement
+
+- **PWA & Mobile Experience**
+  - Installable as a PWA on Android / iOS (Add to Home Screen)
+  - Basic offline-friendly behavior via `manifest.json` and a simple `sw.js`
+  - Mobile-first layout and touch-friendly controls
+
+If you are evaluating this repository as a hiring manager, please see also:
+
+- `docs/testing.md` — testing strategy and CI integration  
+- `docs/accessibility.md` — accessibility considerations  
+- `docs/performance.md` — performance tuning notes  
+- `docs/case-studies.md` — example user stories and before/after narratives
+ - `docs/findy-summary.en.md` — 1-page English summary of this project for hiring managers
 
 ---
 

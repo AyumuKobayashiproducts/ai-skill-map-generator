@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowserClient";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
+import { useTranslations } from "next-intl";
 
 export default function ResetPasswordPage() {
+  const t = useTranslations("authReset");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,17 +21,17 @@ export default function ResetPasswordPage() {
     setError(null);
 
     if (!password.trim() || !confirm.trim()) {
-      setError("新しいパスワードを2回入力してください。");
+      setError(t("errors.missing"));
       return;
     }
 
     if (password !== confirm) {
-      setError("パスワードが一致していません。もう一度確認してください。");
+      setError(t("errors.notMatch"));
       return;
     }
 
     if (password.length < 8) {
-      setError("パスワードは8文字以上を推奨します。");
+      setError(t("errors.tooShort"));
       return;
     }
 
@@ -49,7 +51,7 @@ export default function ResetPasswordPage() {
     } catch (e) {
       console.error(e);
       setError(
-        "パスワードの更新に失敗しました。リンクの有効期限が切れている可能性があります。もう一度メールからアクセスしてください。"
+        t("errors.updateFailed")
       );
     } finally {
       setLoading(false);
@@ -59,46 +61,47 @@ export default function ResetPasswordPage() {
   return (
     <div className="max-w-sm mx-auto space-y-4">
       <div>
-        <h2 className="text-xl font-semibold">パスワードの再設定</h2>
+        <h2 className="text-xl font-semibold">{t("hero.title")}</h2>
         <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-          受信したメールのリンクからこのページにアクセスしている場合、
-          新しいパスワードを設定できます。
+          {t("hero.body")}
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-3 text-sm">
         <div className="space-y-1">
-          <label className="block text-xs font-medium">新しいパスワード</label>
+          <label className="block text-xs font-medium">
+            {t("form.passwordLabel")}
+          </label>
           <input
             type="password"
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="8文字以上を推奨"
+            placeholder={t("form.passwordPlaceholder")}
           />
         </div>
         <div className="space-y-1">
           <label className="block text-xs font-medium">
-            新しいパスワード（確認）
+            {t("form.confirmLabel")}
           </label>
           <input
             type="password"
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
-            placeholder="もう一度入力してください"
+            placeholder={t("form.confirmPlaceholder")}
           />
         </div>
 
         {error && <ErrorAlert message={error} />}
         {done && !error && (
           <p className="text-[11px] text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-md px-2 py-1">
-            パスワードを更新しました。ログイン画面に戻ります。
+            {t("status.updated")}
           </p>
         )}
 
         <Button type="submit" disabled={loading} className="w-full mt-1">
-          {loading ? "更新中..." : "パスワードを更新する"}
+          {loading ? t("button.updating") : t("button.update")}
         </Button>
       </form>
     </div>

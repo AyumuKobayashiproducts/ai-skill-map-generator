@@ -3,6 +3,7 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { reportError } from "@/lib/errorReporter";
+import { useTranslations } from "next-intl";
 
 interface Props {
   children: ReactNode;
@@ -12,6 +13,45 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
+}
+
+interface FallbackProps {
+  error: Error | null;
+  onReset: () => void;
+  onReload: () => void;
+}
+
+function LocalizedErrorFallback({ error, onReset, onReload }: FallbackProps) {
+  const t = useTranslations("errorBoundary");
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[400px] p-8 text-center">
+      <div className="w-16 h-16 rounded-2xl bg-red-100 flex items-center justify-center text-3xl mb-4">
+        😵
+      </div>
+      <h2 className="text-xl font-bold text-slate-900 mb-2">
+        {t("title")}
+      </h2>
+      <p className="text-sm text-slate-600 mb-6 max-w-md">
+        {t("body")}
+      </p>
+      {process.env.NODE_ENV === "development" && error && (
+        <pre className="text-xs text-red-600 bg-red-50 p-4 rounded-lg mb-4 max-w-lg overflow-auto text-left">
+          {error.message}
+          {"\n"}
+          {error.stack}
+        </pre>
+      )}
+      <div className="flex gap-3">
+        <Button variant="outline" onClick={onReset}>
+          {t("buttons.retry")}
+        </Button>
+        <Button onClick={onReload}>
+          {t("buttons.reload")}
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -51,33 +91,11 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="flex flex-col items-center justify-center min-h-[400px] p-8 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-red-100 flex items-center justify-center text-3xl mb-4">
-            😵
-          </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">
-            予期せぬエラーが発生しました
-          </h2>
-          <p className="text-sm text-slate-600 mb-6 max-w-md">
-            申し訳ございません。問題が発生しました。
-            ページを再読み込みするか、しばらくしてからもう一度お試しください。
-          </p>
-          {process.env.NODE_ENV === "development" && this.state.error && (
-            <pre className="text-xs text-red-600 bg-red-50 p-4 rounded-lg mb-4 max-w-lg overflow-auto text-left">
-              {this.state.error.message}
-              {"\n"}
-              {this.state.error.stack}
-            </pre>
-          )}
-          <div className="flex gap-3">
-            <Button variant="outline" onClick={this.handleReset}>
-              再試行
-            </Button>
-            <Button onClick={this.handleReload}>
-              ページを再読み込み
-            </Button>
-          </div>
-        </div>
+        <LocalizedErrorFallback
+          error={this.state.error}
+          onReset={this.handleReset}
+          onReload={this.handleReload}
+        />
       );
     }
 

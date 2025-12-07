@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
-import { createOpenAIClient } from "@/lib/openaiClient";
+import { safeChatCompletion } from "@/lib/openaiRetry";
+import { logUsageServer } from "@/lib/usageServerLogger";
 import type { OneOnOneFeedback } from "@/types/skill";
 import { OneOnOneFeedbackRequestSchema } from "@/types/api";
 import { evaluateAnswer, scoreToLabel } from "@/lib/answerEvaluator";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 type InterviewType = "general" | "technical" | "behavioral";
 
@@ -50,8 +53,8 @@ export async function POST(request: Request) {
       (interviewType as InterviewType) ?? "general"
     );
 
-    const openai = createOpenAIClient();
-    const typeConfig = feedbackPrompts[interviewType as InterviewType] ?? feedbackPrompts.general;
+    const typeConfig =
+      feedbackPrompts[interviewType as InterviewType] ?? feedbackPrompts.general;
 
     // ルールベース評価の結果をプロンプトに含める
     const ruleBasedContext = [
@@ -106,16 +109,19 @@ export async function POST(request: Request) {
       .filter(Boolean)
       .join("\n");
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content: typeConfig.systemPrompt
-        },
-        { role: "user", content: prompt }
-      ]
+    const completion = await safeChatCompletion({
+      feature: "oneonone_feedback",
+      params: {
+        model: "gpt-4.1-mini",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content: typeConfig.systemPrompt
+          },
+          { role: "user", content: prompt }
+        ]
+      }
     });
 
     const raw = completion.choices[0]?.message?.content ?? "{}";
@@ -130,11 +136,23 @@ export async function POST(request: Request) {
       ruleBasedScores: ruleBasedEval.scores
     };
 
+    void logUsageServer("oneonone_feedback_success", {
+      interviewType
+    });
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("Interview feedback API error", error);
+    void logUsageServer("oneonone_feedback_error", {
+      message: error instanceof Error ? error.message : String(error)
+    });
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError(
+      "ONEONONE_SUMMARY_OPENAI_ERROR",
+      locale
+    );
     return NextResponse.json(
-      { error: "面接フィードバックの生成中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }

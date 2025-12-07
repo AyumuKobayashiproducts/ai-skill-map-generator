@@ -99,6 +99,16 @@ sequenceDiagram
     A-->>C: 総評を表示
 ```
 
+### ユーザーストーリー別の整理
+
+- **スキル診断フロー**  
+  - 入力 → `/api/generate` → OpenAI で JSON 生成 → Supabase に保存 → 結果画面へ遷移、という一連の流れを 1 本のシーケンスとして設計しています。
+  - 診断結果は `skill_maps` テーブルに保持し、ダッシュボードやエクスポート機能（Markdown）から再利用できるようにしています。
+
+- **1on1 練習フロー**  
+  - 質問生成（questions）→ 回答＋ルールベース評価 → AI フィードバック（feedback）→ セッション総評＋履歴保存（summary / sessions）までを API 単位に分割。
+  - サマリーや履歴は `interview_sessions` に保存され、ダッシュボードの 1on1 カードや結果画面タブから「成長の見える化」に使えるようにしています。
+
 ## データベース設計
 
 ```mermaid
@@ -250,6 +260,17 @@ graph TB
     style Vercel fill:#000,color:#fff
     style Supabase fill:#3fcf8e,color:#fff
 ```
+
+## 技術選定の理由（Next.js / Supabase / OpenAI / next-intl）
+
+- **Next.js (App Router) + TypeScript**  
+  - API Routes・サーバコンポーネント・クライアントコンポーネントをひとつのプロジェクトにまとめつつ、型安全にフルスタック開発できるため。
+- **Supabase (PostgreSQL + Auth)**  
+  - 小規模 SaaS を想定したときに、認証・RLS・ホスト済み Postgres がセットで手に入り、**本番を意識したデータモデリングと権限設計**をポートフォリオでも示しやすいため。
+- **OpenAI API**  
+  - スキル診断・1on1 フィードバック・リスク分析など、プロンプト次第で複数のユースケースを一貫したインターフェースで扱えるため（`safeChatCompletion` で再利用）。
+- **next-intl**  
+  - App Router 向けの i18n として、**`/[locale]/...` ルーティング + サーバ / クライアント両方での翻訳取得**を素直に構成でき、日英両方の UI をポートフォリオとして見せやすくするため。
 
 
 

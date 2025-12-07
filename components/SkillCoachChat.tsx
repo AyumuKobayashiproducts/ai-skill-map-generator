@@ -3,7 +3,8 @@
 import { useState } from "react";
 import type { SkillMapResult } from "@/types/skill";
 import { Button } from "@/components/ui/button";
-import { postJson } from "@/lib/apiClient";
+import { postJson, isApiClientError } from "@/lib/apiClient";
+import { useTranslations } from "next-intl";
 
 interface SkillCoachChatProps {
   result: SkillMapResult;
@@ -15,6 +16,7 @@ interface ChatMessage {
 }
 
 export function SkillCoachChat({ result }: SkillCoachChatProps) {
+  const t = useTranslations("skillCoach");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,13 +56,13 @@ export function SkillCoachChat({ result }: SkillCoachChatProps) {
         ...prev,
         { role: "assistant" as const, content: data.reply }
       ]);
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e);
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant" as const,
-          content: "エラーが発生しました。しばらくしてからもう一度試してください。"
+          content: isApiClientError(e) ? e.message || t("errors.fallback") : t("errors.fallback")
         }
       ]);
     } finally {
@@ -70,16 +72,15 @@ export function SkillCoachChat({ result }: SkillCoachChatProps) {
 
   return (
     <div className="mt-6 space-y-3">
-      <h3 className="text-lg font-semibold">AI キャリアコーチに質問する</h3>
+      <h3 className="text-lg font-semibold">{t("hero.title")}</h3>
       <p className="text-xs text-muted-foreground leading-relaxed">
-        「この 30 日プランを平日 1 時間でこなせるように調整して」など、
-        学習計画やキャリアの悩みを気軽に質問できます。
+        {t("hero.body")}
       </p>
       <div className="border rounded-lg p-3 space-y-3 bg-muted/30">
         <div className="h-40 overflow-y-auto space-y-2 text-xs">
           {messages.length === 0 ? (
             <p className="text-muted-foreground">
-              まだメッセージはありません。気になることを質問してみましょう。
+              {t("chat.empty")}
             </p>
           ) : (
             messages.map((m, i) => (
@@ -102,7 +103,7 @@ export function SkillCoachChat({ result }: SkillCoachChatProps) {
           <input
             type="text"
             className="flex-1 rounded-md border border-input bg-background px-2 py-1 text-xs shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            placeholder="例）バックエンドを伸ばすために、来週から何を始めると良いですか？"
+            placeholder={t("chat.inputPlaceholder")}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
@@ -113,7 +114,7 @@ export function SkillCoachChat({ result }: SkillCoachChatProps) {
             }}
           />
           <Button type="button" size="sm" onClick={handleSend} disabled={loading}>
-            送信
+            {t("chat.send")}
           </Button>
         </div>
       </div>

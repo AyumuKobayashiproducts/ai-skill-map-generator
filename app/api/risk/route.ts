@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
-import { createOpenAIClient } from "@/lib/openaiClient";
+import { safeChatCompletion } from "@/lib/openaiRetry";
+import { logUsageServer } from "@/lib/usageServerLogger";
 import type { CareerRiskResult } from "@/types/skill";
 import { RiskRequestSchema } from "@/types/api";
 import { loadSkillMapById } from "@/lib/skillMapLoader";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 export async function POST(request: Request) {
   try {
@@ -11,8 +14,10 @@ export async function POST(request: Request) {
     const loaded = await loadSkillMapById(skillMapId);
 
     if (!loaded) {
+      const locale = getRequestLocale(request);
+      const { code, message } = getApiError("RISK_NOT_FOUND", locale);
       return NextResponse.json(
-        { error: "指定されたスキルマップが見つかりませんでした。" },
+        { error: message, code },
         { status: 404 }
       );
     }
@@ -20,8 +25,6 @@ export async function POST(request: Request) {
     const categories = loaded.categories;
     const strengths: string = loaded.strengths;
     const weaknesses: string = loaded.weaknesses;
-
-    const openai = createOpenAIClient();
 
     const prompt = [
       "あなたはソフトウェアエンジニアのキャリアリスクを分析するアナリストです。",
@@ -54,17 +57,20 @@ export async function POST(request: Request) {
       "- 余計な説明文は出さず、有効な JSON のみを返してください。"
     ].join("\n");
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content:
-            "あなたは、エンジニアの市場価値とキャリアリスクを定量化するアナリストです。"
-        },
-        { role: "user", content: prompt }
-      ]
+    const completion = await safeChatCompletion({
+      feature: "risk",
+      params: {
+        model: "gpt-4.1-mini",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "あなたは、エンジニアの市場価値とキャリアリスクを定量化するアナリストです。"
+          },
+          { role: "user", content: prompt }
+        ]
+      }
     });
 
     const raw = completion.choices[0]?.message?.content ?? "{}";
@@ -81,11 +87,18 @@ export async function POST(request: Request) {
       actions: parsed.actions ?? ""
     };
 
+    void logUsageServer("risk_success", { skillMapId });
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("Risk API error", error);
+    void logUsageServer("risk_error", {
+      message: error instanceof Error ? error.message : String(error)
+    });
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError("RISK_OPENAI_ERROR", locale);
     return NextResponse.json(
-      { error: "キャリアリスク分析中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }

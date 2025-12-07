@@ -5,14 +5,15 @@ import type { JobMatchResult, SkillMapResult } from "@/types/skill";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
-import { postJson } from "@/lib/apiClient";
+import { postJson, isApiClientError } from "@/lib/apiClient";
 import { logUsage } from "@/lib/usageLogger";
+import { useTranslations } from "next-intl";
 
 interface JobMatchSectionProps {
   result: SkillMapResult;
 }
 
-function ScoreGauge({ score }: { score: number }) {
+function ScoreGauge({ score, label }: { score: number; label: string }) {
   const circumference = 2 * Math.PI * 40;
   const strokeDashoffset = circumference - (score / 100) * circumference;
   
@@ -56,13 +57,14 @@ function ScoreGauge({ score }: { score: number }) {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className={`text-2xl font-bold ${color.text}`}>{score}</span>
-        <span className="text-[10px] text-slate-500">/ 100</span>
+        <span className="text-[10px] text-slate-500">{label}</span>
       </div>
     </div>
   );
 }
 
 export function JobMatchSection({ result }: JobMatchSectionProps) {
+  const t = useTranslations("result.career.jobMatch");
   const [jdText, setJdText] = useState("");
   const [jobUrl, setJobUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -138,7 +140,7 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
     setError(null);
     setMatch(null);
     if (!jdText.trim() && !jobUrl.trim()) {
-      setError("求人票のテキストかURLのどちらかを入力してください。");
+      setError(t("errors.needInput"));
       return;
     }
     setLoading(true);
@@ -156,11 +158,19 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
         jobUrl: jobUrl.trim() || undefined
       });
       setMatch(data);
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e);
-      setError(
-        "求人マッチングに失敗しました。内容を確認のうえ、時間をおいて再度お試しください。"
-      );
+      if (isApiClientError(e)) {
+        if (e.code === "JOB_MATCH_NOT_FOUND") {
+          setError(t("errors.skillMapNotFound"));
+        } else if (e.code === "JOB_MATCH_OPENAI_ERROR") {
+          setError(t("errors.aiFailed"));
+        } else {
+          setError(e.message || t("errors.matchFailed"));
+        }
+      } else {
+        setError(t("errors.matchFailed"));
+      }
     } finally {
       setLoading(false);
     }
@@ -173,23 +183,23 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
           <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-md">
             💼
           </span>
-          求人票マッチングスコア
+          {t("title")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 text-sm leading-relaxed pt-4">
         <p className="text-xs text-slate-600 leading-relaxed">
-          気になる求人票のテキスト or URL を貼ると、このスキルマップとのマッチング度合いと不足スキル、専用ロードマップを表示します。
+          {t("description")}
         </p>
 
         <div className="space-y-2">
           <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-900">
             <span>📄</span>
-            求人票テキスト
+            {t("fields.jobTextLabel")}
           </label>
           <div className="relative">
             <textarea
               className="w-full min-h-[140px] rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm shadow-sm transition-all duration-200 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 focus:outline-none resize-none"
-              placeholder="求人票の本文をそのまま貼り付けてください（職務内容・必須/歓迎スキルなど）"
+              placeholder={t("fields.jobTextPlaceholder")}
               value={jdText}
               onChange={(e) => setJdText(e.target.value)}
               onKeyDown={(e) => {
@@ -200,7 +210,7 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
               }}
             />
             <div className="absolute bottom-2 right-2 text-[10px] text-slate-400">
-              ⌘+Enter で実行
+              {t("fields.shortcutHint")}
             </div>
           </div>
         </div>
@@ -208,13 +218,15 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
         <div className="space-y-2">
           <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-900">
             <span>🔗</span>
-            求人URL
-            <span className="font-normal text-slate-500">（任意）</span>
+            {t("fields.jobUrlLabel")}
+            <span className="font-normal text-slate-500">
+              {t("fields.jobUrlOptional")}
+            </span>
           </label>
           <input
             type="url"
             className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm transition-all duration-200 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 focus:outline-none"
-            placeholder="例）https://example.com/job/frontend-engineer"
+            placeholder={t("fields.jobUrlPlaceholder")}
             value={jobUrl}
             onChange={(e) => setJobUrl(e.target.value)}
           />
@@ -231,12 +243,12 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
             {loading ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                AI がマッチング中...
+                {t("buttons.running")}
               </>
             ) : (
               <>
                 <span>✨</span>
-                この求人とマッチングしてみる
+                {t("buttons.runMatch")}
               </>
             )}
           </Button>
@@ -247,7 +259,7 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
             onClick={fillJobSample}
             disabled={loading}
           >
-            💡 サンプル求人を入れてみる
+            {t("buttons.insertSample")}
           </Button>
         </div>
 
@@ -255,15 +267,18 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
           <div className="mt-6 space-y-4 border-t border-slate-100 pt-6 animate-fade-in-up">
             {/* Score display */}
             <div className="flex items-center gap-6 p-4 rounded-xl bg-gradient-to-r from-slate-50 to-purple-50/50">
-              <ScoreGauge score={match.score} />
+              <ScoreGauge
+                score={match.score}
+                label={t("score.scoreOutOf", { max: 100 })}
+              />
               <div className="flex-1">
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                  マッチングスコア
+                  {t("score.label")}
                 </p>
                 <p className="text-sm text-slate-700 mt-1">
-                  {match.score >= 70 && "この求人との相性は良好です！"}
-                  {match.score >= 40 && match.score < 70 && "いくつかのスキルを補強すると良さそうです"}
-                  {match.score < 40 && "現時点では少しギャップがありそうです"}
+                  {match.score >= 70 && t("score.high")}
+                  {match.score >= 40 && match.score < 70 && t("score.medium")}
+                  {match.score < 40 && t("score.low")}
                 </p>
               </div>
             </div>
@@ -273,7 +288,7 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
               <div className="space-y-2">
                 <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                   <span className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-[10px]">✓</span>
-                  マッチしているスキル
+                  {t("matchedSkillsTitle")}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {match.matchedSkills.map((s) => (
@@ -293,7 +308,7 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
               <div className="space-y-2">
                 <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                   <span className="w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center text-[10px]">!</span>
-                  不足している/弱いスキル
+                  {t("missingSkillsTitle")}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {match.missingSkills.map((s) => (
@@ -313,7 +328,7 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
               <div className="p-4 rounded-xl bg-slate-50 space-y-2">
                 <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                   <span>📋</span>
-                  マッチングの要約
+                  {t("summaryTitle")}
                 </p>
                 <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">
                   {match.summary}
@@ -326,7 +341,7 @@ export function JobMatchSection({ result }: JobMatchSectionProps) {
               <div className="p-4 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-100 space-y-2">
                 <p className="text-xs font-semibold text-purple-700 flex items-center gap-1.5">
                   <span>🛤️</span>
-                  この求人に寄せるためのロードマップ
+                  {t("roadmapTitle")}
                 </p>
                 <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
                   {match.roadmapForJob}

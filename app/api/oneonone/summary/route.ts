@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
-import { createOpenAIClient } from "@/lib/openaiClient";
+import { safeChatCompletion } from "@/lib/openaiRetry";
+import { logUsageServer } from "@/lib/usageServerLogger";
 import { z } from "zod";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 // セッションサマリー生成用のリクエストスキーマ
 const SessionSummaryRequestSchema = z.object({
@@ -30,13 +33,16 @@ export async function POST(request: Request) {
     const { interviewType, exchanges, strengths, weaknesses } = body;
 
     if (exchanges.length === 0) {
+      const locale = getRequestLocale(request);
+      const { code, message } = getApiError(
+        "ONEONONE_SUMMARY_NO_EXCHANGES",
+        locale
+      );
       return NextResponse.json(
-        { error: "回答履歴がありません。" },
+        { error: message, code },
         { status: 400 }
       );
     }
-
-    const openai = createOpenAIClient();
 
     const exchangesSummary = exchanges
       .map(
@@ -79,17 +85,20 @@ export async function POST(request: Request) {
       .filter(Boolean)
       .join("\n");
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content:
-            "あなたは転職面接のコーチとして、候補者の面接練習セッションを総括し、次のステップに繋がる建設的なフィードバックを提供します。"
-        },
-        { role: "user", content: prompt }
-      ]
+    const completion = await safeChatCompletion({
+      feature: "oneonone_summary",
+      params: {
+        model: "gpt-4.1-mini",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "あなたは転職面接のコーチとして、候補者の面接練習セッションを総括し、次のステップに繋がる建設的なフィードバックを提供します。"
+          },
+          { role: "user", content: prompt }
+        ]
+      }
     });
 
     const raw = completion.choices[0]?.message?.content ?? "{}";
@@ -103,15 +112,28 @@ export async function POST(request: Request) {
       summary: parsed.summary ?? ""
     };
 
+    void logUsageServer("oneonone_summary_success", {
+      questionCount: exchanges.length
+    });
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("Session summary API error", error);
+    void logUsageServer("oneonone_summary_error", {
+      message: error instanceof Error ? error.message : String(error)
+    });
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError(
+      "ONEONONE_SUMMARY_OPENAI_ERROR",
+      locale
+    );
     return NextResponse.json(
-      { error: "セッション総評の生成中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }
 }
+
 
 
 

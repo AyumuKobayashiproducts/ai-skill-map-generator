@@ -12,9 +12,6 @@ const nextConfig = {
     minimumCacheTTL: 60,
   },
 
-  // パフォーマンス最適化
-  swcMinify: true,
-  
   // experimental機能（Next.js 15向け）
   experimental: {
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
@@ -93,4 +90,5 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
+
 

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createSupabaseClient } from "@/lib/supabaseClient";
 import { UsageLogRequestSchema } from "@/types/api";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 export async function POST(request: Request) {
   try {
@@ -15,8 +17,13 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error("Usage log insert error", error);
+      const locale = getRequestLocale(request);
+      const { code, message } = getApiError(
+        "USAGE_LOG_INSERT_FAILED",
+        locale
+      );
       return NextResponse.json(
-        { error: "usage log insert failed" },
+        { error: message, code },
         { status: 500 }
       );
     }
@@ -24,7 +31,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Usage log API error", error);
-    return NextResponse.json({ error: "usage log error" }, { status: 500 });
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError("USAGE_LOG_ERROR", locale);
+    return NextResponse.json({ error: message, code }, { status: 500 });
   }
 }
 

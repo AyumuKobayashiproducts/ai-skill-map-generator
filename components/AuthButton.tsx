@@ -3,10 +3,14 @@
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowserClient";
 import { Button } from "@/components/ui/button";
 
 export function AuthButton() {
+  const t = useTranslations("auth.button");
+  const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [initializing, setInitializing] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
@@ -44,10 +48,15 @@ export function AuthButton() {
     );
   }
 
+  const segments = (pathname ?? "").split("/");
+  const firstSegment = segments[1] ?? "";
+  const locale = firstSegment === "en" ? "en" : "ja";
+  const loginHref = `/${locale}/auth/login`;
+
   const displayEmail =
     user?.email && user.email.length > 20
       ? `${user.email.slice(0, 17)}...`
-      : user?.email ?? "ユーザー";
+      : user?.email ?? t("defaultUserLabel");
 
   const initials = user?.email 
     ? user.email.slice(0, 2).toUpperCase() 
@@ -82,19 +91,21 @@ export function AuthButton() {
             />
             <div className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 z-50 overflow-hidden animate-scale-in">
               <div className="p-3 border-b border-slate-100 bg-slate-50">
-                <p className="text-xs text-slate-500">ログイン中</p>
+                <p className="text-xs text-slate-500">
+                  {t("loggedInLabel")}
+                </p>
                 <p className="text-sm font-medium text-slate-900 truncate mt-0.5">
                   {displayEmail}
                 </p>
               </div>
               <div className="p-2">
                 <Link
-                  href="/dashboard"
+                  href={`/${locale}/dashboard`}
                   onClick={() => setShowMenu(false)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 hover:bg-slate-100 transition-colors"
                 >
                   <span>📊</span>
-                  ダッシュボード
+                  {t("menuDashboard")}
                 </Link>
                 <Link
                   href="/auth/delete"
@@ -102,7 +113,7 @@ export function AuthButton() {
                   className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 hover:bg-slate-100 transition-colors"
                 >
                   <span>⚙️</span>
-                  アカウント設定
+                  {t("menuSettings")}
                 </Link>
                 <button
                   type="button"
@@ -110,7 +121,7 @@ export function AuthButton() {
                   className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-red-600 hover:bg-red-50 transition-colors"
                 >
                   <span>🚪</span>
-                  ログアウト
+                  {t("menuLogout")}
                 </button>
               </div>
             </div>
@@ -121,10 +132,14 @@ export function AuthButton() {
   }
 
   return (
-    <Link href="/auth/login">
+    <Link href={loginHref}>
       <Button type="button" size="sm">
-        <span className="hidden sm:inline">ログイン / 登録</span>
-        <span className="sm:hidden">ログイン</span>
+        <span className="hidden sm:inline">
+          {t("guestLoginPrimary")}
+        </span>
+        <span className="sm:hidden">
+          {t("guestLoginMobile")}
+        </span>
       </Button>
     </Link>
   );

@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
-import { createOpenAIClient } from "@/lib/openaiClient";
+import { safeChatCompletion } from "@/lib/openaiRetry";
+import { logUsageServer } from "@/lib/usageServerLogger";
 import type { SkillCategories } from "@/types/skill";
 import { StoryRequestSchema } from "@/types/api";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 export async function POST(request: Request) {
   try {
@@ -9,8 +12,6 @@ export async function POST(request: Request) {
     const strengths: string | undefined = body.strengths;
     const weaknesses: string | undefined = body.weaknesses;
     const categories: SkillCategories | undefined = body.categories;
-
-    const openai = createOpenAIClient();
 
     const prompt = [
       "以下の情報から、ユーザーのキャリアやスキル感を表す短いプロフィールストーリーを日本語で作成してください。",
@@ -26,24 +27,34 @@ export async function POST(request: Request) {
       .filter(Boolean)
       .join("\n");
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      messages: [
-        {
-          role: "system",
-          content: "あなたは候補者の魅力を引き出す職務経歴書コーチです。"
-        },
-        { role: "user", content: prompt }
-      ]
+    const completion = await safeChatCompletion({
+      feature: "story",
+      params: {
+        model: "gpt-4.1-mini",
+        messages: [
+          {
+            role: "system",
+            content: "あなたは候補者の魅力を引き出す職務経歴書コーチです。"
+          },
+          { role: "user", content: prompt }
+        ]
+      }
     });
 
     const story = completion.choices[0]?.message?.content ?? "";
 
+    void logUsageServer("story_success", {});
+
     return NextResponse.json({ story });
   } catch (error) {
     console.error("Story API error", error);
+    void logUsageServer("story_error", {
+      message: error instanceof Error ? error.message : String(error)
+    });
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError("STORY_OPENAI_ERROR", locale);
     return NextResponse.json(
-      { error: "ストーリー生成中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }

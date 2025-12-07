@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
-import { createOpenAIClient } from "@/lib/openaiClient";
+import { safeChatCompletion } from "@/lib/openaiRetry";
+import { logUsageServer } from "@/lib/usageServerLogger";
 import type { TodayTaskResult } from "@/types/skill";
 import { TodayTaskRequestSchema } from "@/types/api";
 import { loadSkillMapById } from "@/lib/skillMapLoader";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 export async function POST(request: Request) {
   try {
@@ -13,8 +16,10 @@ export async function POST(request: Request) {
     const loaded = await loadSkillMapById(skillMapId);
 
     if (!loaded) {
+      const locale = getRequestLocale(request);
+      const { code, message } = getApiError("TODAY_TASK_NOT_FOUND", locale);
       return NextResponse.json(
-        { error: "指定されたスキルマップが見つかりませんでした。" },
+        { error: message, code },
         { status: 404 }
       );
     }
@@ -22,8 +27,6 @@ export async function POST(request: Request) {
     const categories = loaded.categories;
     const roadmap30: string = loaded.roadmap30;
     const roadmap90: string = loaded.roadmap90;
-
-    const openai = createOpenAIClient();
 
     const prompt = [
       "あなたは Web エンジニアの学習を伴走するパーソナルコーチです。",
@@ -53,16 +56,19 @@ export async function POST(request: Request) {
       "- 余計な説明文は出さず、有効な JSON のみを返してください。"
     ].join("\n");
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content: "あなたは現実的な学習タスクを1つに絞って提案するコーチです。"
-        },
-        { role: "user", content: prompt }
-      ]
+    const completion = await safeChatCompletion({
+      feature: "today_task",
+      params: {
+        model: "gpt-4.1-mini",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content: "あなたは現実的な学習タスクを1つに絞って提案するコーチです。"
+          },
+          { role: "user", content: prompt }
+        ]
+      }
     });
 
     const raw = completion.choices[0]?.message?.content ?? "{}";
@@ -75,11 +81,18 @@ export async function POST(request: Request) {
       estimatedHours: parsed.estimatedHours ?? hours
     };
 
+    void logUsageServer("today_task_success", { skillMapId });
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("Today task API error", error);
+    void logUsageServer("today_task_error", {
+      message: error instanceof Error ? error.message : String(error)
+    });
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError("TODAY_TASK_OPENAI_ERROR", locale);
     return NextResponse.json(
-      { error: "今日のタスク生成中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }

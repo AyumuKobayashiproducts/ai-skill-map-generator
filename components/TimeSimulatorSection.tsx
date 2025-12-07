@@ -5,14 +5,16 @@ import type { SkillMapResult, TimeSimulationResult } from "@/types/skill";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
-import { postJson } from "@/lib/apiClient";
+import { postJson, isApiClientError } from "@/lib/apiClient";
 import { logUsage } from "@/lib/usageLogger";
+import { useTranslations } from "next-intl";
 
 interface TimeSimulatorSectionProps {
   result: SkillMapResult;
 }
 
 export function TimeSimulatorSection({ result }: TimeSimulatorSectionProps) {
+  const t = useTranslations("timeSim");
   const [weekdayHours, setWeekdayHours] = useState(1);
   const [weekendHours, setWeekendHours] = useState(2);
   const [months, setMonths] = useState(3);
@@ -39,11 +41,19 @@ export function TimeSimulatorSection({ result }: TimeSimulatorSectionProps) {
         months
       });
       setPlan(data);
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e);
-      setError(
-        "学習時間シミュレーションに失敗しました。入力値を確認し、時間をおいて再度お試しください。"
-      );
+      if (isApiClientError(e)) {
+        if (e.code === "TIME_SIM_NOT_FOUND") {
+          setError(t("errors.skillMapNotFound"));
+        } else if (e.code === "TIME_SIM_OPENAI_ERROR") {
+          setError(t("errors.aiFailed"));
+        } else {
+          setError(e.message || t("errors.simulateFailed"));
+        }
+      } else {
+        setError(t("errors.simulateFailed"));
+      }
     } finally {
       setLoading(false);
     }
@@ -52,18 +62,17 @@ export function TimeSimulatorSection({ result }: TimeSimulatorSectionProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>学習時間シミュレーター</CardTitle>
+        <CardTitle>{t("hero.title")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 text-sm leading-relaxed">
         <p className="text-xs text-muted-foreground leading-relaxed">
-          平日・休日に確保できる学習時間と期間を入力すると、
-          現実的プランと理想プランの 2 パターンで学習ロードマップを再構成します。
+          {t("hero.body")}
         </p>
 
         <div className="grid gap-3 md:grid-cols-3">
           <div className="space-y-1">
             <label className="block text-xs font-medium">
-              平日1日あたりの学習時間（時間）
+              {t("form.weekdayLabel")}
             </label>
             <input
               type="number"
@@ -76,7 +85,7 @@ export function TimeSimulatorSection({ result }: TimeSimulatorSectionProps) {
           </div>
           <div className="space-y-1">
             <label className="block text-xs font-medium">
-              休日1日あたりの学習時間（時間）
+              {t("form.weekendLabel")}
             </label>
             <input
               type="number"
@@ -89,7 +98,7 @@ export function TimeSimulatorSection({ result }: TimeSimulatorSectionProps) {
           </div>
           <div className="space-y-1">
             <label className="block text-xs font-medium">
-              計画期間（ヶ月）
+              {t("form.monthsLabel")}
             </label>
             <input
               type="number"
@@ -111,14 +120,14 @@ export function TimeSimulatorSection({ result }: TimeSimulatorSectionProps) {
           onClick={handleSimulate}
           disabled={loading}
         >
-          {loading ? "AI が再プランニング中..." : "この条件でプランを作り直す"}
+          {loading ? t("button.simulating") : t("button.simulate")}
         </Button>
 
         {plan && (
           <div className="space-y-3 border-t pt-3">
             <div>
               <p className="text-xs font-semibold text-muted-foreground">
-                現実的プラン
+                {t("result.realistic")}
               </p>
               <p className="text-xs whitespace-pre-wrap">
                 {plan.realisticPlan}
@@ -126,14 +135,14 @@ export function TimeSimulatorSection({ result }: TimeSimulatorSectionProps) {
             </div>
             <div>
               <p className="text-xs font-semibold text-muted-foreground">
-                理想プラン
+                {t("result.ideal")}
               </p>
               <p className="text-xs whitespace-pre-wrap">{plan.idealPlan}</p>
             </div>
             {plan.notes && (
               <div>
                 <p className="text-xs font-semibold text-muted-foreground">
-                  メモ・注意点
+                  {t("result.notes")}
                 </p>
                 <p className="text-xs whitespace-pre-wrap">{plan.notes}</p>
               </div>

@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
 import { createSupabaseClient } from "@/lib/supabaseClient";
-import { createOpenAIClient } from "@/lib/openaiClient";
+import { safeChatCompletion } from "@/lib/openaiRetry";
+import { logUsageServer } from "@/lib/usageServerLogger";
 import type { SkillCategories, SkillMapResult } from "@/types/skill";
 import { GenerateRequestSchema, GenerateResponseSchema } from "@/types/api";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 export async function POST(request: Request) {
   try {
     const body = GenerateRequestSchema.parse(await request.json());
     const { text, repoUrl, goal, userId } = body;
-
-    const openai = createOpenAIClient();
 
     // OpenAI への日本語プロンプト
     const promptLines = [
@@ -63,20 +64,24 @@ export async function POST(request: Request) {
 
     const prompt = promptLines.join("\n");
 
-    // Chat Completions API を利用して JSON を生成
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content: "あなたは経験豊富なキャリアコーチ兼エンジニアリングマネージャーです。"
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ]
+    // Chat Completions API を利用して JSON を生成（タイムアウト・リトライ付き）
+    const completion = await safeChatCompletion({
+      feature: "generate",
+      params: {
+        model: "gpt-4.1-mini",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "あなたは経験豊富なキャリアコーチ兼エンジニアリングマネージャーです。"
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ]
+      }
     });
 
     const rawOutput = completion.choices[0]?.message?.content ?? "{}";
@@ -105,8 +110,10 @@ export async function POST(request: Request) {
 
     if (error || !data) {
       console.error("Supabase insert error", error);
+      const locale = getRequestLocale(request);
+      const { code, message } = getApiError("GENERATE_SAVE_FAILED", locale);
       return NextResponse.json(
-        { error: "データの保存に失敗しました。" },
+        { error: message, code },
         { status: 500 }
       );
     }
@@ -126,11 +133,20 @@ export async function POST(request: Request) {
       }
     };
 
+    void logUsageServer("generate_skill_map_success", {
+      skillMapId: data.id
+    });
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("Generate API error", error);
+    void logUsageServer("generate_skill_map_error", {
+      message: error instanceof Error ? error.message : String(error)
+    });
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError("GENERATE_OPENAI_ERROR", locale);
     return NextResponse.json(
-      { error: "AI 解析中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }

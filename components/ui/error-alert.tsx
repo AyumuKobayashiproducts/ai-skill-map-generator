@@ -1,6 +1,7 @@
 "use client";
 
 import type { HTMLAttributes } from "react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 interface ErrorAlertProps extends HTMLAttributes<HTMLDivElement> {
@@ -29,12 +30,13 @@ const variants = {
   }
 };
 
-export function ErrorAlert({ 
-  message, 
-  variant = "error", 
-  className, 
-  ...props 
+export function ErrorAlert({
+  message,
+  variant = "error",
+  className,
+  ...props
 }: ErrorAlertProps) {
+  const t = useTranslations("ui.errorAlert");
   if (!message) return null;
 
   const styles = variants[variant];
@@ -58,9 +60,9 @@ export function ErrorAlert({
       </div>
       <div className="flex-1 min-w-0">
         <p className={cn("text-base font-bold mb-1", styles.text)}>
-          {variant === "error" && "エラーが発生しました"}
-          {variant === "warning" && "ご注意ください"}
-          {variant === "info" && "お知らせ"}
+          {variant === "error" && t("title.error")}
+          {variant === "warning" && t("title.warning")}
+          {variant === "info" && t("title.info")}
         </p>
         <p className={cn("text-sm leading-relaxed", styles.text, "opacity-90")}>
           {message}
@@ -68,12 +70,14 @@ export function ErrorAlert({
         {variant === "error" && (
           <div className="mt-3 pt-3 border-t border-current/10">
             <p className="text-xs opacity-75">
-              💡 問題が解決しない場合は、以下をお試しください：
+              {t("hintTitle")}
             </p>
             <ul className="mt-1 text-xs opacity-75 space-y-0.5 list-disc list-inside">
-              <li>ページを再読み込みする</li>
-              <li>しばらく時間をおいてから再度お試しください</li>
-              <li>問題が続く場合は、GitHubのIssuesでご報告ください</li>
+              {t("hintItems")
+                .split("|")
+                .map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
             </ul>
           </div>
         )}

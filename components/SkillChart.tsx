@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Radar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -36,8 +37,8 @@ const LABEL_MAP: Record<SkillCategoryKey, { label: string; emoji: string }> = {
   tools: { label: "Tools", emoji: "🔧" }
 };
 
-// チャートオプションは静的なので外部に定義
-const CHART_OPTIONS = {
+// チャートオプションのベース設定（文言以外）
+const BASE_CHART_OPTIONS = {
   responsive: true,
   maintainAspectRatio: true,
   animation: {
@@ -90,8 +91,8 @@ const CHART_OPTIONS = {
         title: (items: Array<{ label?: string }>) => {
           const label = items[0]?.label ?? "";
           return label.replace(/^[^\s]+\s/, ""); // Remove emoji
-        },
-        label: (item: { raw: unknown }) => `レベル: ${item.raw} / 5`
+        }
+        // label はコンポーネント内でローカライズしたものを上書き
       }
     }
   },
@@ -102,11 +103,8 @@ const CHART_OPTIONS = {
   }
 } as const;
 
-/**
- * スキルレーダーチャートコンポーネント
- * React.memoでメモ化し、不要な再レンダリングを防止
- */
 function SkillChartComponent({ categories }: SkillChartProps) {
+  const t = useTranslations("skillChart");
   const labels = useMemo(
     () => SKILL_KEYS.map((k) => `${LABEL_MAP[k].emoji} ${LABEL_MAP[k].label}`),
     []
@@ -122,7 +120,7 @@ function SkillChartComponent({ categories }: SkillChartProps) {
       labels,
       datasets: [
         {
-          label: "スキルレベル",
+          label: t("datasetLabel"),
           data: dataValues,
           backgroundColor: (context: { chart: { ctx: CanvasRenderingContext2D; chartArea: { left: number; top: number; width: number; height: number } | null } }) => {
             const chart = context.chart;
@@ -172,7 +170,7 @@ function SkillChartComponent({ categories }: SkillChartProps) {
         }
       ]
     }),
-    [labels, dataValues]
+    [labels, dataValues, t]
   );
 
   const legendItems = useMemo(
@@ -190,7 +188,7 @@ function SkillChartComponent({ categories }: SkillChartProps) {
     <div
       className="relative w-full max-w-sm md:max-w-md mx-auto p-4"
       role="img"
-      aria-label="スキルレベルのレーダーチャート"
+      aria-label={t("ariaChart")}
     >
       {/* Background decoration */}
       <div
@@ -198,14 +196,30 @@ function SkillChartComponent({ categories }: SkillChartProps) {
         aria-hidden="true"
       />
       <div className="relative">
-        <Radar data={data} options={CHART_OPTIONS} />
+        <Radar
+          data={data}
+          options={{
+            ...BASE_CHART_OPTIONS,
+            plugins: {
+              ...BASE_CHART_OPTIONS.plugins,
+              tooltip: {
+                ...BASE_CHART_OPTIONS.plugins.tooltip,
+                callbacks: {
+                  ...BASE_CHART_OPTIONS.plugins.tooltip.callbacks,
+                  label: (item: { raw: unknown }) =>
+                    t("tooltipLabel", { value: String(item.raw ?? "") })
+                }
+              }
+            }
+          }}
+        />
       </div>
 
       {/* Legend */}
       <div
         className="mt-4 flex flex-wrap justify-center gap-2"
         role="list"
-        aria-label="スキルレベル一覧"
+        aria-label={t("ariaList")}
       >
         {legendItems.map((item) => (
           <div

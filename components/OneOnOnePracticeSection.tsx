@@ -11,8 +11,9 @@ import type {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
-import { postJson } from "@/lib/apiClient";
+import { postJson, isApiClientError } from "@/lib/apiClient";
 import { logUsage } from "@/lib/usageLogger";
+import { useTranslations } from "next-intl";
 
 type InterviewType = "general" | "technical" | "behavioral";
 
@@ -42,6 +43,7 @@ function ProgressDots({ current, total }: { current: number; total: number }) {
 export function OneOnOnePracticeSection({
   result
 }: OneOnOnePracticeSectionProps) {
+  const t = useTranslations("result.oneOnOne");
   const [questions, setQuestions] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answer, setAnswer] = useState("");
@@ -58,6 +60,7 @@ export function OneOnOnePracticeSection({
   const [savingSession, setSavingSession] = useState(false);
   const [sessions, setSessions] = useState<InterviewSessionRecord[]>([]);
   const [sessionsLoading, setSessionsLoading] = useState(false);
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
 
   const loadSessions = useCallback(async () => {
     try {
@@ -95,18 +98,26 @@ export function OneOnOnePracticeSection({
           interviewType
         });
         setQuestions(data.questions ?? []);
-      } catch (e) {
+      } catch (e: unknown) {
         console.error(e);
-        setError(
-          "1on1 の質問取得に失敗しました。時間をおいてから、もう一度お試しください。"
-        );
+        if (isApiClientError(e)) {
+          if (e.code === "ONEONONE_QUESTIONS_NOT_FOUND") {
+            setError(t("errors.questionsSkillMapNotFound"));
+          } else if (e.code === "ONEONONE_QUESTIONS_OPENAI_ERROR") {
+            setError(t("errors.questionsAiFailed"));
+          } else {
+            setError(e.message || t("errors.questionsFetch"));
+          }
+        } else {
+          setError(t("errors.questionsFetch"));
+        }
       } finally {
         setQuestionsLoading(false);
       }
     };
 
     loadQuestions();
-  }, [result.id, interviewType]);
+  }, [result.id, interviewType, t]);
 
   // セッション履歴読み込み
   useEffect(() => {
@@ -117,7 +128,7 @@ export function OneOnOnePracticeSection({
 
   const handleFeedback = async () => {
     if (!currentQuestion || !answer.trim()) {
-      setError("質問への回答を入力してください。");
+      setError(t("errors.answerMissing"));
       return;
     }
     setLoading(true);
@@ -145,11 +156,13 @@ export function OneOnOnePracticeSection({
         ...prev,
         { question: currentQuestion, answer, feedback: data.feedback }
       ]);
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e);
-      setError(
-        "フィードバックの取得に失敗しました。回答内容を確認し、時間をおいて再度お試しください。"
-      );
+      if (isApiClientError(e)) {
+        setError(e.message || t("errors.feedbackFailed"));
+      } else {
+        setError(t("errors.feedbackFailed"));
+      }
     } finally {
       setLoading(false);
     }
@@ -165,7 +178,7 @@ export function OneOnOnePracticeSection({
 
   const handleSaveSession = async () => {
     if (!exchanges.length) {
-      setError("少なくとも1問はフィードバックを受けてから保存してください。");
+      setError(t("errors.saveSessionNoExchanges"));
       return;
     }
     setSavingSession(true);
@@ -223,11 +236,21 @@ export function OneOnOnePracticeSection({
 
       // 3. 履歴を再読み込み
       void loadSessions();
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e);
-      setError(
-        "セッションの保存に失敗しました。時間をおいてから、もう一度お試しください。"
-      );
+      if (isApiClientError(e)) {
+        if (e.code === "ONEONONE_SUMMARY_NO_EXCHANGES") {
+          setError(t("errors.saveSessionNoExchanges"));
+        } else if (e.code === "ONEONONE_SUMMARY_OPENAI_ERROR") {
+          setError(t("errors.saveSessionSummaryAiFailed"));
+        } else if (e.code === "ONEONONE_SESSIONS_SAVE_FAILED") {
+          setError(t("errors.sessionsSaveFailedDetailed"));
+        } else {
+          setError(e.message || t("errors.saveSessionFailed"));
+        }
+      } else {
+        setError(t("errors.saveSessionFailed"));
+      }
     } finally {
       setSavingSession(false);
     }
@@ -240,12 +263,12 @@ export function OneOnOnePracticeSection({
           <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center text-white shadow-md">
             🎤
           </span>
-          1on1 練習モード
+          {t("title")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 pt-4">
         <p className="text-xs text-slate-600 leading-relaxed">
-          評価面談でよく聞かれる質問に対して回答を考え、AI マネージャーからフィードバックと模範回答をもらえます。
+          {t("intro")}
         </p>
 
         {/* 面接タイプ選択 */}
@@ -253,20 +276,20 @@ export function OneOnOnePracticeSection({
           {[
             {
               id: "general" as InterviewType,
-              label: "総合",
-              desc: "自己紹介・志望動機など",
+              label: t("types.general.label"),
+              desc: t("types.general.desc"),
               emoji: "🗣️"
             },
             {
               id: "technical" as InterviewType,
-              label: "技術",
-              desc: "技術選定・課題解決",
+              label: t("types.technical.label"),
+              desc: t("types.technical.desc"),
               emoji: "🧪"
             },
             {
               id: "behavioral" as InterviewType,
-              label: "行動 (STAR)",
-              desc: "行動・成果エピソード",
+              label: t("types.behavioral.label"),
+              desc: t("types.behavioral.desc"),
               emoji: "📚"
             }
           ].map((t) => {
@@ -302,13 +325,15 @@ export function OneOnOnePracticeSection({
         {questionsLoading ? (
           <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-50">
             <div className="w-5 h-5 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
-            <span className="text-sm text-slate-600">質問を準備しています...</span>
+            <span className="text-sm text-slate-600">
+              {t("loadingQuestions")}
+            </span>
           </div>
         ) : !currentQuestion ? (
           <div className="text-center py-8">
             <span className="text-4xl">😢</span>
             <p className="text-sm text-slate-500 mt-2">
-              質問の取得に失敗しました
+              {t("noQuestions")}
             </p>
           </div>
         ) : (
@@ -317,7 +342,10 @@ export function OneOnOnePracticeSection({
             <div className="flex items-center justify-between">
               <ProgressDots current={currentIndex} total={questions.length} />
               <span className="text-xs text-slate-500">
-                {currentIndex + 1} / {questions.length}
+                {t("progressLabel", {
+                  current: currentIndex + 1,
+                  total: questions.length
+                })}
               </span>
             </div>
 
@@ -337,12 +365,12 @@ export function OneOnOnePracticeSection({
             <div className="space-y-2">
               <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
                 <span>💬</span>
-                あなたの回答
+                {t("answerLabel")}
               </label>
               <div className="relative">
                 <textarea
                   className="w-full min-h-[140px] rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm shadow-sm transition-all duration-200 focus:border-violet-400 focus:ring-4 focus:ring-violet-100 focus:outline-none resize-none"
-                  placeholder="実際の1on1で話すつもりで、できるだけ具体的に書いてみてください。"
+                  placeholder={t("answerPlaceholder")}
                   value={answer}
                   onChange={(e) => setAnswer(e.target.value)}
                   onKeyDown={(e) => {
@@ -353,7 +381,7 @@ export function OneOnOnePracticeSection({
                   }}
                 />
                 <div className="absolute bottom-2 right-2 text-[10px] text-slate-400">
-                  ⌘+Enter で送信
+                  {t("shortcutHint")}
                 </div>
               </div>
             </div>
@@ -368,12 +396,12 @@ export function OneOnOnePracticeSection({
                 {loading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    AI がレビュー中...
+                    {t("buttons.feedbackLoading")}
                   </>
                 ) : (
                   <>
                     <span>✨</span>
-                    フィードバックをもらう
+                    {t("buttons.feedback")}
                   </>
                 )}
               </Button>
@@ -383,7 +411,7 @@ export function OneOnOnePracticeSection({
                   variant="outline"
                   onClick={handleNext}
                 >
-                  次の質問へ →
+                  {t("buttons.nextQuestion")}
                 </Button>
               )}
             </div>
@@ -395,16 +423,18 @@ export function OneOnOnePracticeSection({
                   <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
                     <div>
                       <p className="text-xs font-semibold text-slate-700">
-                        総合スコア（自己評価）
+                        {t("ruleScore.title")}
                       </p>
                       <p className="text-[11px] text-slate-500">
-                        文字数・具体性・構造・STAR要素をもとに採点しています。
+                        {t("ruleScore.description")}
                       </p>
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-violet-600">
                         {feedback.ruleBasedScore}
-                        <span className="text-xs text-slate-500"> / 100</span>
+                        <span className="text-xs text-slate-500">
+                          {t("ruleScore.scoreOutOf", { max: 100 })}
+                        </span>
                       </p>
                     </div>
                   </div>
@@ -416,7 +446,7 @@ export function OneOnOnePracticeSection({
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-amber-700 mb-1">
-                        フィードバック
+                        {t("feedbackBlock.title")}
                       </p>
                       <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
                         {feedback.feedback}
@@ -432,7 +462,7 @@ export function OneOnOnePracticeSection({
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-emerald-700 mb-1">
-                        模範回答の例
+                        {t("improvedAnswerBlock.title")}
                       </p>
                       <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
                         {feedback.improvedAnswer}
@@ -450,7 +480,9 @@ export function OneOnOnePracticeSection({
                     onClick={handleSaveSession}
                     disabled={savingSession || !exchanges.length}
                   >
-                    {savingSession ? "セッションを保存中..." : "セッションを保存して総評を見る"}
+                    {savingSession
+                      ? t("buttons.saveSessionLoading")
+                      : t("buttons.saveSession")}
                   </Button>
                 </div>
 
@@ -459,23 +491,25 @@ export function OneOnOnePracticeSection({
                   <div className="space-y-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
                     <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                       <span>📊</span>
-                      今回のセッション総評
+                      {t("sessionSummary.title")}
                     </p>
                     <div className="flex flex-wrap items-center gap-4">
                       <div className="flex items-baseline gap-1">
                         <span className="text-2xl font-bold text-violet-600">
                           {sessionSummary.overallScore}
                         </span>
-                        <span className="text-xs text-slate-500">/ 5</span>
+                        <span className="text-xs text-slate-500">
+                          {t("sessionSummary.scoreOutOf", { max: 5 })}
+                        </span>
                       </div>
                       <p className="text-xs text-slate-500">
-                        1 が要改善、5 がとても良い状態の目安です。
+                        {t("sessionSummary.scoreNote")}
                       </p>
                     </div>
                     {!!sessionSummary.strongPoints.length && (
                       <div className="space-y-1">
                         <p className="text-xs font-semibold text-emerald-700">
-                          良かった点
+                          {t("sessionSummary.strongPointsTitle")}
                         </p>
                         <ul className="list-disc list-inside text-xs text-slate-700 space-y-0.5">
                           {sessionSummary.strongPoints.map((p) => (
@@ -487,7 +521,7 @@ export function OneOnOnePracticeSection({
                     {!!sessionSummary.improvementPoints.length && (
                       <div className="space-y-1">
                         <p className="text-xs font-semibold text-amber-700">
-                          改善すると良い点
+                          {t("sessionSummary.improvementPointsTitle")}
                         </p>
                         <ul className="list-disc list-inside text-xs text-slate-700 space-y-0.5">
                           {sessionSummary.improvementPoints.map((p) => (
@@ -499,7 +533,7 @@ export function OneOnOnePracticeSection({
                     {!!sessionSummary.nextSteps.length && (
                       <div className="space-y-1">
                         <p className="text-xs font-semibold text-sky-700">
-                          次回までにやること
+                          {t("sessionSummary.nextStepsTitle")}
                         </p>
                         <ul className="list-disc list-inside text-xs text-slate-700 space-y-0.5">
                           {sessionSummary.nextSteps.map((p) => (
@@ -523,13 +557,15 @@ export function OneOnOnePracticeSection({
         <div className="mt-6 border-t border-slate-100 pt-4 space-y-2">
           <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
             <span>🕒</span>
-            過去の 1on1 セッション履歴（直近 5 件）
+            {t("history.title")}
           </p>
           {sessionsLoading ? (
-            <p className="text-xs text-slate-500">読み込み中...</p>
+            <p className="text-xs text-slate-500">
+              {t("history.loading")}
+            </p>
           ) : sessions.length === 0 ? (
             <p className="text-xs text-slate-500">
-              まだ保存されたセッションはありません。1問以上フィードバックを受けて「セッションを保存して総評を見る」を押すと、ここに履歴が表示されます。
+              {t("history.empty")}
             </p>
           ) : (
             <ul className="space-y-1.5">
@@ -540,7 +576,16 @@ export function OneOnOnePracticeSection({
                 return (
                   <li
                     key={s.id}
-                    className="text-xs text-slate-700 flex items-center justify-between gap-2"
+                    className={`text-xs text-slate-700 flex items-center justify-between gap-2 rounded-lg px-2 py-1 cursor-pointer transition-colors ${
+                      selectedSessionId === s.id
+                        ? "bg-violet-50 border border-violet-200"
+                        : "hover:bg-slate-50"
+                    }`}
+                    onClick={() =>
+                      setSelectedSessionId(
+                        selectedSessionId === s.id ? null : s.id
+                      )
+                    }
                   >
                     <div className="flex flex-col">
                       <span className="font-medium">
@@ -559,16 +604,105 @@ export function OneOnOnePracticeSection({
                     </div>
                     <div className="text-right text-[11px] text-slate-600">
                       <span className="mr-2">
-                        質問数: {s.question_count ?? "-"}
+                        {t("history.questionsLabel", {
+                          count: s.question_count ?? "-"
+                        })}
                       </span>
                       <span>
-                        スコア: {s.overall_score ?? "-"}
+                        {t("history.scoreLabel", {
+                          score: s.overall_score ?? "-"
+                        })}
                       </span>
                     </div>
                   </li>
                 );
               })}
             </ul>
+          )}
+          {/* 選択中セッションの詳細 */}
+          {selectedSessionId && (
+            (() => {
+              const session = sessions.find((s) => s.id === selectedSessionId);
+              if (!session) return null;
+
+              const exchanges = session.exchanges ?? [];
+
+              return (
+                <div className="mt-3 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                      <span>📊</span>
+                      {t("history.detailsTitle", {
+                        type: session.interview_type ?? "unknown"
+                      })}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedSessionId(null)}
+                      className="text-[11px] text-slate-500 hover:text-slate-700"
+                    >
+                      {t("history.close")}
+                    </button>
+                  </div>
+                  {typeof session.overall_score === "number" && (
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-xl font-bold text-violet-600">
+                          {session.overall_score}
+                        </span>
+                        <span className="text-[11px] text-slate-500">/ 5</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500">
+                        {t("history.savedScoreNote")}
+                      </p>
+                    </div>
+                  )}
+                  {session.summary && (
+                    <div className="space-y-1">
+                      <p className="text-[11px] font-semibold text-slate-700">
+                          {t("sessionSummary.summaryTitle")}
+                      </p>
+                      <p className="text-xs text-slate-700 whitespace-pre-wrap leading-relaxed">
+                        {session.summary}
+                      </p>
+                    </div>
+                  )}
+                  {exchanges.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-[11px] font-semibold text-slate-700">
+                        {t("history.qaTitle", { count: exchanges.length })}
+                      </p>
+                      <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                        {exchanges.map((ex, idx) => (
+                          <div
+                            key={`${idx}-${ex.question.slice(0, 16)}`}
+                            className="rounded-lg bg-white border border-slate-200 p-3 space-y-1"
+                          >
+                            <p className="text-[11px] font-semibold text-slate-700">
+                              {`Q${idx + 1}. ${ex.question}`}
+                            </p>
+                            <p className="text-[11px] text-slate-700 whitespace-pre-wrap">
+                              <span className="font-semibold text-slate-600">
+                                {t("history.yourAnswerLabel")}
+                              </span>
+                              <br />
+                              {ex.answer}
+                            </p>
+                            <p className="text-[11px] text-amber-700 whitespace-pre-wrap">
+                              <span className="font-semibold">
+                                {t("history.aiFeedbackLabel")}
+                              </span>
+                              <br />
+                              {ex.feedback}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()
           )}
         </div>
       </CardContent>

@@ -5,8 +5,9 @@ import type { CareerRiskResult, SkillMapResult } from "@/types/skill";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
-import { postJson } from "@/lib/apiClient";
+import { postJson, isApiClientError } from "@/lib/apiClient";
 import { logUsage } from "@/lib/usageLogger";
+import { useTranslations } from "next-intl";
 
 interface CareerRiskSectionProps {
   result: SkillMapResult;
@@ -18,13 +19,25 @@ interface RiskBarProps {
   icon: string;
   color: string;
   description: string;
+  levelLabels: {
+    high: string;
+    medium: string;
+    low: string;
+  };
 }
 
-function RiskBar({ label, value, icon, color, description }: RiskBarProps) {
+function RiskBar({
+  label,
+  value,
+  icon,
+  color,
+  description,
+  levelLabels
+}: RiskBarProps) {
   const getLevel = (v: number) => {
-    if (v >= 70) return { text: "高リスク", bg: "bg-red-500" };
-    if (v >= 40) return { text: "中リスク", bg: "bg-amber-500" };
-    return { text: "低リスク", bg: "bg-emerald-500" };
+    if (v >= 70) return { text: levelLabels.high, bg: "bg-red-500" };
+    if (v >= 40) return { text: levelLabels.medium, bg: "bg-amber-500" };
+    return { text: levelLabels.low, bg: "bg-emerald-500" };
   };
   
   const level = getLevel(value);
@@ -59,6 +72,7 @@ function RiskBar({ label, value, icon, color, description }: RiskBarProps) {
 }
 
 export function CareerRiskSection({ result }: CareerRiskSectionProps) {
+  const t = useTranslations("result.career.risk");
   const [risk, setRisk] = useState<CareerRiskResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -73,39 +87,46 @@ export function CareerRiskSection({ result }: CareerRiskSectionProps) {
         { skillMapId: result.id }
       );
       setRisk(data);
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e);
-      setError(
-        "キャリアリスク分析に失敗しました。時間をおいてから、もう一度お試しください。"
-      );
+      if (isApiClientError(e)) {
+        if (e.code === "RISK_NOT_FOUND") {
+          setError(t("errors.skillMapNotFound"));
+        } else if (e.code === "RISK_OPENAI_ERROR") {
+          setError(t("errors.aiFailed"));
+        } else {
+          setError(e.message || t("errors.analyzeFailed"));
+        }
+      } else {
+        setError(t("errors.analyzeFailed"));
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const riskItems = risk ? [
-    {
-      label: "陳腐化リスク",
-      value: risk.obsolescence,
-      icon: "📉",
-      color: "bg-gradient-to-r from-red-400 to-rose-500",
-      description: "技術トレンドの変化により、スキルの価値が下がるリスク"
-    },
-    {
-      label: "属人化リスク",
-      value: risk.busFactor,
-      icon: "👤",
-      color: "bg-gradient-to-r from-amber-400 to-orange-500",
-      description: "特定の環境やチームに依存しすぎているリスク"
-    },
-    {
-      label: "自動化リスク",
-      value: risk.automation,
-      icon: "🤖",
-      color: "bg-gradient-to-r from-purple-400 to-violet-500",
-      description: "AI やツールによって代替される可能性のリスク"
-    }
-  ] : [];
+  const riskItems = risk
+    ? [
+        {
+          key: "obsolescence" as const,
+          value: risk.obsolescence,
+          icon: "📉",
+          color: "bg-gradient-to-r from-red-400 to-rose-500"
+        },
+        {
+          key: "busFactor" as const,
+          value: risk.busFactor,
+          icon: "👤",
+          color: "bg-gradient-to-r from-amber-400 to-orange-500"
+        },
+        {
+          key: "automation" as const,
+          value: risk.automation,
+          icon: "🤖",
+          color: "bg-gradient-to-r from-purple-400 to-violet-500"
+        }
+      ]
+    : [];
 
   const overallRisk = risk 
     ? Math.round((risk.obsolescence + risk.busFactor + risk.automation) / 3)
@@ -118,14 +139,12 @@ export function CareerRiskSection({ result }: CareerRiskSectionProps) {
           <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white shadow-md">
             ⚠️
           </span>
-          キャリアリスク分析
+          {t("title")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 text-sm leading-relaxed pt-4">
         <p className="text-xs text-slate-600 leading-relaxed">
-          現在のスキル構成から、
-          「技術の陳腐化」「属人化」「自動化される」リスクをスコア化し、
-          どこを補強すると良いかを可視化します。
+          {t("description")}
         </p>
 
         {!risk && (
@@ -138,12 +157,12 @@ export function CareerRiskSection({ result }: CareerRiskSectionProps) {
             {loading ? (
               <>
                 <div className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
-                AI が分析中...
+                {t("buttons.analyzing")}
               </>
             ) : (
               <>
                 <span>🔍</span>
-                キャリアリスクを分析する
+                {t("buttons.analyze")}
               </>
             )}
           </Button>
@@ -164,12 +183,12 @@ export function CareerRiskSection({ result }: CareerRiskSectionProps) {
               </div>
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                  総合リスクスコア
+                  {t("overall.label")}
                 </p>
                 <p className="text-sm text-slate-700 mt-1">
-                  {overallRisk >= 70 && "いくつかの領域で対策を検討することをおすすめします"}
-                  {overallRisk >= 40 && overallRisk < 70 && "バランスは取れていますが、改善の余地があります"}
-                  {overallRisk < 40 && "全体的にリスクは低めです"}
+                  {overallRisk >= 70 && t("overall.high")}
+                  {overallRisk >= 40 && overallRisk < 70 && t("overall.medium")}
+                  {overallRisk < 40 && t("overall.low")}
                 </p>
               </div>
             </div>
@@ -177,7 +196,19 @@ export function CareerRiskSection({ result }: CareerRiskSectionProps) {
             {/* Individual risk bars */}
             <div className="space-y-4">
               {riskItems.map((item) => (
-                <RiskBar key={item.label} {...item} />
+                <RiskBar
+                  key={item.key}
+                  label={t(`items.${item.key}.label`)}
+                  description={t(`items.${item.key}.description`)}
+                  value={item.value}
+                  icon={item.icon}
+                  color={item.color}
+                  levelLabels={{
+                    high: t("levels.high"),
+                    medium: t("levels.medium"),
+                    low: t("levels.low")
+                  }}
+                />
               ))}
             </div>
 
@@ -185,7 +216,7 @@ export function CareerRiskSection({ result }: CareerRiskSectionProps) {
             <div className="p-4 rounded-xl bg-slate-50 space-y-2">
               <p className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                 <span>📋</span>
-                リスクの要約
+                {t("summaryTitle")}
               </p>
               <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">
                 {risk.summary}
@@ -196,7 +227,7 @@ export function CareerRiskSection({ result }: CareerRiskSectionProps) {
             <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 space-y-2">
               <p className="text-xs font-semibold text-emerald-700 flex items-center gap-1.5">
                 <span>💡</span>
-                具体的なアクション
+                {t("actionsTitle")}
               </p>
               <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
                 {risk.actions}
@@ -212,7 +243,7 @@ export function CareerRiskSection({ result }: CareerRiskSectionProps) {
               disabled={loading}
             >
               <span>🔄</span>
-              再分析する
+              {t("buttons.reanalyze")}
             </Button>
           </div>
         )}

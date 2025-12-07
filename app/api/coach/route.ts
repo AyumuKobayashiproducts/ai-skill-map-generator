@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
-import { createOpenAIClient } from "@/lib/openaiClient";
+import { safeChatCompletion } from "@/lib/openaiRetry";
+import { logUsageServer } from "@/lib/usageServerLogger";
 import { CoachRequestSchema } from "@/types/api";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 export async function POST(request: Request) {
   try {
     const { messages, context } = CoachRequestSchema.parse(
       await request.json()
     );
-
-    const openai = createOpenAIClient();
 
     const systemContent = [
       "あなたは Web エンジニア向けの優しいキャリアコーチです。",
@@ -21,24 +22,34 @@ export async function POST(request: Request) {
       .filter(Boolean)
       .join("\n");
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      messages: [
-        { role: "system", content: systemContent },
-        ...messages.map((m) => ({
-          role: m.role,
-          content: m.content
-        }))
-      ]
+    const completion = await safeChatCompletion({
+      feature: "coach",
+      params: {
+        model: "gpt-4.1-mini",
+        messages: [
+          { role: "system", content: systemContent },
+          ...messages.map((m) => ({
+            role: m.role,
+            content: m.content
+          }))
+        ]
+      }
     });
 
     const reply = completion.choices[0]?.message?.content ?? "";
 
+    void logUsageServer("coach_success", {});
+
     return NextResponse.json({ reply });
   } catch (error) {
     console.error("Coach API error", error);
+    void logUsageServer("coach_error", {
+      message: error instanceof Error ? error.message : String(error)
+    });
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError("COACH_OPENAI_ERROR", locale);
     return NextResponse.json(
-      { error: "AI コーチとの対話中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }

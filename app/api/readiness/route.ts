@@ -3,6 +3,8 @@ import { createSupabaseClient } from "@/lib/supabaseClient";
 import type { SkillCategories } from "@/types/skill";
 import { ReadinessRequestSchema } from "@/types/api";
 import { calculateReadinessScore } from "@/lib/readiness";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 export async function POST(request: Request) {
   try {
@@ -24,8 +26,10 @@ export async function POST(request: Request) {
       .single();
 
     if (error || !data) {
+      const locale = getRequestLocale(request);
+      const { code, message } = getApiError("READINESS_NOT_FOUND", locale);
       return NextResponse.json(
-        { error: "指定されたスキルマップが見つかりませんでした。" },
+        { error: message, code },
         { status: 404 }
       );
     }
@@ -44,8 +48,10 @@ export async function POST(request: Request) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("Readiness API error", error);
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError("READINESS_OPENAI_ERROR", locale);
     return NextResponse.json(
-      { error: "転職準備スコア算出中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }

@@ -8,8 +8,9 @@ import type {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
-import { postJson } from "@/lib/apiClient";
+import { postJson, isApiClientError } from "@/lib/apiClient";
 import { logUsage } from "@/lib/usageLogger";
+import { useTranslations } from "next-intl";
 
 type InputItem = {
   title: string;
@@ -18,6 +19,7 @@ type InputItem = {
 };
 
 export function PortfolioGeneratorSection() {
+  const t = useTranslations("portfolioGen");
   const [items, setItems] = useState<InputItem[]>([
     { title: "", url: "", description: "" }
   ]);
@@ -56,7 +58,7 @@ export function PortfolioGeneratorSection() {
         }));
 
       if (payloadItems.length === 0) {
-        setError("少なくとも1件はプロジェクト情報を入力してください。");
+        setError(t("errors.needItem"));
         setLoading(false);
         return;
       }
@@ -70,11 +72,13 @@ export function PortfolioGeneratorSection() {
         PortfolioGeneratorResult
       >("/api/portfolio", { items: payloadItems });
       setResult(data);
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e);
-      setError(
-        "ポートフォリオ生成に失敗しました。入力内容を確認し、時間をおいて再度お試しください。"
-      );
+      if (isApiClientError(e)) {
+        setError(e.message || t("errors.generateFailed"));
+      } else {
+        setError(t("errors.generateFailed"));
+      }
     } finally {
       setLoading(false);
     }
@@ -96,13 +100,12 @@ export function PortfolioGeneratorSection() {
             <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-md text-sm">
               ✍️
             </span>
-            プロジェクトを入力
+            {t("input.title")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 pt-4">
           <p className="text-xs text-slate-600 leading-relaxed">
-            自分のプロジェクト（GitHub / 作品サイトなど）を入力すると、
-            ポートフォリオに載せるべき案件 TOP3 と紹介文を自動生成します。
+            {t("input.description")}
           </p>
 
           <div className="space-y-3">
@@ -126,27 +129,27 @@ export function PortfolioGeneratorSection() {
                     {index + 1}
                   </span>
                   <span className="text-xs font-semibold text-slate-700">
-                    プロジェクト {index + 1}
+                    {t("input.projectLabel", { index: index + 1 })}
                   </span>
                 </div>
                 
                 <input
                   type="text"
                   className="w-full rounded-lg border-2 border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition-all duration-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 focus:outline-none"
-                  placeholder="タイトル（例：AI Skill Map Generator）"
+                  placeholder={t("input.titlePlaceholder")}
                   value={item.title}
                   onChange={(e) => updateItem(index, "title", e.target.value)}
                 />
                 <input
                   type="url"
                   className="w-full rounded-lg border-2 border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition-all duration-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 focus:outline-none"
-                  placeholder="URL（例：https://github.com/username/project）"
+                  placeholder={t("input.urlPlaceholder")}
                   value={item.url}
                   onChange={(e) => updateItem(index, "url", e.target.value)}
                 />
                 <textarea
                   className="w-full rounded-lg border-2 border-slate-200 bg-white px-3 py-2 text-sm shadow-sm transition-all duration-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 focus:outline-none resize-none"
-                  placeholder="簡単な説明や使用技術などがあれば入力（任意）"
+                  placeholder={t("input.descPlaceholder")}
                   rows={2}
                   value={item.description}
                   onChange={(e) =>
@@ -165,7 +168,7 @@ export function PortfolioGeneratorSection() {
             className="w-full border-dashed"
           >
             <span>➕</span>
-            プロジェクトを追加
+            {t("input.addButton")}
           </Button>
 
           {error && <ErrorAlert message={error} />}
@@ -179,12 +182,12 @@ export function PortfolioGeneratorSection() {
             {loading ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                AI が整理中...
+                {t("generateButton.generating")}
               </>
             ) : (
               <>
                 <span>✨</span>
-                ポートフォリオ案を生成する
+                {t("generateButton.default")}
               </>
             )}
           </Button>
@@ -200,7 +203,7 @@ export function PortfolioGeneratorSection() {
                 <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white shadow-md text-sm">
                   🏆
                 </span>
-                選ばれた案件 TOP3
+                {t("result.top3Title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 pt-4">
@@ -241,7 +244,7 @@ export function PortfolioGeneratorSection() {
                     <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-100">
                       <p className="text-xs font-semibold text-emerald-700 flex items-center gap-1.5 mb-1">
                         <span>💪</span>
-                        アピールポイント
+                        {t("result.sellingPointsTitle")}
                       </p>
                       <p className="text-xs text-slate-700 whitespace-pre-wrap">
                         {item.sellingPoints}
@@ -250,7 +253,7 @@ export function PortfolioGeneratorSection() {
                     <div className="p-3 rounded-lg bg-sky-50 border border-sky-100">
                       <p className="text-xs font-semibold text-sky-700 flex items-center gap-1.5 mb-1">
                         <span>💭</span>
-                        振り返り
+                        {t("result.reflectionTitle")}
                       </p>
                       <p className="text-xs text-slate-700 whitespace-pre-wrap">
                         {item.reflection}
@@ -267,7 +270,7 @@ export function PortfolioGeneratorSection() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <span>📄</span>
-                  Markdown 出力
+                    {t("result.markdownTitle")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -283,12 +286,12 @@ export function PortfolioGeneratorSection() {
                   {copied ? (
                     <>
                       <span className="text-emerald-500">✓</span>
-                      コピーしました！
+                      {t("result.copyDone")}
                     </>
                   ) : (
                     <>
                       <span>📋</span>
-                      Markdown をコピー
+                      {t("result.copyButton")}
                     </>
                   )}
                 </Button>

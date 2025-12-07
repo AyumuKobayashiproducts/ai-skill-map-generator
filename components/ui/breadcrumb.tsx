@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Route } from "next";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 export interface BreadcrumbItem {
@@ -26,11 +27,13 @@ interface BreadcrumbProps {
  * />
  */
 export function Breadcrumb({ items, className }: BreadcrumbProps) {
+  const t = useTranslations("ui.breadcrumb");
+
   if (items.length === 0) return null;
 
   return (
     <nav
-      aria-label="パンくずリスト"
+      aria-label={t("ariaLabel")}
       className={cn("flex items-center text-sm", className)}
     >
       <ol className="flex items-center gap-1 flex-wrap" role="list">

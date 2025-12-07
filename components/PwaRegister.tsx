@@ -23,13 +23,16 @@ export function PwaRegister() {
     // ページロード完了後に登録
     if (document.readyState === "complete") {
       register();
-    } else {
-      window.addEventListener("load", register);
-      return () => window.removeEventListener("load", register);
+      return;
     }
+
+    // それ以外の場合は load イベントで登録し、クリーンアップ関数を返す
+    window.addEventListener("load", register);
+    return () => window.removeEventListener("load", register);
   }, []);
 
   return null;
 }
+
 
 

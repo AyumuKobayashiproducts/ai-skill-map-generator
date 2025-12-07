@@ -7,6 +7,22 @@ interface ApiError {
   error: string;
   message?: string;
   statusCode?: number;
+  code?: string;
+}
+
+export class ApiClientError extends Error {
+  code?: string;
+  status?: number;
+
+  constructor(message: string, options?: { code?: string; status?: number }) {
+    super(message);
+    this.code = options?.code;
+    this.status = options?.status;
+  }
+}
+
+export function isApiClientError(error: unknown): error is ApiClientError {
+  return error instanceof ApiClientError;
 }
 
 /**
@@ -38,7 +54,10 @@ export async function postJson<TBody, TResponse>(
       errorData?.error ??
       errorData?.message ??
       `API リクエストに失敗しました (${res.status})`;
-    throw new Error(message);
+    throw new ApiClientError(message, {
+      code: errorData?.code,
+      status: res.status
+    });
   }
 
   return data as TResponse;
@@ -69,7 +88,10 @@ export async function getJson<TResponse>(url: string): Promise<TResponse> {
       errorData?.error ??
       errorData?.message ??
       `API リクエストに失敗しました (${res.status})`;
-    throw new Error(message);
+    throw new ApiClientError(message, {
+      code: errorData?.code,
+      status: res.status
+    });
   }
 
   return data as TResponse;
@@ -101,7 +123,10 @@ export async function putJson<TBody, TResponse>(
       errorData?.error ??
       errorData?.message ??
       `API リクエストに失敗しました (${res.status})`;
-    throw new Error(message);
+    throw new ApiClientError(message, {
+      code: errorData?.code,
+      status: res.status
+    });
   }
 
   return data as TResponse;
@@ -129,7 +154,10 @@ export async function deleteJson<TResponse>(url: string): Promise<TResponse> {
       errorData?.error ??
       errorData?.message ??
       `API リクエストに失敗しました (${res.status})`;
-    throw new Error(message);
+    throw new ApiClientError(message, {
+      code: errorData?.code,
+      status: res.status
+    });
   }
 
   return data as TResponse;

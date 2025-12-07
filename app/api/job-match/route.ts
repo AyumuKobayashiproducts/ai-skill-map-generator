@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
-import { createOpenAIClient } from "@/lib/openaiClient";
+import { safeChatCompletion } from "@/lib/openaiRetry";
+import { logUsageServer } from "@/lib/usageServerLogger";
 import type { JobMatchResult } from "@/types/skill";
 import { JobMatchRequestSchema } from "@/types/api";
 import { loadSkillMapById } from "@/lib/skillMapLoader";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 export async function POST(request: Request) {
   try {
@@ -13,8 +16,10 @@ export async function POST(request: Request) {
     const loaded = await loadSkillMapById(skillMapId);
 
     if (!loaded) {
+      const locale = getRequestLocale(request);
+      const { code, message } = getApiError("JOB_MATCH_NOT_FOUND", locale);
       return NextResponse.json(
-        { error: "指定されたスキルマップが見つかりませんでした。" },
+        { error: message, code },
         { status: 404 }
       );
     }
@@ -24,8 +29,6 @@ export async function POST(request: Request) {
     const weaknesses: string = loaded.weaknesses;
     const nextSkills: string[] =
       (loaded.chartData && (loaded.chartData as any).nextSkills) ?? [];
-
-    const openai = createOpenAIClient();
 
     const jdDescription = jdText
       ? jdText
@@ -61,17 +64,20 @@ export async function POST(request: Request) {
       "- 余計な説明文は出さず、有効な JSON のみを返してください。"
     ].join("\n");
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content:
-            "あなたはソフトウェアエンジニアの転職を支援するプロフェッショナルリクルーターです。"
-        },
-        { role: "user", content: prompt }
-      ]
+    const completion = await safeChatCompletion({
+      feature: "job_match",
+      params: {
+        model: "gpt-4.1-mini",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "あなたはソフトウェアエンジニアの転職を支援するプロフェッショナルリクルーターです。"
+          },
+          { role: "user", content: prompt }
+        ]
+      }
     });
 
     const raw = completion.choices[0]?.message?.content ?? "{}";
@@ -88,11 +94,18 @@ export async function POST(request: Request) {
       roadmapForJob: parsed.roadmapForJob ?? ""
     };
 
+    void logUsageServer("job_match_success", { skillMapId, hasJdText: !!jdText });
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("Job match API error", error);
+    void logUsageServer("job_match_error", {
+      message: error instanceof Error ? error.message : String(error)
+    });
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError("JOB_MATCH_OPENAI_ERROR", locale);
     return NextResponse.json(
-      { error: "求人マッチング中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }

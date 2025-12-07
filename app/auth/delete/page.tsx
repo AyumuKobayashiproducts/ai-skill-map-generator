@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowserClient";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
+import { useTranslations } from "next-intl";
 
 export default function DeleteAccountPage() {
+  const t = useTranslations("authDelete");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -32,7 +34,7 @@ export default function DeleteAccountPage() {
       if (userError) throw userError;
       const userId = data.user?.id;
       if (!userId) {
-        throw new Error("ログイン情報が取得できませんでした。");
+        throw new Error(t("errors.noUser"));
       }
 
       // このアプリで保存しているデータを削除（認証ユーザー自体の削除はサービスキーが必要なため対象外）
@@ -49,7 +51,7 @@ export default function DeleteAccountPage() {
     } catch (e) {
       console.error(e);
       setError(
-        "アカウントデータの削除に失敗しました。時間をおいてから、もう一度お試しください。"
+        t("errors.deleteFailed")
       );
     } finally {
       setLoading(false);
@@ -59,36 +61,32 @@ export default function DeleteAccountPage() {
   return (
     <div className="max-w-sm mx-auto space-y-4">
       <div>
-        <h2 className="text-xl font-semibold">アカウント削除</h2>
+        <h2 className="text-xl font-semibold">{t("hero.title")}</h2>
         <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-          このページでは、AI Skill Map Generator 上に保存された
-          スキルマップや利用ログなどのデータを削除できます。
-          （Supabase の認証アカウントそのものの削除は対象外です。）
+          {t("hero.body")}
         </p>
       </div>
 
       {email ? (
         <p className="text-xs text-slate-700">
-          現在ログイン中のメールアドレス:{" "}
-          <span className="font-semibold">{email}</span>
+          {t("status.currentEmail", { email })}
         </p>
       ) : (
         <p className="text-xs text-red-600">
-          ログインしていないため、削除対象のアカウントを特定できません。
-          先に右上の「ログイン」からサインインしてください。
+          {t("status.notLoggedIn")}
         </p>
       )}
 
       {error && <ErrorAlert message={error} />}
       {done && !error && (
         <p className="text-[11px] text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-md px-2 py-1">
-          アカウントデータを削除しました。トップページに戻ります。
+          {t("status.deleted")}
         </p>
       )}
 
       <div className="space-y-2 text-xs">
         <p className="text-slate-700">
-          削除すると、このアプリに保存されたスキルマップ履歴や利用ログは復元できません。
+          {t("confirm.warning")}
         </p>
         <label className="flex items-start gap-2">
           <input
@@ -99,7 +97,7 @@ export default function DeleteAccountPage() {
             disabled={loading || !email}
           />
           <span>
-            上記の内容を理解したうえで、このアプリに保存された自分のデータを削除します。
+            {t("confirm.label")}
           </span>
         </label>
         <Button
@@ -109,7 +107,7 @@ export default function DeleteAccountPage() {
           onClick={handleDelete}
           className="w-full border-red-300 text-red-700 hover:bg-red-50"
         >
-          {loading ? "削除中..." : "このアプリの保存データを削除する"}
+          {loading ? t("button.deleting") : t("button.delete")}
         </Button>
       </div>
     </div>

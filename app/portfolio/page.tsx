@@ -1,6 +1,9 @@
 import { PortfolioGeneratorSection } from "@/components/PortfolioGeneratorSection";
+import { getTranslations } from "next-intl/server";
 
-export default function PortfolioPage() {
+export default async function PortfolioPage() {
+  const t = await getTranslations("portfolio.hero");
+
   return (
     <div className="space-y-6">
       <header className="animate-fade-in-up">
@@ -10,17 +13,15 @@ export default function PortfolioPage() {
           </div>
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-              ポートフォリオ棚卸しジェネレーター
+              {t("title")}
             </h2>
             <p className="text-sm text-slate-500">
-              プロジェクトを整理して魅力的なポートフォリオを作成
+              {t("subtitle")}
             </p>
           </div>
         </div>
         <p className="mt-4 text-sm text-slate-700 leading-relaxed max-w-2xl">
-          自分のプロジェクトを入力すると、
-          ポートフォリオに載せるべき案件 TOP3 と紹介文を AI が提案します。
-          転職活動や面接準備にお役立てください。
+          {t("intro")}
         </p>
       </header>
       <PortfolioGeneratorSection />

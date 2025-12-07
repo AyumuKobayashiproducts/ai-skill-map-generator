@@ -5,7 +5,8 @@ import type { SkillMapResult } from "@/types/skill";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ErrorAlert } from "@/components/ui/error-alert";
 import { Button } from "@/components/ui/button";
-import { postJson } from "@/lib/apiClient";
+import { postJson, isApiClientError } from "@/lib/apiClient";
+import { useTranslations } from "next-intl";
 
 interface SkillStorySectionProps {
   result: SkillMapResult;
@@ -25,6 +26,7 @@ function SkeletonLines() {
 }
 
 export function SkillStorySection({ result }: SkillStorySectionProps) {
+  const t = useTranslations("skillStory");
   const [story, setStory] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,18 +50,20 @@ export function SkillStorySection({ result }: SkillStorySectionProps) {
           categories: result.categories
         });
         setStory(data.story);
-      } catch (e) {
+      } catch (e: unknown) {
         console.error(e);
-        setError(
-          e instanceof Error ? e.message : "ストーリーを生成できませんでした。"
-        );
+        if (isApiClientError(e)) {
+          setError(e.message || t("errors.generateFailed"));
+        } else {
+          setError(t("errors.generateFailed"));
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchStory();
-  }, [result.strengths, result.weaknesses, result.categories]);
+  }, [result.strengths, result.weaknesses, result.categories, t]);
 
   const handleCopy = async () => {
     if (!story) return;
@@ -75,7 +79,7 @@ export function SkillStorySection({ result }: SkillStorySectionProps) {
           <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white shadow-md">
             📖
           </span>
-          あなたのプロフィールストーリー
+          {t("hero.title")}
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-4">
@@ -83,7 +87,7 @@ export function SkillStorySection({ result }: SkillStorySectionProps) {
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm text-slate-600">
               <div className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-              AI がストーリーを作成中です...
+              {t("loading.text")}
             </div>
             <SkeletonLines />
           </div>
@@ -116,17 +120,17 @@ export function SkillStorySection({ result }: SkillStorySectionProps) {
                 {copied ? (
                   <>
                     <span className="text-emerald-500">✓</span>
-                    コピーしました！
+                    {t("copy.done")}
                   </>
                 ) : (
                   <>
                     <span>📋</span>
-                    ストーリーをコピー
+                    {t("copy.button")}
                   </>
                 )}
               </Button>
               <p className="text-[10px] text-slate-500">
-                職務経歴書や面接の自己紹介にご活用ください
+                {t("copy.hint")}
               </p>
             </div>
           </div>

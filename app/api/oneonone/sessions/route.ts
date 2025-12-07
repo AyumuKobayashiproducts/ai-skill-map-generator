@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createSupabaseClient } from "@/lib/supabaseClient";
 import { z } from "zod";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 // セッション保存用のリクエストスキーマ
 const SaveSessionRequestSchema = z.object({
@@ -46,8 +48,13 @@ export async function GET(request: Request) {
 
     if (error) {
       console.error("Failed to fetch interview sessions", error);
+      const locale = getRequestLocale(request);
+      const { code, message } = getApiError(
+        "ONEONONE_SESSIONS_FETCH_FAILED",
+        locale
+      );
       return NextResponse.json(
-        { error: "セッション履歴の取得に失敗しました。" },
+        { error: message, code },
         { status: 500 }
       );
     }
@@ -55,8 +62,13 @@ export async function GET(request: Request) {
     return NextResponse.json({ sessions: data ?? [] });
   } catch (error) {
     console.error("Interview sessions GET error", error);
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError(
+      "ONEONONE_SESSIONS_FETCH_FAILED",
+      locale
+    );
     return NextResponse.json(
-      { error: "セッション履歴の取得中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }
@@ -87,8 +99,13 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error("Failed to save interview session", error);
+      const locale = getRequestLocale(request);
+      const { code, message } = getApiError(
+        "ONEONONE_SESSIONS_SAVE_FAILED",
+        locale
+      );
       return NextResponse.json(
-        { error: "セッションの保存に失敗しました。" },
+        { error: message, code },
         { status: 500 }
       );
     }
@@ -96,12 +113,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ session: data });
   } catch (error) {
     console.error("Interview sessions POST error", error);
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError(
+      "ONEONONE_SESSIONS_SAVE_FAILED",
+      locale
+    );
     return NextResponse.json(
-      { error: "セッションの保存中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }
 }
+
 
 
 

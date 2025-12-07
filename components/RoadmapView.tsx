@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 interface RoadmapViewProps {
   roadmap30: string;
@@ -20,6 +21,7 @@ interface TimelineProps {
 }
 
 function Timeline({ steps, variant }: TimelineProps) {
+  const t = useTranslations("roadmap");
   const config = {
     "30day": {
       label: "STEP",
@@ -46,7 +48,7 @@ function Timeline({ steps, variant }: TimelineProps) {
           📝
         </div>
         <p className="text-sm text-slate-500">
-          AI ロードマップがまだ生成されていません
+          {t("noPlan")}
         </p>
       </div>
     );
@@ -88,6 +90,7 @@ function Timeline({ steps, variant }: TimelineProps) {
 }
 
 export function RoadmapView({ roadmap30, roadmap90 }: RoadmapViewProps) {
+  const t = useTranslations("roadmap");
   const steps30 = toSteps(roadmap30);
   const steps90 = toSteps(roadmap90);
 
@@ -100,9 +103,11 @@ export function RoadmapView({ roadmap30, roadmap90 }: RoadmapViewProps) {
               30
             </span>
             <div>
-              <span className="text-slate-900">30日ロードマップ</span>
+              <span className="text-slate-900">
+                {t("30day.title")}
+              </span>
               <p className="text-xs font-normal text-slate-500 mt-0.5">
-                短期集中で取り組むべきこと
+                {t("30day.subtitle")}
               </p>
             </div>
           </CardTitle>
@@ -119,9 +124,11 @@ export function RoadmapView({ roadmap30, roadmap90 }: RoadmapViewProps) {
               90
             </span>
             <div>
-              <span className="text-slate-900">90日ロードマップ</span>
+              <span className="text-slate-900">
+                {t("90day.title")}
+              </span>
               <p className="text-xs font-normal text-slate-500 mt-0.5">
-                中期的なキャリアの方向性
+                {t("90day.subtitle")}
               </p>
             </div>
           </CardTitle>

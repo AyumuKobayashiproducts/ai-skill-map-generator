@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
-import { createOpenAIClient } from "@/lib/openaiClient";
+import { safeChatCompletion } from "@/lib/openaiRetry";
+import { logUsageServer } from "@/lib/usageServerLogger";
 import type { OneOnOneQuestions } from "@/types/skill";
 import { OneOnOneQuestionsRequestSchema } from "@/types/api";
 import { loadSkillMapById } from "@/lib/skillMapLoader";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 type InterviewType = "general" | "technical" | "behavioral";
 
@@ -51,8 +54,13 @@ export async function POST(request: Request) {
     const loaded = await loadSkillMapById(skillMapId);
 
     if (!loaded) {
+      const locale = getRequestLocale(request);
+      const { code, message } = getApiError(
+        "ONEONONE_QUESTIONS_NOT_FOUND",
+        locale
+      );
       return NextResponse.json(
-        { error: "指定されたスキルマップが見つかりませんでした。" },
+        { error: message, code },
         { status: 404 }
       );
     }
@@ -61,8 +69,9 @@ export async function POST(request: Request) {
     const strengths: string = loaded.strengths;
     const weaknesses: string = loaded.weaknesses;
 
-    const openai = createOpenAIClient();
-    const typeConfig = interviewTypePrompts[interviewType as InterviewType] ?? interviewTypePrompts.general;
+    const typeConfig =
+      interviewTypePrompts[interviewType as InterviewType] ??
+      interviewTypePrompts.general;
 
     const prompt = [
       "転職面接の質問を作成してください。",
@@ -93,16 +102,19 @@ export async function POST(request: Request) {
       "- 回答しやすい順（自己紹介系→経験系→深掘り系）に並べる"
     ].join("\n");
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content: typeConfig.systemPrompt
-        },
-        { role: "user", content: prompt }
-      ]
+    const completion = await safeChatCompletion({
+      feature: "oneonone_questions",
+      params: {
+        model: "gpt-4.1-mini",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content: typeConfig.systemPrompt
+          },
+          { role: "user", content: prompt }
+        ]
+      }
     });
 
     const raw = completion.choices[0]?.message?.content ?? "{}";
@@ -112,11 +124,24 @@ export async function POST(request: Request) {
       questions: parsed.questions ?? []
     };
 
+    void logUsageServer("oneonone_questions_success", {
+      skillMapId,
+      interviewType
+    });
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("Interview questions API error", error);
+    void logUsageServer("oneonone_questions_error", {
+      message: error instanceof Error ? error.message : String(error)
+    });
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError(
+      "ONEONONE_QUESTIONS_OPENAI_ERROR",
+      locale
+    );
     return NextResponse.json(
-      { error: "面接質問の生成中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }

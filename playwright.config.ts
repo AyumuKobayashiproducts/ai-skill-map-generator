@@ -4,7 +4,9 @@ export default defineConfig({
   testDir: "./tests/e2e",
   use: {
     baseURL: "http://localhost:3000",
-    trace: "on-first-retry"
+    trace: "on-first-retry",
+    // デモ動画を録画したい場合だけ PLAYWRIGHT_DEMO=1 を付けて実行する
+    video: process.env.PLAYWRIGHT_DEMO ? "on" : "off"
   },
   projects: [
     {

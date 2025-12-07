@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
-import { createOpenAIClient } from "@/lib/openaiClient";
+import { safeChatCompletion } from "@/lib/openaiRetry";
+import { logUsageServer } from "@/lib/usageServerLogger";
 import type { TimeSimulationResult } from "@/types/skill";
 import { TimeSimulateRequestSchema } from "@/types/api";
 import { loadSkillMapById } from "@/lib/skillMapLoader";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 export async function POST(request: Request) {
   try {
@@ -12,16 +15,16 @@ export async function POST(request: Request) {
     const loaded = await loadSkillMapById(skillMapId);
 
     if (!loaded) {
+      const locale = getRequestLocale(request);
+      const { code, message } = getApiError("TIME_SIM_NOT_FOUND", locale);
       return NextResponse.json(
-        { error: "指定されたスキルマップが見つかりませんでした。" },
+        { error: message, code },
         { status: 404 }
       );
     }
 
     const roadmap30: string = loaded.roadmap30;
     const roadmap90: string = loaded.roadmap90;
-
-    const openai = createOpenAIClient();
 
     const prompt = [
       "あなたはソフトウェアエンジニアの学習計画を立てるコーチです。",
@@ -52,16 +55,19 @@ export async function POST(request: Request) {
       "- 日/週単位でタスクをまとめ、現実的な優先順位付けをしてください。"
     ].join("\n");
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content: "あなたは現実的な学習計画を立てることが得意なメンターです。"
-        },
-        { role: "user", content: prompt }
-      ]
+    const completion = await safeChatCompletion({
+      feature: "time_simulate",
+      params: {
+        model: "gpt-4.1-mini",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content: "あなたは現実的な学習計画を立てることが得意なメンターです。"
+          },
+          { role: "user", content: prompt }
+        ]
+      }
     });
 
     const raw = completion.choices[0]?.message?.content ?? "{}";
@@ -73,11 +79,18 @@ export async function POST(request: Request) {
       notes: parsed.notes ?? ""
     };
 
+    void logUsageServer("time_simulate_success", { skillMapId });
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("Time simulate API error", error);
+    void logUsageServer("time_simulate_error", {
+      message: error instanceof Error ? error.message : String(error)
+    });
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError("TIME_SIM_OPENAI_ERROR", locale);
     return NextResponse.json(
-      { error: "学習時間シミュレーション中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }

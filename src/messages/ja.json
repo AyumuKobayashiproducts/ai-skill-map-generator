@@ -1,0 +1,956 @@
+{
+  "app": {
+    "name": "AI Skill Map Generator"
+  },
+  "home": {
+    "badge": "AI × キャリア診断",
+    "hero": {
+      "titleLine1": "職務経歴を入力するだけで、",
+      "titleLine2": "転職準備がまるっと完成",
+      "lead": "スキルマップ・学習ロードマップ・求人マッチング・面接練習を <strong>60秒で一括生成</strong>。とくに「1〜3年目の Web エンジニア」が、次の転職で失敗しないための「全体像」と「最初の一歩」を一枚のマップでつかむことをゴールにしています。",
+      "badgeFree": "完全無料",
+      "badgeMailOnly": "登録はメールアドレスのみ",
+      "badgeFast": "60秒で診断完了"
+    },
+    "steps": {
+      "label": "たった 3 ステップ",
+      "items": [
+        {
+          "title": "ゴールを選ぶ",
+          "desc": "「フロントエンド特化」「フルスタック」など、いま近づきたいキャリアのイメージを一つだけ選びます。"
+        },
+        {
+          "title": "スキル・職務経歴を入力",
+          "desc": "いままでやってきたことを日本語でそのまま書きます。サンプル文をベースに少し書き換えるだけでも大丈夫です。"
+        },
+        {
+          "title": "結果で全体像をつかむ",
+          "desc": "スキルマップと転職準備スコアを見て、どこを伸ばせば良いか・どんな求人が合いそうかを一緒に確認します。"
+        }
+      ]
+    },
+    "guide": {
+      "title": "初めての方へ：まずはお試しください",
+      "description": "所要時間わずか 60秒で、あなたに最適化されたキャリア診断が完成します",
+      "howToTitle": "おすすめの使い方",
+      "howToBody": "右側のフォームで「<strong>サンプル文を入れてみる</strong>」を押してから送信してください。どんな診断結果が出るか一目で分かります。",
+      "dashboardLink": "ダッシュボード",
+      "dashboardText": "で診断や 1on1 練習の履歴を振り返り",
+      "aboutLink": "このアプリについて",
+      "aboutText": "で設計意図や技術スタックを確認"
+    },
+    "features": {
+      "title": "このツールでできること",
+      "subtitle": "1回の診断で、転職準備に必要なものが揃います",
+      "items": "スキルマップと「あなたのクラス（ジョブ）」を自動生成|30日 / 90日ロードマップと今日やることの提案|気になる求人とのマッチングスコアと不足スキルの可視化|評価面談を想定した 1on1 練習とフィードバック|転職用ポートフォリオの棚卸しと Markdown 出力"
+    },
+    "formHeader": {
+      "title": "診断フォーム",
+      "badge": "AI Ready"
+    },
+    "demoGuide": {
+      "title": "ホーム画面：診断のスタート地点",
+      "description": "ここで職務経歴を入力し、「サンプル文を入れてみる」→「AI にスキルマップを生成してもらう」の順に進むと、デモ動画のように結果画面へ遷移します。"
+    }
+  },
+  "dashboard": {
+    "skillMapHistory": {
+      "title": "スキルマップ履歴",
+      "description": "直近の解析結果から、あなたのスキルバランスの変化をざっくり振り返ることができます。",
+      "ctaNewDiagnosis": "新しく診断する",
+      "loggedInNote": "ログイン中のユーザーに紐づく診断結果のみを表示しています。",
+      "guestNote": "ログインしていないため、全体の診断履歴を表示しています（デモ用）。",
+      "careerTypeLabel": "あなたのキャリアタイプ"
+    },
+    "errors": {
+      "listFetchDefault": "一覧の取得に失敗しました。",
+      "listFetchGeneric": "一覧取得中にエラーが発生しました。",
+      "sessionsFetchDefault": "1on1 セッションの取得に失敗しました。",
+      "sessionsFetchGeneric": "1on1 セッション取得中にエラーが発生しました。"
+    },
+    "checklist": {
+      "title": "転職準備チェックリスト",
+      "subtitle": "スコアだけでなく、「やるべきこと」がどこまで進んでいるかをざっくり確認できます。",
+      "items": {
+        "resume_updated": "職務経歴書を直近のプロジェクトまで更新した",
+        "github_ready": "GitHub / ポートフォリオのリンクを整理した",
+        "job_research": "気になる求人を 3 件以上ピックアップした",
+        "interview_practice": "直近 7 日以内に 1 回は 1on1 面接練習をした"
+      },
+      "completedPrefix": "完了:",
+      "levelLabelHigh": "High（今すぐ動ける）",
+      "levelLabelMedium": "Medium（準備しながら動ける）",
+      "levelLabelLow": "Low（まずは土台固め）",
+      "readinessLevelLabel": "転職準備レベル"
+    },
+    "retention": {
+      "title": "転職準備のリマインド",
+      "line1": "前回の診断から {days}日 経過しています。",
+      "line2": "学習ロードマップを 1 ステップ進めるか、1on1 練習でアウトプットしておくと、次の面接のときに「直近の成長ストーリー」として話しやすくなります。",
+      "ctaDiagnose": "✨ もう一度診断する",
+      "ctaInterview": "🎤 1on1 練習をする"
+    },
+    "scoreTrend": {
+      "title": "診断スコアの推移",
+      "subtitle": "スキルマップの合計スコアの変化をざっくり確認できます。",
+      "ctaDiagnoseAgain": "＋ もう一度診断する",
+      "empty": "まだ診断履歴が少ないため、推移グラフは表示されません。2回以上診断すると、ここに変化が表示されます。",
+      "latestTotal": "直近の合計スコア",
+      "diffUp": "▲ 前回比 +{diff}",
+      "diffDown": "▼ 前回比 {diff}",
+      "diffSame": "＝ 前回と同じスコア",
+      "sparklineCaption": "左が過去、右が最新の診断です。棒グラフが右肩上がりになっていれば、スキルマップ全体として伸びている状態です。"
+    },
+    "categoryTrend": {
+      "title": "カテゴリ別の伸び・要ケア",
+      "subtitle": "直近2回の診断を比較して、どの領域が伸びたか / 下がったかをざっくり確認できます。",
+      "empty": "2回以上診断すると、直近2回分を比較してカテゴリごとのミニトレンドが表示されます。",
+      "improvedTitle": "伸びたカテゴリ",
+      "noImproved": "今回は数値上の「伸び」が確認できるカテゴリはありませんでした。",
+      "declinedTitle": "要ケアなカテゴリ",
+      "noDeclined": "スコアが下がったカテゴリはありません。全体としてキープ以上の状態です。"
+    },
+    "categoryLabels": {
+      "frontend": "フロントエンド",
+      "backend": "バックエンド",
+      "infra": "インフラ",
+      "ai": "AI",
+      "tools": "ツール",
+      "typeGeneral": "総合",
+      "typeTechnical": "技術",
+      "typeBehavioral": "行動・スタンス",
+      "typeUnknown": "その他"
+    },
+    "tagline": {
+      "frontend": "UI/UX へのこだわりが強いフロント寄りエンジニアです。",
+      "backend": "ビジネスロジックとデータ設計が得意なバックエンド寄りエンジニアです。",
+      "infra": "安定稼働や運用を意識したインフラ志向のエンジニアです。",
+      "ai": "AI 技術をプロダクトに組み込むことに関心の高いエンジニアです。",
+      "tools": "開発効率を最大化するツール選定やワークフロー改善が得意です。"
+    },
+    "oneOnOne": {
+      "title": "1on1 練習の振り返り",
+      "subtitle": "面接練習のセッション数とスコアの推移をざっくり確認できます。",
+      "ctaDetails": "詳細を見る",
+      "noSessions": "まだ 1on1 練習のセッション履歴がありません。結果画面の「1on1 練習モード」から、まずは 1 セッション試してみましょう。",
+      "totalTitle": "総セッション数",
+      "totalCaption": "直近のスキルマップに紐づく 1on1 練習の回数です。",
+      "avgTitle": "平均スコア",
+      "avgCaption": "セッション総評の overallScore を平均した値です。",
+      "bestTypeTitle": "よく練習しているタイプ",
+      "bestTypeEmpty": "データが十分に集まると、ここにタイプ別の傾向が表示されます。",
+      "nextStepTitle": "Next Step",
+      "nextStepBody": "スキルマップだけでなく、実際の「話す力」を鍛えることで、転職の合格率を一段引き上げることを狙っています。面接本番を想定した 1on1 セッションを、週 1 回のペースで積み上げていきましょう。",
+      "ctaPracticeNow": "🎤 今すぐ 1on1 練習をする",
+      "ctaUsageLog": "📈 利用ログを見る"
+    },
+    "emptyState": {
+      "heading": "さあ、最初の診断を始めましょう",
+      "body": "まだスキルマップが生成されていません。たった60秒で、あなただけのキャリアマップが完成します。",
+      "ctaDiagnose": "診断を始める",
+      "ctaAbout": "使い方を見る",
+      "badgeFast": "60秒で完了",
+      "badgeSafe": "データは安全",
+      "badgeFree": "完全無料"
+    },
+    "list": {
+      "badgeLatest": "最新",
+      "totalLabel": "合計:",
+      "details": "詳細"
+    },
+    "demoGuide": {
+      "title": "ダッシュボード：診断と 1on1 の履歴",
+      "description": "過去の診断結果や 1on1 練習のスコア推移を一覧で振り返る画面です。デモ動画では、ここまでの一連の流れ（ホーム → 診断 → 結果 → ダッシュボード）を 30〜60 秒で確認できるようにしています。"
+    }
+  },
+  "result": {
+    "breadcrumb": {
+      "dashboard": "ダッシュボード",
+      "result": "スキルマップ結果"
+    },
+    "hero": {
+      "title": "診断完了！",
+      "subtitle": "あなたのスキルマップと転職準備プランが完成しました",
+      "badges": {
+        "analysisDone": "スキル分析完了",
+        "roadmapDone": "ロードマップ生成完了",
+        "savedToDashboard": "ダッシュボードに保存済み",
+        "downloadMarkdown": "Markdown レポートをダウンロード"
+      }
+    },
+    "nextSteps": {
+      "title": "次の一歩：このまま活用しましょう",
+      "description": "診断結果を「読んで終わり」にせず、学習・求人リサーチ・面接練習まで一気通貫で進めていきましょう。",
+      "cards": {
+        "learning": {
+          "title": "学習ロードマップを進める",
+          "body": "ロードマップの中から「今週やること」を 1 つだけ選んで着手してみましょう。取り組んだら、もう一度診断してスコアの変化を確認できます。"
+        },
+        "jobs": {
+          "title": "求人マッチングを試す",
+          "body": "気になる求人票を貼り付けて、マッチ度と不足スキルを確認してみましょう。「どの求人がいまの自分に合いそうか」が見えやすくなります。"
+        },
+        "interview": {
+          "title": "面接練習でアウトプットする",
+          "body": "スキルマップの内容をもとに 1on1 練習で回答を作ってみましょう。STAR 法に沿ったフィードバックと、セッション履歴のスコア推移を使って、「話す力」の成長も数字で追いかけていけます。"
+        }
+      },
+      "quickActions": {
+        "title": "よく使うアクション",
+        "toDashboard": "ダッシュボードで履歴を見る",
+        "again": "もう一度診断する",
+        "usage": "使い方を振り返る",
+        "about": "アプリについて"
+      }
+    },
+    "demoGuide": {
+      "title": "結果画面：スキルマップと次のアクション",
+      "description": "この画面では、スキルレーダー・転職準備スコア・学習計画・キャリア＆求人・1on1 練習などをタブで切り替えて確認できます。デモ動画では、「概要 → キャリア & 求人 → 1on1」へとタブを切り替えながら全体像を紹介しています。"
+    },
+    "tabs": {
+      "overview": "概要",
+      "learning": "学習計画",
+      "career": "キャリア & 求人",
+      "export": "エクスポート",
+      "ariaLabel": "スキルマップ結果のセクション切り替え"
+    },
+    "readiness": {
+      "title": "転職準備スコア",
+      "errorFetchDefault": "転職準備スコアの取得に失敗しました。",
+      "errorSkillMapNotFound": "診断結果が見つかりませんでした。スキルマップが削除された可能性があります。最新の診断を実行してから、再度この画面を開いてください。",
+      "errorAiFailed": "転職準備スコアの算出中に AI でエラーが発生しました。時間をおいてから、もう一度お試しください。",
+      "levelHigh": "✨ すぐに動ける状態",
+      "levelMedium": "📈 準備しながら動ける状態",
+      "levelLow": "🌱 まずは土台固めが必要",
+      "scoreOutOf": "/ {max}"
+    },
+    "classCard": {
+      "title": "あなたのクラス",
+      "description": "カテゴリの中で最もスコアが高い分野をベースにした、あなたの現在の「ジョブ」です。"
+    },
+    "classNames": {
+      "frontend": "フロントエンドメイジ",
+      "backend": "バックエンドナイト",
+      "infra": "インフラガーディアン",
+      "ai": "AI アルケミスト",
+      "tools": "ツールアーティスト"
+    },
+    "badgeNames": {
+      "fullstack": "フルスタック見習い",
+      "ui": "UI 職人",
+      "ai": "AI 使い魔",
+      "reliability": "信頼性エンジニア",
+      "growing": "成長中エンジニア"
+    },
+    "summary": {
+      "title": "今日のまとめ",
+      "bodyWithSkill": "あなたは{classLabel}タイプのエンジニアです。直近では{firstSkill}などを伸ばしていくと、次のキャリアの選択肢が広がりそうです。",
+      "bodyNoSkill": "あなたは{classLabel}タイプのエンジニアです。フロントエンドまわりを中心に伸ばしていくと、次のキャリアの選択肢が広がりそうです。"
+    },
+    "overview": {
+      "radarTitle": "スキルレーダーチャート",
+      "comparisonTitle": "前回との比較",
+      "comparisonDescription": "一つ前の解析結果と現在のスキルバランスを重ねて表示しています。",
+      "recommendTitle": "おすすめスキル",
+      "strengthsTitle": "強み",
+      "weaknessesTitle": "伸ばしどころ",
+      "notProvided": "（未入力）",
+      "currentLabel": "今回",
+      "previousLabel": "前回"
+    },
+    "export": {
+      "title": "データをエクスポート",
+      "description": "スキルマップのデータを各種形式でコピーできます。",
+      "buttons": {
+        "copyMarkdown": "📋 Markdown としてコピー",
+        "copyJson": "📋 JSON をコピー",
+        "copyResume": "📄 職務経歴書テンプレートをコピー"
+      },
+      "markdown": {
+        "title": "# AI Skill Map",
+        "classLine": "- クラス: {classLabel} (Lv.{level})",
+        "strengthsLine": "- 強み: {strengths}",
+        "weaknessesLine": "- 弱み: {weaknesses}",
+        "nextSkillsLine": "- 次に学ぶと良いスキル: {skills}",
+        "roadmap30Title": "## 30日ロードマップ",
+        "roadmap90Title": "## 90日ロードマップ"
+      },
+      "resume": {
+        "title": "# 職務経歴書（ドラフト）",
+        "profileTitle": "## 1. プロフィール要約",
+        "profileClassLine": "- クラス: {classLabel}（Lv.{level}）",
+        "profileStrengthsLine": "- 強み: {strengths}",
+        "profileWeaknessesLine": "- 弱み / 今後の伸ばしどころ: {weaknesses}",
+        "stackTitle": "## 2. 技術スタック（サマリ）",
+        "stackFrontend": "- フロントエンド: レベル {value}",
+        "stackBackend": "- バックエンド: レベル {value}",
+        "stackInfra": "- インフラ: レベル {value}",
+        "stackAi": "- AI / 機械学習: レベル {value}",
+        "stackTools": "- 開発ツール / ワークフロー: レベル {value}",
+        "nextSkillsTitle": "## 3. 今後フォーカスしたいスキル",
+        "nextSkillsItem": "- {skill}",
+        "plan30Title": "## 4. 30日プラン（学習・改善）",
+        "plan90Title": "## 5. 90日プラン（キャリアの方向性）"
+      }
+    },
+    "career": {
+      "jobMatch": {
+        "title": "求人票マッチングスコア",
+        "description": "気になる求人票のテキスト or URL を貼ると、このスキルマップとのマッチング度合いと不足スキル、専用ロードマップを表示します。",
+        "fields": {
+          "jobTextLabel": "求人票テキスト",
+          "jobTextPlaceholder": "求人票の本文をそのまま貼り付けてください（職務内容・必須/歓迎スキルなど）",
+          "shortcutHint": "⌘+Enter で実行",
+          "jobUrlLabel": "求人URL",
+          "jobUrlOptional": "（任意）",
+          "jobUrlPlaceholder": "例）https://example.com/job/frontend-engineer"
+        },
+        "errors": {
+          "needInput": "求人票のテキストかURLのどちらかを入力してください。",
+          "matchFailed": "求人マッチングに失敗しました。内容を確認のうえ、時間をおいて再度お試しください。",
+          "skillMapNotFound": "診断結果が見つかりませんでした。スキルマップが削除された可能性があります。もう一度診断を実行してから、求人マッチングをお試しください。",
+          "aiFailed": "求人マッチング中に AI でエラーが発生しました。時間をおいてから、もう一度お試しください。"
+        },
+        "buttons": {
+          "runMatch": "この求人とマッチングしてみる",
+          "running": "AI がマッチング中...",
+          "insertSample": "💡 サンプル求人を入れてみる"
+        },
+        "score": {
+          "label": "マッチングスコア",
+          "scoreOutOf": "/ {max}",
+          "high": "この求人との相性は良好です！",
+          "medium": "いくつかのスキルを補強すると良さそうです",
+          "low": "現時点では少しギャップがありそうです"
+        },
+        "matchedSkillsTitle": "マッチしているスキル",
+        "missingSkillsTitle": "不足している/弱いスキル",
+        "summaryTitle": "マッチングの要約",
+        "roadmapTitle": "この求人に寄せるためのロードマップ"
+      },
+      "risk": {
+        "title": "キャリアリスク分析",
+        "description": "現在のスキル構成から、「技術の陳腐化」「属人化」「自動化される」リスクをスコア化し、どこを補強すると良いかを可視化します。",
+        "errors": {
+          "analyzeFailed": "キャリアリスク分析に失敗しました。時間をおいてから、もう一度お試しください。",
+          "skillMapNotFound": "診断結果が見つかりませんでした。スキルマップが削除された可能性があります。もう一度診断を実行してから、キャリアリスク分析をお試しください。",
+          "aiFailed": "キャリアリスク分析中に AI でエラーが発生しました。時間をおいてから、もう一度お試しください。"
+        },
+        "buttons": {
+          "analyze": "キャリアリスクを分析する",
+          "analyzing": "AI が分析中...",
+          "reanalyze": "再分析する"
+        },
+        "overall": {
+          "label": "総合リスクスコア",
+          "high": "いくつかの領域で対策を検討することをおすすめします",
+          "medium": "バランスは取れていますが、改善の余地があります",
+          "low": "全体的にリスクは低めです"
+        },
+        "levels": {
+          "high": "高リスク",
+          "medium": "中リスク",
+          "low": "低リスク"
+        },
+        "items": {
+          "obsolescence": {
+            "label": "陳腐化リスク",
+            "description": "技術トレンドの変化により、スキルの価値が下がるリスク"
+          },
+          "busFactor": {
+            "label": "属人化リスク",
+            "description": "特定の環境やチームに依存しすぎているリスク"
+          },
+          "automation": {
+            "label": "自動化リスク",
+            "description": "AI やツールによって代替される可能性のリスク"
+          }
+        },
+        "summaryTitle": "リスクの要約",
+        "actionsTitle": "具体的なアクション"
+      }
+    },
+    "oneOnOne": {
+      "title": "1on1 練習モード",
+      "intro": "評価面談でよく聞かれる質問に対して回答を考え、AI マネージャーからフィードバックと模範回答をもらえます。",
+      "types": {
+        "general": {
+          "label": "総合",
+          "desc": "自己紹介・志望動機など"
+        },
+        "technical": {
+          "label": "技術",
+          "desc": "技術選定・課題解決"
+        },
+        "behavioral": {
+          "label": "行動 (STAR)",
+          "desc": "行動・成果エピソード"
+        }
+      },
+      "errors": {
+        "questionsFetch": "1on1 の質問取得に失敗しました。時間をおいてから、もう一度お試しください。",
+        "answerMissing": "質問への回答を入力してください。",
+        "feedbackFailed": "フィードバックの取得に失敗しました。回答内容を確認し、時間をおいて再度お試しください。",
+        "saveSessionNoExchanges": "少なくとも1問はフィードバックを受けてから保存してください。",
+        "saveSessionFailed": "セッションの保存に失敗しました。時間をおいてから、もう一度お試しください。",
+        "questionsSkillMapNotFound": "1on1 の元になる診断結果が見つかりませんでした。スキルマップが削除された可能性があります。もう一度診断を実行してから、1on1 練習モードをお試しください。",
+        "questionsAiFailed": "1on1 の質問生成中に AI でエラーが発生しました。時間をおいてから、もう一度お試しください。",
+        "feedbackAiFailed": "フィードバック生成中に AI でエラーが発生しました。回答内容を軽く見直したうえで、時間をおいて再度お試しください。",
+        "saveSessionSummaryAiFailed": "セッション総評の生成中に AI でエラーが発生しました。フィードバック自体は確認できているので、必要に応じてテキストをコピーしておくことをおすすめします。",
+        "sessionsFetchFailedDetailed": "1on1 セッション履歴の取得に失敗しました。ページを再読み込みしても解消しない場合は、時間をおいてから再度お試しください。",
+        "sessionsSaveFailedDetailed": "1on1 セッションの保存に失敗しました。ネットワーク状態を確認のうえ、時間をおいてからもう一度お試しください。"
+      },
+      "loadingQuestions": "質問を準備しています...",
+      "noQuestions": "質問の取得に失敗しました",
+      "progressLabel": "{current} / {total}",
+      "answerLabel": "あなたの回答",
+      "answerPlaceholder": "実際の1on1で話すつもりで、できるだけ具体的に書いてみてください。",
+      "shortcutHint": "⌘+Enter で送信",
+      "buttons": {
+        "feedback": "フィードバックをもらう",
+        "feedbackLoading": "AI がレビュー中...",
+        "nextQuestion": "次の質問へ →",
+        "saveSession": "セッションを保存して総評を見る",
+        "saveSessionLoading": "セッションを保存中..."
+      },
+      "ruleScore": {
+        "title": "総合スコア（自己評価）",
+        "description": "文字数・具体性・構造・STAR要素をもとに採点しています。",
+        "scoreOutOf": "/ {max}"
+      },
+      "feedbackBlock": {
+        "title": "フィードバック"
+      },
+      "improvedAnswerBlock": {
+        "title": "模範回答の例"
+      },
+      "sessionSummary": {
+        "title": "今回のセッション総評",
+        "scoreNote": "1 が要改善、5 がとても良い状態の目安です。",
+        "strongPointsTitle": "良かった点",
+        "improvementPointsTitle": "改善すると良い点",
+        "nextStepsTitle": "次回までにやること",
+        "summaryTitle": "総評",
+        "scoreOutOf": "/ {max}"
+      },
+      "history": {
+        "title": "過去の 1on1 セッション履歴（直近 5 件）",
+        "loading": "読み込み中...",
+        "empty": "まだ保存されたセッションはありません。1問以上フィードバックを受けて「セッションを保存して総評を見る」を押すと、ここに履歴が表示されます。",
+        "questionsLabel": "質問数: {count}",
+        "scoreLabel": "スコア: {score}",
+        "detailsTitle": "セッション詳細（{type}）",
+        "close": "閉じる",
+        "savedScoreNote": "保存時点の総合スコアです。",
+        "qaTitle": "Q&A とフィードバック（{count} 件）",
+        "yourAnswerLabel": "あなたの回答：",
+        "aiFeedbackLabel": "AI フィードバック："
+      }
+    },
+    "todayTask": {
+      "title": "今日やること",
+      "description": "ロードマップとスキルマップを元に、今日1日で取り組むべきタスクを1つだけ提案します。",
+      "timeLabel": "今日使える学習時間",
+      "timeOptions": {
+        "30m": "30分",
+        "1h": "1時間",
+        "1_5h": "1.5時間",
+        "2h": "2時間",
+        "3h": "3時間",
+        "4h": "4時間+"
+      },
+      "buttons": {
+        "generate": "今日のタスクを決める",
+        "generating": "AI がタスクを選定中..."
+      },
+      "errors": {
+        "generateFailed": "今日のタスク生成に失敗しました。時間をおいてから、もう一度お試しください。",
+        "skillMapNotFound": "診断結果が見つかりませんでした。スキルマップが削除された可能性があります。もう一度診断を実行してから、今日のタスク生成をお試しください。",
+        "aiFailed": "今日のタスク生成中に AI でエラーが発生しました。時間をおいてから、もう一度お試しください。"
+      },
+      "task": {
+        "estimated": "⏱️ 約 {hours} 時間",
+        "descriptionTitle": "内容",
+        "stepsTitle": "手順の例"
+      },
+      "completed": {
+        "title": "お疲れさまでした！",
+        "subtitle": "今日の学習を完了しました"
+      }
+    }
+  },
+  "about": {
+    "hero": {
+      "title": "このアプリについて",
+      "subtitle": "AI Skill Map Generator の概要と技術スタック",
+      "intro": "「AI Skill Map Generator」は、若手 Web エンジニアの初めての転職を想定した、スキルマップ＆キャリアコーチングツールです。面接やポートフォリオ提出の場で、「自分が何を考えてこのプロダクトを作ったか」を説明しやすいように設計しています。"
+    },
+    "sections": {
+      "goalTitle": "サービスの狙い",
+      "roleTitle": "自分の役割",
+      "roleBody": "このプロジェクトでは、企画・設計・実装のすべてを一人で担当しています。",
+      "techStackTitle": "技術スタック",
+      "pricingTitle": "料金イメージ（もし本当に売るとしたら）",
+      "pricingBody": "このアプリは現状ポートフォリオ用として無料で公開していますが、「実際に売るとしたらどう課金するか？」も docs/monetization.md に整理しています。ここでは、その内容をざっくり UI としてまとめています。",
+      "futureTitle": "今後やりたい改善",
+      "sceneTitle": "この画面の想定シーン",
+      "sceneBody": "面接やカジュアル面談の場で、「このアプリを通して、自分がどう考え、どう設計・実装したか」を説明するための解説ページとして用意しています。実際の画面をお見せしながら、技術的な深掘りや設計の意図についてお話しできればと思っています。",
+      "feedbackTitle": "フィードバック・改善アイデアはこちら",
+      "feedbackBody": "「ここが分かりづらかった」「こういう機能が欲しい」などのフィードバックがあれば、ぜひ教えてください。実務でも使えるプロダクトに近づけていきたいと考えています。"
+    },
+    "features": {
+      "inventory": {
+        "title": "スキル棚卸し",
+        "desc": "AI が職務経歴を分析し、スキルを言語化"
+      },
+      "roadmap": {
+        "title": "ロードマップ生成",
+        "desc": "30日/90日の具体的な学習計画を自動作成"
+      },
+      "jobMatch": {
+        "title": "求人マッチング",
+        "desc": "求人票との相性とギャップを可視化"
+      }
+    },
+    "roles": {
+      "planning": {
+        "title": "企画・設計",
+        "desc": "ユーザーストーリーと画面遷移の設計"
+      },
+      "frontend": {
+        "title": "フロントエンド",
+        "desc": "Next.js + TypeScript での UI 実装"
+      },
+      "backend": {
+        "title": "バックエンド",
+        "desc": "Supabase / OpenAI を利用した API 設計"
+      },
+      "testing": {
+        "title": "テスト",
+        "desc": "ロジック設計とテストコードの作成"
+      },
+      "design": {
+        "title": "デザイン",
+        "desc": "UI 調整・モバイル対応・UX 改善"
+      }
+    },
+    "techStack": {
+      "frontend": {
+        "category": "フロントエンド"
+      },
+      "backend": {
+        "category": "バックエンド"
+      },
+      "dataAuth": {
+        "category": "データ / 認証"
+      },
+      "ai": {
+        "category": "AI"
+      },
+      "quality": {
+        "category": "品質"
+      },
+      "ops": {
+        "category": "運用"
+      }
+    },
+    "pricing": {
+      "free": {
+        "name": "Free（現在の実装）",
+        "price": "無料",
+        "badge": "現状の挙動",
+        "description": "ポートフォリオ用として、すべての機能を無料で体験できるモードです。本番運用時には回数制限を掛ける想定です。",
+        "features": "診断（スキルマップ / ロードマップ / リスク診断）|求人マッチング・ポートフォリオ整理|1on1 練習（履歴・スコア推移を含む）"
+      },
+      "pro": {
+        "name": "Pro（構想段階）",
+        "price": "月額 980〜1,500円 想定",
+        "badge": "アイデア",
+        "description": "転職活動の 1〜3 ヶ月間、本気で走り切る人向けの有料プランを想定しています（このリポジトリではまだ実装していません）。",
+        "features": "診断回数・1on1 セッション保存件数の上限緩和|転職準備スコア・1on1 スコアの推移グラフ|ポートフォリオ出力テンプレートの追加（Findy / レジュメ用 など）"
+      }
+    },
+    "future": {
+      "items": "企業側のポジション要件を取り込んだ、より精度の高い求人マッチング|スキルマップの履歴から、長期的な成長曲線を可視化する機能|チームリーダーやメンターが、メンバーの成長を支援するためのビュー"
+    },
+    "feedback": {
+      "buttons": {
+        "discussions": "💬 GitHub Discussions を開く",
+        "issues": "🐛 Issue / Feature リクエストを作成"
+      }
+    }
+  },
+  "legal": {
+    "hero": {
+      "title": "利用について",
+      "subtitle": "AI Skill Map Generator の利用規約と注意事項",
+      "intro": "AI Skill Map Generator は、開発者本人のポートフォリオ用として公開しているデモアプリです。実際の転職活動で利用する場合の前提や注意点を、以下にまとめています。"
+    },
+    "sections": {
+      "provision": {
+        "title": "提供形態",
+        "content": "本アプリは個人開発によるものであり、営利目的の有償サービスではありません。予告なく仕様変更や停止を行う場合があります。"
+      },
+      "data": {
+        "title": "データの取り扱い",
+        "items": [
+          "入力されたスキル・職務経歴などの情報は Supabase（Postgres）に保存されます。",
+          "これらの情報は、開発者による動作検証・改善のために参照する場合があります。",
+          "第三者への販売・共有は行いませんが、技術的なログや統計として匿名で扱う場合があります。",
+          "アカウント削除を行うことで、本アプリ上に保存されたスキルマップや利用ログを削除できます。"
+        ]
+      },
+      "disclaimer": {
+        "title": "免責事項",
+        "items": [
+          "本アプリの分析結果やスコアは、あくまで参考情報であり、転職活動の結果を保証するものではありません。",
+          "障害・バグ・サービス停止などにより生じたいかなる損害についても、開発者は責任を負いかねます。"
+        ]
+      },
+      "contact": {
+        "title": "お問い合わせ",
+        "content": "本アプリに関するご質問や不具合の報告は、GitHub リポジトリの Issues からご連絡いただけると助かります。"
+      }
+    },
+    "quickLinks": {
+      "title": "関連リンク",
+      "subtitle": "アカウント管理やお問い合わせ",
+      "deleteAccount": "アカウント削除",
+      "githubIssues": "GitHub Issues"
+    }
+  },
+  "portfolio": {
+    "hero": {
+      "title": "ポートフォリオ棚卸しジェネレーター",
+      "subtitle": "プロジェクトを整理して魅力的なポートフォリオを作成",
+      "intro": "自分のプロジェクトを入力すると、ポートフォリオに載せるべき案件 TOP3 と紹介文を AI が提案します。転職活動や面接準備にお役立てください。"
+    }
+  },
+  "authDelete": {
+    "errors": {
+      "noUser": "ログイン情報が取得できませんでした。",
+      "deleteFailed": "アカウントデータの削除に失敗しました。時間をおいてから、もう一度お試しください。"
+    },
+    "hero": {
+      "title": "アカウント削除",
+      "body": "このページでは、AI Skill Map Generator 上に保存されたスキルマップや利用ログなどのデータを削除できます。（Supabase の認証アカウントそのものの削除は対象外です。）"
+    },
+    "status": {
+      "currentEmail": "現在ログイン中のメールアドレス: {email}",
+      "notLoggedIn": "ログインしていないため、削除対象のアカウントを特定できません。先に右上の「ログイン」からサインインしてください。",
+      "deleted": "アカウントデータを削除しました。トップページに戻ります。"
+    },
+    "confirm": {
+      "warning": "削除すると、このアプリに保存されたスキルマップ履歴や利用ログは復元できません。",
+      "label": "上記の内容を理解したうえで、このアプリに保存された自分のデータを削除します。"
+    },
+    "button": {
+      "deleting": "削除中...",
+      "delete": "このアプリの保存データを削除する"
+    }
+  },
+  "authReset": {
+    "errors": {
+      "missing": "新しいパスワードを2回入力してください。",
+      "notMatch": "パスワードが一致していません。もう一度確認してください。",
+      "tooShort": "パスワードは8文字以上を推奨します。",
+      "updateFailed": "パスワードの更新に失敗しました。リンクの有効期限が切れている可能性があります。もう一度メールからアクセスしてください。"
+    },
+    "hero": {
+      "title": "パスワードの再設定",
+      "body": "受信したメールのリンクからこのページにアクセスしている場合、新しいパスワードを設定できます。"
+    },
+    "form": {
+      "passwordLabel": "新しいパスワード",
+      "passwordPlaceholder": "8文字以上を推奨",
+      "confirmLabel": "新しいパスワード（確認）",
+      "confirmPlaceholder": "もう一度入力してください"
+    },
+    "status": {
+      "updated": "パスワードを更新しました。ログイン画面に戻ります。"
+    },
+    "button": {
+      "updating": "更新中...",
+      "update": "パスワードを更新する"
+    }
+  },
+  "skillForm": {
+    "errors": {
+      "loginRequired": "スキルマップを生成するには、右上の「ログイン」からサインアップ / ログインしてください。",
+      "textRequired": "スキル・職務経歴を入力してください。",
+      "aiFailed": "AI 解析に失敗しました。時間をおいてから、もう一度お試しください。",
+      "aiFailedOpenAI": "AI 解析中にエラーが発生しました。OpenAI 側の一時的な問題かもしれません。数分おいてから、もう一度お試しください。",
+      "aiFailedSave": "診断結果の保存に失敗しました。ネットワーク状態を確認のうえ、時間をおいてからもう一度お試しください。問題が続く場合はブラウザを再読み込みしてから再実行してください。"
+    },
+    "loading": {
+      "checkingLogin": "ログイン状態を確認しています…",
+      "title": "AI が診断中...",
+      "eta": "予想時間: 約 30〜60秒",
+      "steps": [
+        { "label": "職務経歴を要約中" },
+        { "label": "スキルを分類中" },
+        { "label": "ロードマップを生成中" }
+      ],
+      "button": "AI が分析中...（{step}/3）"
+    },
+    "locked": {
+      "title": "ログインが必要です",
+      "body": "スキルマップを生成・保存するにはログインしてください",
+      "button": "ログイン / 新規登録画面を開く"
+    },
+    "skillInput": {
+      "label": "あなたのスキル・職務経歴",
+      "description": "希望するポジション（例: フロントエンドエンジニア）や使っている技術、担当業務などをできるだけ具体的に書いてください。",
+      "placeholder": "例）フロントエンドエンジニアとして3年勤務。React / TypeScript / Next.js を中心にSPA開発を担当。バックエンドはNode.jsでAPIの実装経験あり。インフラはVercelとSupabaseを主に利用している。",
+      "countLabel": "{count} 文字",
+      "hint": "あなたの職務経歴やスキルセットをできるだけ具体的に入力してください。サンプル文ボタンで例文を挿入できます。",
+      "sampleButton": "サンプル文を入れてみる",
+      "sampleAria": "サンプル文を入力欄に挿入する"
+    },
+    "goal": {
+      "legend": "目指したいキャリアの方向性",
+      "aria": "キャリアの方向性",
+      "helper": "いま一番近づきたいイメージに近いものを選んでください。AI がスキルマップとロードマップを少しその方向に寄せてくれます。",
+      "options": {
+        "frontend_specialist": {
+          "label": "フロントエンド特化",
+          "desc": "UI/UXに集中"
+        },
+        "fullstack": {
+          "label": "フルスタック",
+          "desc": "幅広く対応"
+        },
+        "backend_api": {
+          "label": "バックエンド / API 中心",
+          "desc": "ロジック重視"
+        },
+        "tech_lead": {
+          "label": "テックリード候補",
+          "desc": "リーダーシップ"
+        },
+        "unsure": {
+          "label": "まだ特に決めていない",
+          "desc": "探索中"
+        }
+      }
+    },
+    "repo": {
+      "label": "GitHub リポジトリ URL",
+      "optional": "（任意）",
+      "placeholder": "例）https://github.com/username/portfolio",
+      "hint": "ポートフォリオ用リポジトリなどがあれば入力すると、AI が技術スタックのヒントとして活用します。"
+    },
+    "submit": {
+      "label": "AI にスキルマップを生成してもらう"
+    },
+    "samples": [
+      [
+        "フロントエンドエンジニアとして3年勤務。",
+        "React / Next.js / TypeScript を使った SPA / SSR 開発の経験があります。",
+        "状態管理は React Query / Zustand、スタイリングは Tailwind CSS が多いです。",
+        "バックエンドは Node.js（Express）や Supabase の Edge Functions を簡単に書ける程度です。",
+        "CI/CD は GitHub Actions、デプロイは Vercel を利用しています。",
+        "今後はよりアーキテクチャ設計やパフォーマンスチューニング、AI 連携にも強くなりたいです。"
+      ],
+      [
+        "受託開発会社でフルスタックエンジニアとして4年勤務。",
+        "フロントエンドは React / Vue、バックエンドは Node.js / NestJS、DB は PostgreSQL を主に使用しています。",
+        "要件定義〜設計〜実装〜テスト〜リリースまで一通り経験し、小規模プロジェクトでは4〜5名のチームリードも担当しました。",
+        "最近は Next.js / Prisma / Supabase を使ったモダンな SaaS 開発に興味があります。",
+        "インフラは AWS（EC2 / RDS / ECS）での構築経験があり、Terraform によるIaCも簡単なものなら扱えます。"
+      ],
+      [
+        "自社サービスでバックエンドエンジニアとして2年勤務。",
+        "主に Node.js（Express）と Go を使った REST API / バッチ処理の開発・運用を担当しています。",
+        "Redis / RabbitMQ を使った非同期処理や、New Relic / Datadog を使ったモニタリング・パフォーマンス改善も経験しました。",
+        "最近はフロントエンドとの連携を意識して、API 設計や OpenAPI ベースの型共有にも取り組んでいます。",
+        "今後はアーキテクチャ設計やドメインモデリングにも関わり、テックリードとしてチームを引っ張れるようになりたいです。"
+      ]
+    ]
+  },
+  "skillStory": {
+    "errors": {
+      "generateFailed": "ストーリーを生成できませんでした。"
+    },
+    "hero": {
+      "title": "あなたのプロフィールストーリー"
+    },
+    "loading": {
+      "text": "AI がストーリーを作成中です..."
+    },
+    "copy": {
+      "done": "コピーしました！",
+      "button": "ストーリーをコピー",
+      "hint": "職務経歴書や面接の自己紹介にご活用ください"
+    }
+  },
+  "portfolioGen": {
+    "errors": {
+      "needItem": "少なくとも1件はプロジェクト情報を入力してください。",
+      "generateFailed": "ポートフォリオ生成に失敗しました。入力内容を確認し、時間をおいて再度お試しください。"
+    },
+    "input": {
+      "title": "プロジェクトを入力",
+      "description": "自分のプロジェクト（GitHub / 作品サイトなど）を入力すると、ポートフォリオに載せるべき案件 TOP3 と紹介文を自動生成します。",
+      "projectLabel": "プロジェクト {index}",
+      "titlePlaceholder": "タイトル（例：AI Skill Map Generator）",
+      "urlPlaceholder": "URL（例：https://github.com/username/project）",
+      "descPlaceholder": "簡単な説明や使用技術などがあれば入力（任意）",
+      "addButton": "プロジェクトを追加"
+    },
+    "generateButton": {
+      "generating": "AI が整理中...",
+      "default": "ポートフォリオ案を生成する"
+    },
+    "result": {
+      "top3Title": "選ばれた案件 TOP3",
+      "sellingPointsTitle": "アピールポイント",
+      "reflectionTitle": "振り返り",
+      "markdownTitle": "Markdown 出力",
+      "copyDone": "コピーしました！",
+      "copyButton": "Markdown をコピー"
+    }
+  },
+  "skillCoach": {
+    "errors": {
+      "fallback": "エラーが発生しました。しばらくしてからもう一度試してください。"
+    },
+    "hero": {
+      "title": "AI キャリアコーチに質問する",
+      "body": "「この 30 日プランを平日 1 時間でこなせるように調整して」など、学習計画やキャリアの悩みを気軽に質問できます。"
+    },
+    "chat": {
+      "empty": "まだメッセージはありません。気になることを質問してみましょう。",
+      "inputPlaceholder": "例）バックエンドを伸ばすために、来週から何を始めると良いですか？",
+      "send": "送信"
+    }
+  },
+  "ui": {
+    "errorAlert": {
+      "title": {
+        "error": "エラーが発生しました",
+        "warning": "ご注意ください",
+        "info": "お知らせ"
+      },
+      "hintTitle": "💡 問題が解決しない場合は、以下をお試しください：",
+      "hintItems": "ページを再読み込みする|しばらく時間をおいてから再度お試しください|問題が続く場合は、GitHub の Issues でご報告ください"
+    },
+    "breadcrumb": {
+      "ariaLabel": "パンくずリスト"
+    }
+  },
+  "skillChart": {
+    "datasetLabel": "スキルレベル",
+    "tooltipLabel": "レベル: {value} / 5",
+    "ariaChart": "スキルレベルのレーダーチャート",
+    "ariaList": "スキルレベル一覧"
+  },
+  "roadmap": {
+    "noPlan": "AI ロードマップがまだ生成されていません",
+    "30day": {
+      "title": "30日ロードマップ",
+      "subtitle": "短期集中で取り組むべきこと"
+    },
+    "90day": {
+      "title": "90日ロードマップ",
+      "subtitle": "中期的なキャリアの方向性"
+    }
+  },
+  "timeSim": {
+    "errors": {
+      "simulateFailed": "学習時間シミュレーションに失敗しました。入力値を確認し、時間をおいて再度お試しください。",
+      "skillMapNotFound": "診断結果が見つかりませんでした。スキルマップが削除された可能性があります。もう一度診断を実行してから、学習時間シミュレーションをお試しください。",
+      "aiFailed": "学習時間シミュレーション中に AI でエラーが発生しました。時間をおいてから、もう一度お試しください。"
+    },
+    "hero": {
+      "title": "学習時間シミュレーター",
+      "body": "平日・休日に確保できる学習時間と期間を入力すると、現実的プランと理想プランの 2 パターンで学習ロードマップを再構成します。"
+    },
+    "form": {
+      "weekdayLabel": "平日1日あたりの学習時間（時間）",
+      "weekendLabel": "休日1日あたりの学習時間（時間）",
+      "monthsLabel": "計画期間（ヶ月）"
+    },
+    "button": {
+      "simulating": "AI が再プランニング中...",
+      "simulate": "この条件でプランを作り直す"
+    },
+    "result": {
+      "realistic": "現実的プラン",
+      "ideal": "理想プラン",
+      "notes": "メモ・注意点"
+    }
+  },
+  "layout": {
+    "nav": {
+      "home": "ホーム",
+      "dashboard": "ダッシュボード",
+      "about": "このアプリについて",
+      "portfolio": "ポートフォリオ整理",
+      "legal": "利用について"
+    },
+    "aria": {
+      "skipToMain": "メインコンテンツへスキップ",
+      "logo": "AI Skill Map Generator ホームページ",
+      "mainNav": "メインナビゲーション",
+      "mobileNav": "モバイルナビゲーション",
+      "github": "GitHubリポジトリを開く（新しいタブ）"
+    }
+  },
+  "errorBoundary": {
+    "title": "予期せぬエラーが発生しました",
+    "body": "申し訳ございません。問題が発生しました。ページを再読み込みするか、しばらくしてからもう一度お試しください。",
+    "buttons": {
+      "retry": "再試行",
+      "reload": "ページを再読み込み"
+    }
+  },
+  "auth": {
+    "login": {
+      "titleLogin": "おかえりなさい",
+      "titleSignup": "はじめまして",
+      "subtitleLogin": "メールアドレスとパスワードでログイン",
+      "subtitleSignup": "新しいアカウントを作成",
+      "tabLogin": "ログイン",
+      "tabSignup": "新規登録",
+      "googleButton": "Google アカウントでログイン / 登録",
+      "googleNote": "Google ログインを使うと、メールアドレスと紐づいたアカウントが自動で作成されます。",
+      "divider": "または メールアドレスでログイン",
+      "emailLabel": "メールアドレス",
+      "passwordLabel": "パスワード",
+      "passwordPlaceholderLogin": "••••••••",
+      "passwordPlaceholderSignup": "8文字以上を推奨",
+      "submitLogin": "ログイン",
+      "submitSignup": "新規登録してログイン",
+      "submittingLogin": "ログイン中...",
+      "submittingSignup": "登録中...",
+      "forgotPassword": "パスワードを忘れた場合",
+      "resetTitle": "パスワードを再設定",
+      "resetPlaceholder": "再設定メールを受け取るアドレス",
+      "resetCancel": "キャンセル",
+      "resetSubmit": "送信",
+      "deleteAccountText": "アカウントを削除したい場合は",
+      "deleteAccountLink": "アカウント削除ページ",
+      "backToHome": "← ホームに戻る",
+      "errorMissing": "メールアドレスとパスワードを入力してください。",
+      "errorLogin": "ログインに失敗しました。メールアドレスとパスワードを確認してください。",
+      "errorSignup": "新規登録に失敗しました。入力内容を確認し、時間をおいて再度お試しください。",
+      "errorResetMissing": "パスワードを再設定したいメールアドレスを入力してください。",
+      "infoResetSent": "パスワード再設定用のメールを送信しました。メールボックス（迷惑メールフォルダも含む）を確認してください。",
+      "errorResetFailed": "パスワード再設定メールの送信に失敗しました。時間をおいてから、もう一度お試しください。",
+      "errorGoogle": "Google ログインに失敗しました。時間をおいてから、もう一度お試しください。"
+    },
+    "button": {
+      "guestLoginPrimary": "ログイン / 登録",
+      "guestLoginMobile": "ログイン",
+      "loggedInLabel": "ログイン中",
+      "menuDashboard": "ダッシュボード",
+      "menuSettings": "アカウント設定",
+      "menuLogout": "ログアウト",
+      "defaultUserLabel": "ユーザー"
+    }
+  }
+}
+
+
+

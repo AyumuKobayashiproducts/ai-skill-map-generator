@@ -1,0 +1,956 @@
+{
+  "app": {
+    "name": "AI Skill Map Generator"
+  },
+  "home": {
+    "badge": "AI × Career Diagnosis",
+    "hero": {
+      "titleLine1": "Just paste your experience,",
+      "titleLine2": "and your job search prep is done",
+      "lead": "Generate a skill map, learning roadmap, job matching insights and interview practice <strong>within 60 seconds</strong>. Designed especially for web engineers in their first 1–3 years to see the big picture and choose the very first step for their next move.",
+      "badgeFree": "Completely free",
+      "badgeMailOnly": "Sign up with email only",
+      "badgeFast": "Diagnosis in 60 seconds"
+    },
+    "steps": {
+      "label": "Just 3 steps",
+      "items": [
+        {
+          "title": "Choose your goal",
+          "desc": "Pick one direction you want to move towards, such as “Frontend specialist” or “Fullstack engineer”."
+        },
+        {
+          "title": "Describe your skills & experience",
+          "desc": "Write what you’ve done so far in natural Japanese. You can start from the sample text and tweak it."
+        },
+        {
+          "title": "See the big picture",
+          "desc": "Use the skill map and readiness score to see what to improve and which kinds of roles might fit you."
+        }
+      ]
+    },
+    "guide": {
+      "title": "New here? Try a quick demo first",
+      "description": "In about 60 seconds, you’ll get a personalized career diagnosis tailored to your profile.",
+      "howToTitle": "Recommended first-time flow",
+      "howToBody": "On the right, click <strong>“Insert sample text”</strong> and submit. You can instantly see what kind of result this tool produces.",
+      "dashboardLink": "Dashboard",
+      "dashboardText": "to review past diagnoses and 1on1 practice sessions",
+      "aboutLink": "About this app",
+      "aboutText": "to read about the design decisions and tech stack"
+    },
+    "features": {
+      "title": "What this tool can do",
+      "subtitle": "A single diagnosis gives you most of what you need to start your job search.",
+      "items": "Generate a skill map and a simple “class/job” profile for you|Propose 30-day / 90-day roadmaps and a concrete task for today|Highlight matching score and missing skills for target job posts|Provide 1on1-style interview practice with AI feedback|整理 and export your portfolio projects as Markdown"
+    },
+    "formHeader": {
+      "title": "Diagnosis form",
+      "badge": "AI Ready"
+    },
+    "demoGuide": {
+      "title": "Home: starting point of the diagnosis",
+      "description": "Enter your experience here, then click “Insert sample text” → “Let AI generate my skill map” to move to the result screen as shown in the demo video."
+    }
+  },
+  "dashboard": {
+    "skillMapHistory": {
+      "title": "Skill Map history",
+      "description": "Review how your overall skill balance has changed across recent diagnoses.",
+      "ctaNewDiagnosis": "Start a new diagnosis",
+      "loggedInNote": "Showing only diagnoses linked to your signed-in account.",
+      "guestNote": "You’re not signed in, so all public diagnoses are shown here (demo mode).",
+      "careerTypeLabel": "Your career type"
+    },
+    "errors": {
+      "listFetchDefault": "Failed to fetch the list of skill maps.",
+      "listFetchGeneric": "An error occurred while loading the list.",
+      "sessionsFetchDefault": "Failed to fetch 1on1 sessions.",
+      "sessionsFetchGeneric": "An error occurred while loading 1on1 sessions."
+    },
+    "checklist": {
+      "title": "Job preparation checklist",
+      "subtitle": "Not just scores – quickly see how far you’ve progressed on the key preparation items.",
+      "items": {
+        "resume_updated": "Update your resume with your latest projects",
+        "github_ready": "整理 links to your GitHub / portfolio projects",
+        "job_research": "Pick at least 3 target job posts",
+        "interview_practice": "Do at least one 1on1 interview practice in the last 7 days"
+      },
+      "completedPrefix": "Completed:",
+      "levelLabelHigh": "High (Ready to move now)",
+      "levelLabelMedium": "Medium (Can move while preparing)",
+      "levelLabelLow": "Low (Focus on foundation first)",
+      "readinessLevelLabel": "Readiness level"
+    },
+    "retention": {
+      "title": "Job preparation reminder",
+      "line1": "It’s been {days} days since your last diagnosis.",
+      "line2": "Advancing your learning roadmap or doing a 1on1 practice now will give you a fresh “recent growth story” to tell in your next interview.",
+      "ctaDiagnose": "✨ Run diagnosis again",
+      "ctaInterview": "🎤 Start 1on1 practice"
+    },
+    "scoreTrend": {
+      "title": "Skill score trend",
+      "subtitle": "See how your total skill map score has changed over time.",
+      "ctaDiagnoseAgain": "+ Run diagnosis again",
+      "empty": "There aren’t enough diagnoses yet to show a trend. Once you have at least two, changes will appear here.",
+      "latestTotal": "Latest total score",
+      "diffUp": "▲ Change vs last: +{diff}",
+      "diffDown": "▼ Change vs last: {diff}",
+      "diffSame": "＝ Same as last time",
+      "sparklineCaption": "Left bars are older, right bars are the most recent. If the right side is generally higher, your overall skill map is trending up."
+    },
+    "categoryTrend": {
+      "title": "Category mini-trends",
+      "subtitle": "Compare your last two diagnoses to see which areas improved or declined.",
+      "empty": "Once you have at least two diagnoses, mini-trends for each category will appear here.",
+      "improvedTitle": "Improved categories",
+      "noImproved": "There were no categories with a positive numeric change this time.",
+      "declinedTitle": "Categories to watch",
+      "noDeclined": "No categories decreased this time. Overall you’re at least keeping your level."
+    },
+    "categoryLabels": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "infra": "Infra / DevOps",
+      "ai": "AI",
+      "tools": "Tools",
+      "typeGeneral": "General",
+      "typeTechnical": "Technical",
+      "typeBehavioral": "Behavioral / soft skills",
+      "typeUnknown": "Other"
+    },
+    "tagline": {
+      "frontend": "You lean towards frontend work with a strong focus on UI/UX.",
+      "backend": "You lean towards backend work, with strength in business logic and data design.",
+      "infra": "You have an infra-oriented mindset, caring about stability and operations.",
+      "ai": "You’re keen on integrating AI capabilities into products.",
+      "tools": "You enjoy optimising workflows and toolchains to maximise development productivity."
+    },
+    "oneOnOne": {
+      "title": "1on1 practice overview",
+      "subtitle": "See how many practice sessions you’ve done and how your scores are trending.",
+      "ctaDetails": "View details",
+      "noSessions": "There are no 1on1 practice sessions yet. Start with one session from the “1on1 Practice Mode” tab on the result screen.",
+      "totalTitle": "Total sessions",
+      "totalCaption": "Number of 1on1 practice sessions linked to your latest skill map.",
+      "avgTitle": "Average score",
+      "avgCaption": "Average of the overallScore in each session summary.",
+      "bestTypeTitle": "Most practiced interview type",
+      "bestTypeEmpty": "Once you accumulate enough sessions, trends by interview type will appear here.",
+      "nextStepTitle": "Next Step",
+      "nextStepBody": "Beyond the skill map itself, strengthening your “speaking skills” in 1on1 practice can meaningfully increase your offer rate. Aim for one realistic mock session per week to build a recent story you can tell with confidence.",
+      "ctaPracticeNow": "🎤 Start 1on1 practice now",
+      "ctaUsageLog": "📈 View usage log"
+    },
+    "emptyState": {
+      "heading": "Let’s start your first diagnosis",
+      "body": "No skill maps have been generated yet. In about 60 seconds, you’ll have a personalised career map.",
+      "ctaDiagnose": "Start diagnosis",
+      "ctaAbout": "How it works",
+      "badgeFast": "Done in ~60 seconds",
+      "badgeSafe": "Your data is safe",
+      "badgeFree": "Completely free"
+    },
+    "list": {
+      "badgeLatest": "Latest",
+      "totalLabel": "Total:",
+      "details": "Details"
+    },
+    "demoGuide": {
+      "title": "Dashboard: history of diagnoses and 1on1 sessions",
+      "description": "This page lets you review past diagnoses and 1on1 practice scores at a glance. In the demo video, the full flow (Home → Diagnosis → Result → Dashboard) is shown in about 30–60 seconds."
+    }
+  },
+  "result": {
+    "breadcrumb": {
+      "dashboard": "Dashboard",
+      "result": "Skill map result"
+    },
+    "hero": {
+      "title": "Diagnosis complete!",
+      "subtitle": "Your skill map and job search readiness plan are now ready.",
+      "badges": {
+        "analysisDone": "Skill analysis done",
+        "roadmapDone": "Roadmap generated",
+        "savedToDashboard": "Saved to dashboard",
+        "downloadMarkdown": "Download Markdown report"
+      }
+    },
+    "nextSteps": {
+      "title": "Next steps: make this result work for you",
+      "description": "Don’t stop at just reading the result – use it to drive your learning, job research and interview practice.",
+      "cards": {
+        "learning": {
+          "title": "Progress your learning roadmap",
+          "body": "Pick just one “this week” item from the roadmap and start on it. After you’ve taken action, run the diagnosis again to see how your score changes."
+        },
+        "jobs": {
+          "title": "Try job matching",
+          "body": "Paste in job descriptions you’re interested in to see how well you match and which skills are missing. It becomes easier to see which roles fit you right now."
+        },
+        "interview": {
+          "title": "Practice interviews and speak it out",
+          "body": "Use your skill map as input for 1on1 practice and craft your answers. With STAR-style feedback and session score history, you can track your “speaking skills” in numbers."
+        }
+      },
+      "quickActions": {
+        "title": "Frequently used actions",
+        "toDashboard": "View history in dashboard",
+        "again": "Run diagnosis again",
+        "usage": "Review usage & patterns",
+        "about": "About this app"
+      }
+    },
+    "demoGuide": {
+      "title": "Result screen: skill map & next actions",
+      "description": "On this screen you can switch between tabs to see the skill radar, readiness score, learning plan, career & jobs, and 1on1 practice. In the demo video, we move across “Overview → Career & Jobs → 1on1” to show the full picture."
+    },
+    "tabs": {
+      "overview": "Overview",
+      "learning": "Learning plan",
+      "career": "Career & Jobs",
+      "export": "Export",
+      "ariaLabel": "Switch sections for the skill map result"
+    },
+    "readiness": {
+      "title": "Job readiness score",
+      "errorFetchDefault": "Failed to fetch the readiness score.",
+      "errorSkillMapNotFound": "Your diagnosis result could not be found. The underlying skill map may have been deleted. Please run a fresh diagnosis and then reopen this page.",
+      "errorAiFailed": "An AI error occurred while calculating the readiness score. Please wait a bit and try again.",
+      "levelHigh": "✨ Ready to move now",
+      "levelMedium": "📈 Can move while still preparing",
+      "levelLow": "🌱 Need to build more foundation first",
+      "scoreOutOf": "/ {max}"
+    },
+    "classCard": {
+      "title": "Your class",
+      "description": "This is your current “job/class”, based on the category with the highest score."
+    },
+    "classNames": {
+      "frontend": "Frontend Mage",
+      "backend": "Backend Knight",
+      "infra": "Infra Guardian",
+      "ai": "AI Alchemist",
+      "tools": "Tool Artisan"
+    },
+    "badgeNames": {
+      "fullstack": "Fullstack Apprentice",
+      "ui": "UI Craftsperson",
+      "ai": "AI Tinkerer",
+      "reliability": "Reliability Engineer",
+      "growing": "Growth-stage Engineer"
+    },
+    "summary": {
+      "title": "Today’s takeaway",
+      "bodyWithSkill": "You’re a {classLabel} type engineer. If you deepen areas like {firstSkill}, you’ll likely unlock more options for your next move.",
+      "bodyNoSkill": "You’re a {classLabel} type engineer. If you focus especially on frontend-related areas, you’ll likely unlock more options for your next move."
+    },
+    "overview": {
+      "radarTitle": "Skill radar chart",
+      "comparisonTitle": "Comparison with previous",
+      "comparisonDescription": "We overlay your previous analysis with the current one to visualise how your balance has changed.",
+      "recommendTitle": "Recommended skills to focus on",
+      "strengthsTitle": "Strengths",
+      "weaknessesTitle": "Areas to develop",
+      "notProvided": "(Not provided)",
+      "currentLabel": "Current",
+      "previousLabel": "Previous"
+    },
+    "export": {
+      "title": "Export data",
+      "description": "Copy your skill map data in several formats.",
+      "buttons": {
+        "copyMarkdown": "📋 Copy as Markdown",
+        "copyJson": "📋 Copy JSON",
+        "copyResume": "📄 Copy resume template"
+      },
+      "markdown": {
+        "title": "# AI Skill Map",
+        "classLine": "- Class: {classLabel} (Lv.{level})",
+        "strengthsLine": "- Strengths: {strengths}",
+        "weaknessesLine": "- Weaknesses: {weaknesses}",
+        "nextSkillsLine": "- Skills to learn next: {skills}",
+        "roadmap30Title": "## 30-day roadmap",
+        "roadmap90Title": "## 90-day roadmap"
+      },
+      "resume": {
+        "title": "# Resume (Draft)",
+        "profileTitle": "## 1. Profile summary",
+        "profileClassLine": "- Class: {classLabel} (Lv.{level})",
+        "profileStrengthsLine": "- Strengths: {strengths}",
+        "profileWeaknessesLine": "- Weaknesses / Focus areas: {weaknesses}",
+        "stackTitle": "## 2. Tech stack (summary)",
+        "stackFrontend": "- Frontend: level {value}",
+        "stackBackend": "- Backend: level {value}",
+        "stackInfra": "- Infra: level {value}",
+        "stackAi": "- AI / Machine Learning: level {value}",
+        "stackTools": "- Tools / workflow: level {value}",
+        "nextSkillsTitle": "## 3. Skills to focus on next",
+        "nextSkillsItem": "- {skill}",
+        "plan30Title": "## 4. 30-day plan (learning & improvement)",
+        "plan90Title": "## 5. 90-day plan (career direction)"
+      }
+    },
+    "career": {
+      "jobMatch": {
+        "title": "Job posting match score",
+        "description": "Paste the job description text or URL to see how well it matches this skill map, which skills are missing, and a tailored roadmap.",
+        "fields": {
+          "jobTextLabel": "Job description text",
+          "jobTextPlaceholder": "Paste the full job description here (responsibilities, required / nice-to-have skills, etc.)",
+          "shortcutHint": "⌘+Enter to run",
+          "jobUrlLabel": "Job URL",
+          "jobUrlOptional": "(optional)",
+          "jobUrlPlaceholder": "e.g. https://example.com/job/frontend-engineer"
+        },
+        "errors": {
+          "needInput": "Please enter either the job description text or the job URL.",
+          "matchFailed": "Job matching failed. Please check the content and try again later.",
+          "skillMapNotFound": "Your diagnosis result could not be found. The underlying skill map may have been deleted. Please run the diagnosis again and then try job matching once more.",
+          "aiFailed": "An AI error occurred while running the job matching analysis. Please wait a bit and try again."
+        },
+        "buttons": {
+          "runMatch": "Match this job with my skill map",
+          "running": "AI is calculating the match...",
+          "insertSample": "💡 Insert a sample job description"
+        },
+        "score": {
+          "label": "Matching score",
+          "scoreOutOf": "/ {max}",
+          "high": "You’re a strong match for this job!",
+          "medium": "You look close – strengthening a few skills could make this a good fit.",
+          "low": "There seems to be a noticeable gap for this role right now."
+        },
+        "matchedSkillsTitle": "Skills you already match",
+        "missingSkillsTitle": "Skills that are weak or missing",
+        "summaryTitle": "Matching summary",
+        "roadmapTitle": "Roadmap to move closer to this job"
+      },
+      "risk": {
+        "title": "Career risk analysis",
+        "description": "From your current skill mix, we quantify the risk of “skills becoming obsolete”, “over-dependence on a specific environment” and “being automated away”, and highlight where to strengthen.",
+        "errors": {
+          "analyzeFailed": "Career risk analysis failed. Please try again later.",
+          "skillMapNotFound": "Your diagnosis result could not be found. The underlying skill map may have been deleted. Please run the diagnosis again and then try the career risk analysis.",
+          "aiFailed": "An AI error occurred while analysing career risks. Please wait a bit and try again."
+        },
+        "buttons": {
+          "analyze": "Analyze career risks",
+          "analyzing": "AI is analyzing...",
+          "reanalyze": "Analyze again"
+        },
+        "overall": {
+          "label": "Overall risk score",
+          "high": "We recommend considering countermeasures in several areas.",
+          "medium": "The balance is okay overall, but there is room for improvement.",
+          "low": "Overall, the risk looks relatively low."
+        },
+        "levels": {
+          "high": "High risk",
+          "medium": "Medium risk",
+          "low": "Low risk"
+        },
+        "items": {
+          "obsolescence": {
+            "label": "Obsolescence risk",
+            "description": "Risk that your skills will lose value as technology trends change."
+          },
+          "busFactor": {
+            "label": "Bus factor risk",
+            "description": "Risk of being too tied to a specific environment, team or context."
+          },
+          "automation": {
+            "label": "Automation risk",
+            "description": "Risk that your work could be replaced by AI or tools."
+          }
+        },
+        "summaryTitle": "Risk summary",
+        "actionsTitle": "Concrete actions"
+      }
+    },
+    "oneOnOne": {
+      "title": "1on1 practice mode",
+      "intro": "Practice answers to common evaluation / interview questions and get feedback plus example answers from an AI manager.",
+      "types": {
+        "general": {
+          "label": "General",
+          "desc": "Self-introduction, motivation, etc."
+        },
+        "technical": {
+          "label": "Technical",
+          "desc": "Tech choices, problem solving"
+        },
+        "behavioral": {
+          "label": "Behavioral (STAR)",
+          "desc": "Behavior & result episodes"
+        }
+      },
+      "errors": {
+        "questionsFetch": "Failed to load 1on1 questions. Please try again later.",
+        "answerMissing": "Please enter your answer to the question.",
+        "feedbackFailed": "Failed to get feedback. Please check your answer and try again later.",
+        "saveSessionNoExchanges": "Please receive feedback on at least one question before saving.",
+        "saveSessionFailed": "Failed to save the session. Please try again later.",
+        "questionsSkillMapNotFound": "The diagnosis result behind this 1on1 session could not be found. The skill map may have been deleted. Please run the diagnosis again and then try the 1on1 practice mode.",
+        "questionsAiFailed": "An AI error occurred while generating 1on1 questions. Please wait a bit and try again.",
+        "feedbackAiFailed": "An AI error occurred while generating feedback. Please briefly review your answer and try again later.",
+        "saveSessionSummaryAiFailed": "An AI error occurred while generating the session summary. You can still review the feedback you received, so consider copying any important text before closing this session.",
+        "sessionsFetchFailedDetailed": "Failed to fetch the 1on1 session history. If reloading the page doesn’t help, please wait a bit and try again.",
+        "sessionsSaveFailedDetailed": "Failed to save the 1on1 session. Please check your connection and try again later."
+      },
+      "loadingQuestions": "Preparing questions...",
+      "noQuestions": "Failed to load questions",
+      "progressLabel": "{current} / {total}",
+      "answerLabel": "Your answer",
+      "answerPlaceholder": "Write as if you were in a real 1on1. Be as concrete as you can.",
+      "shortcutHint": "⌘+Enter to submit",
+      "buttons": {
+        "feedback": "Get feedback",
+        "feedbackLoading": "AI is reviewing...",
+        "nextQuestion": "Next question →",
+        "saveSession": "Save session and show summary",
+        "saveSessionLoading": "Saving session..."
+      },
+      "ruleScore": {
+        "title": "Overall score (rule-based)",
+        "description": "We score based on length, concreteness, structure and STAR-like elements.",
+        "scoreOutOf": "/ {max}"
+      },
+      "feedbackBlock": {
+        "title": "Feedback"
+      },
+      "improvedAnswerBlock": {
+        "title": "Example improved answer"
+      },
+      "sessionSummary": {
+        "title": "Session summary",
+        "scoreNote": "1 means “needs work”, 5 means “very strong”.",
+        "strongPointsTitle": "What went well",
+        "improvementPointsTitle": "What to improve",
+        "nextStepsTitle": "What to do before next time",
+        "summaryTitle": "Overall comments",
+        "scoreOutOf": "/ {max}"
+      },
+      "history": {
+        "title": "Recent 1on1 session history (last 5)",
+        "loading": "Loading...",
+        "empty": "No saved sessions yet. Once you get feedback on at least one question and press “Save session and show summary”, they will appear here.",
+        "questionsLabel": "Questions: {count}",
+        "scoreLabel": "Score: {score}",
+        "detailsTitle": "Session details ({type})",
+        "close": "Close",
+        "savedScoreNote": "Overall score at the time of saving.",
+        "qaTitle": "Q&A and feedback ({count})",
+        "yourAnswerLabel": "Your answer:",
+        "aiFeedbackLabel": "AI feedback:"
+      }
+    },
+    "todayTask": {
+      "title": "Today’s task",
+      "description": "Based on your roadmap and skill map, we suggest a single concrete task to work on today.",
+      "timeLabel": "Time you can spend today",
+      "timeOptions": {
+        "30m": "30 min",
+        "1h": "1 hour",
+        "1_5h": "1.5 hours",
+        "2h": "2 hours",
+        "3h": "3 hours",
+        "4h": "4 hours+"
+      },
+      "buttons": {
+        "generate": "Decide today’s task",
+        "generating": "AI is picking a task..."
+      },
+      "errors": {
+        "generateFailed": "Failed to generate today’s task. Please try again later.",
+        "skillMapNotFound": "Your diagnosis result could not be found. The underlying skill map may have been deleted. Please run the diagnosis again and then try generating today’s task.",
+        "aiFailed": "An AI error occurred while generating today’s task. Please wait a bit and try again."
+      },
+      "task": {
+        "estimated": "⏱️ About {hours} hours",
+        "descriptionTitle": "Details",
+        "stepsTitle": "Example steps"
+      },
+      "completed": {
+        "title": "Nice work!",
+        "subtitle": "You’ve completed today’s learning session"
+      }
+    }
+  },
+  "about": {
+    "hero": {
+      "title": "About this app",
+      "subtitle": "Overview and tech stack of AI Skill Map Generator",
+      "intro": "AI Skill Map Generator is a skill mapping and career coaching tool built for early-career web engineers preparing for their first or second job change. It’s designed so that I can easily explain \"how I designed and built this product\" in interviews and portfolio reviews."
+    },
+    "sections": {
+      "goalTitle": "Product goal",
+      "roleTitle": "My role",
+      "roleBody": "I designed, implemented, and tested the entire project end-to-end on my own.",
+      "techStackTitle": "Tech stack",
+      "pricingTitle": "Pricing idea (if this were a real product)",
+      "pricingBody": "Right now this app is available for free as a portfolio project, but in docs/monetization.md I also sketched how I would charge if it were a real service. This section roughly visualises those ideas in the UI.",
+      "futureTitle": "Potential future improvements",
+      "sceneTitle": "How I plan to use this page",
+      "sceneBody": "In interviews or casual chats, this page works as a guided walkthrough to explain how I thought about, designed, and implemented the app. I can show the actual screens while going deeper into technical decisions and trade-offs.",
+      "feedbackTitle": "Feedback & improvement ideas",
+      "feedbackBody": "If you find parts that are confusing or have ideas like “this feature would be useful”, I’d really appreciate hearing them. I’d like to keep evolving this into something that would be usable even in a real-world setting."
+    },
+    "features": {
+      "inventory": {
+        "title": "Skill inventory",
+        "desc": "Use AI to analyse work history and turn it into an explicit skill map."
+      },
+      "roadmap": {
+        "title": "Roadmap generation",
+        "desc": "Automatically generate concrete 30-day / 90-day learning plans."
+      },
+      "jobMatch": {
+        "title": "Job matching",
+        "desc": "Visualise how well you match a job post and where the gaps are."
+      }
+    },
+    "roles": {
+      "planning": {
+        "title": "Product & UX design",
+        "desc": "User stories, flows, and screen structure."
+      },
+      "frontend": {
+        "title": "Frontend",
+        "desc": "UI implementation with Next.js + TypeScript."
+      },
+      "backend": {
+        "title": "Backend",
+        "desc": "API design using Supabase and OpenAI."
+      },
+      "testing": {
+        "title": "Testing",
+        "desc": "Designing logic and writing tests."
+      },
+      "design": {
+        "title": "Design",
+        "desc": "UI tuning, mobile layout, and UX improvements."
+      }
+    },
+    "techStack": {
+      "frontend": {
+        "category": "Frontend"
+      },
+      "backend": {
+        "category": "Backend"
+      },
+      "dataAuth": {
+        "category": "Data / Auth"
+      },
+      "ai": {
+        "category": "AI"
+      },
+      "quality": {
+        "category": "Quality"
+      },
+      "ops": {
+        "category": "Operations"
+      }
+    },
+    "pricing": {
+      "free": {
+        "name": "Free (current implementation)",
+        "price": "Free",
+        "badge": "What you see now",
+        "description": "For the portfolio version, all features are available for free. In a real product, I would likely add some limits on usage volume.",
+        "features": "Diagnosis (skill map / roadmap / risk analysis)|Job matching & portfolio整理|1on1 practice (with history and score trends)"
+      },
+      "pro": {
+        "name": "Pro (concept stage)",
+        "price": "Around ¥980–1,500 / month (idea)",
+        "badge": "Concept",
+        "description": "A paid plan for people who want to commit seriously for 1–3 months of job hunting (not implemented in this repo).",
+        "features": "Higher limits on diagnosis runs and 1on1 session saves|More detailed trends for readiness and 1on1 scores|Additional portfolio export templates (e.g. for Findy / CV)"
+      }
+    },
+    "future": {
+      "items": "Higher-precision job matching using company-side position requirements|Visualising long-term growth curves from skill map history|A management / mentor view to help leaders support their team members"
+    },
+    "feedback": {
+      "buttons": {
+        "discussions": "💬 Open GitHub Discussions",
+        "issues": "🐛 Create Issue / Feature request"
+      }
+    }
+  },
+  "legal": {
+    "hero": {
+      "title": "Usage & terms",
+      "subtitle": "Usage notes and disclaimers for AI Skill Map Generator",
+      "intro": "AI Skill Map Generator is published as a demo app and portfolio project by the developer. If you use it in a real job search, please keep the following assumptions and caveats in mind."
+    },
+    "sections": {
+      "provision": {
+        "title": "Service form",
+        "content": "This app is an individual side project, not a paid commercial service. Features and availability may change or be stopped without prior notice."
+      },
+      "data": {
+        "title": "Data handling",
+        "items": [
+          "Skill and work history data you enter is stored in Supabase (Postgres).",
+          "The developer may review this data for debugging or improvement purposes.",
+          "We do not sell or share this data with third parties, but may use logs and statistics in an anonymised way.",
+          "By deleting your account data, you can remove skill maps and usage logs stored in this app."
+        ]
+      },
+      "disclaimer": {
+        "title": "Disclaimer",
+        "items": [
+          "All analysis results and scores are for reference only and do not guarantee any outcome in your job search.",
+          "The developer cannot be held responsible for any damages caused by bugs, outages or service suspension."
+        ]
+      },
+      "contact": {
+        "title": "Contact",
+        "content": "For questions or bug reports about this app, please use GitHub Issues on the repository."
+      }
+    },
+    "quickLinks": {
+      "title": "Quick links",
+      "subtitle": "Account management & contact",
+      "deleteAccount": "Delete account data",
+      "githubIssues": "GitHub Issues"
+    }
+  },
+  "portfolio": {
+    "hero": {
+      "title": "Portfolio inventory generator",
+      "subtitle": "整理 your projects into a compelling portfolio",
+      "intro": "Paste in your own projects, and the app will suggest the top 3 to highlight plus draft descriptions. Designed to help with interviews and job applications."
+    }
+  },
+  "authDelete": {
+    "errors": {
+      "noUser": "Failed to get login information.",
+      "deleteFailed": "Failed to delete your account data. Please try again later."
+    },
+    "hero": {
+      "title": "Delete account data",
+      "body": "On this page you can delete skill maps, usage logs and other data saved by AI Skill Map Generator. (Deleting the underlying Supabase auth account itself is out of scope.)"
+    },
+    "status": {
+      "currentEmail": "Currently signed-in email: {email}",
+      "notLoggedIn": "You are not signed in, so we cannot identify which account to delete. Please sign in from the “Sign in” button first.",
+      "deleted": "Your account data has been deleted. Redirecting to the home page..."
+    },
+    "confirm": {
+      "warning": "Once deleted, skill map history and usage logs saved in this app cannot be restored.",
+      "label": "I understand the above and want to delete my data stored in this app."
+    },
+    "button": {
+      "deleting": "Deleting...",
+      "delete": "Delete my saved data in this app"
+    }
+  },
+  "authReset": {
+    "errors": {
+      "missing": "Please enter your new password twice.",
+      "notMatch": "The passwords do not match. Please check again.",
+      "tooShort": "We recommend a password of at least 8 characters.",
+      "updateFailed": "Failed to update your password. The link may have expired; please open it again from the email."
+    },
+    "hero": {
+      "title": "Reset your password",
+      "body": "If you visited this page from the link in the email, you can set a new password below."
+    },
+    "form": {
+      "passwordLabel": "New password",
+      "passwordPlaceholder": "Recommended: at least 8 characters",
+      "confirmLabel": "New password (confirm)",
+      "confirmPlaceholder": "Enter the same password again"
+    },
+    "status": {
+      "updated": "Your password has been updated. Redirecting to the sign-in page..."
+    },
+    "button": {
+      "updating": "Updating...",
+      "update": "Update password"
+    }
+  },
+  "skillForm": {
+    "errors": {
+      "loginRequired": "To generate a skill map, please sign up / sign in from the “Sign in” button in the header.",
+      "textRequired": "Please enter your skills and work history.",
+      "aiFailed": "Failed to run the AI analysis. Please try again later.",
+      "aiFailedOpenAI": "An error occurred while running the AI analysis. This may be a temporary issue on the AI provider’s side. Please wait a bit and try again.",
+      "aiFailedSave": "Failed to save the diagnosis result. Please check your connection and try again in a few minutes. If the problem persists, reload the page and run the diagnosis again."
+    },
+    "loading": {
+      "checkingLogin": "Checking sign-in status…",
+      "title": "AI is generating your diagnosis...",
+      "eta": "Estimated time: about 30–60 seconds",
+      "steps": [
+        { "label": "Summarising your work history" },
+        { "label": "Classifying skills" },
+        { "label": "Generating roadmap" }
+      ],
+      "button": "AI is analysing... ({step}/3)"
+    },
+    "locked": {
+      "title": "Sign-in required",
+      "body": "Please sign in to generate and save your skill map.",
+      "button": "Open sign-in / sign-up screen"
+    },
+    "skillInput": {
+      "label": "Your skills & work history",
+      "description": "Describe your target roles (e.g. “frontend engineer”), technologies you use, and your responsibilities as concretely as you can.",
+      "placeholder": "Example: 3 years as a frontend engineer. Mainly worked on SPA development with React / TypeScript / Next.js. Some experience implementing APIs with Node.js. Hosting mainly on Vercel and Supabase.",
+      "countLabel": "{count} characters",
+      "hint": "Please describe your work history and skill set as concretely as you can. You can insert example text using the sample button.",
+      "sampleButton": "Insert sample text",
+      "sampleAria": "Insert sample text into the input field"
+    },
+    "goal": {
+      "legend": "Target career direction",
+      "aria": "Career direction",
+      "helper": "Choose the option closest to the direction you want to move towards. The AI will slightly bias the skill map and roadmap towards it.",
+      "options": {
+        "frontend_specialist": {
+          "label": "Frontend specialist",
+          "desc": "Focus on UI / UX"
+        },
+        "fullstack": {
+          "label": "Fullstack",
+          "desc": "Cover wide areas"
+        },
+        "backend_api": {
+          "label": "Backend / API-focused",
+          "desc": "Logic-centric"
+        },
+        "tech_lead": {
+          "label": "Future tech lead",
+          "desc": "Leadership"
+        },
+        "unsure": {
+          "label": "Not sure yet",
+          "desc": "Exploring"
+        }
+      }
+    },
+    "repo": {
+      "label": "GitHub repository URL",
+      "optional": "(optional)",
+      "placeholder": "e.g. https://github.com/username/portfolio",
+      "hint": "If you have a portfolio or related repo, the AI can use it as a hint for your tech stack."
+    },
+    "submit": {
+      "label": "Let AI generate my skill map"
+    },
+    "samples": [
+      [
+        "フロントエンドエンジニアとして3年勤務。",
+        "React / Next.js / TypeScript を使った SPA / SSR 開発の経験があります。",
+        "状態管理は React Query / Zustand、スタイリングは Tailwind CSS が多いです。",
+        "バックエンドは Node.js（Express）や Supabase の Edge Functions を簡単に書ける程度です。",
+        "CI/CD は GitHub Actions、デプロイは Vercel を利用しています。",
+        "今後はよりアーキテクチャ設計やパフォーマンスチューニング、AI 連携にも強くなりたいです。"
+      ],
+      [
+        "受託開発会社でフルスタックエンジニアとして4年勤務。",
+        "フロントエンドは React / Vue、バックエンドは Node.js / NestJS、DB は PostgreSQL を主に使用しています。",
+        "要件定義〜設計〜実装〜テスト〜リリースまで一通り経験し、小規模プロジェクトでは4〜5名のチームリードも担当しました。",
+        "最近は Next.js / Prisma / Supabase を使ったモダンな SaaS 開発に興味があります。",
+        "インフラは AWS（EC2 / RDS / ECS）での構築経験があり、Terraform によるIaCも簡単なものなら扱えます。"
+      ],
+      [
+        "自社サービスでバックエンドエンジニアとして2年勤務。",
+        "主に Node.js（Express）と Go を使った REST API / バッチ処理の開発・運用を担当しています。",
+        "Redis / RabbitMQ を使った非同期処理や、New Relic / Datadog を使ったモニタリング・パフォーマンス改善も経験しました。",
+        "最近はフロントエンドとの連携を意識して、API 設計や OpenAPI ベースの型共有にも取り組んでいます。",
+        "今後はアーキテクチャ設計やドメインモデリングにも関わり、テックリードとしてチームを引っ張れるようになりたいです。"
+      ]
+    ]
+  },
+  "skillStory": {
+    "errors": {
+      "generateFailed": "Failed to generate your story."
+    },
+    "hero": {
+      "title": "Your profile story"
+    },
+    "loading": {
+      "text": "AI is crafting your story..."
+    },
+    "copy": {
+      "done": "Copied!",
+      "button": "Copy story",
+      "hint": "You can reuse this for your resume summary or interview self-introduction."
+    }
+  },
+  "portfolioGen": {
+    "errors": {
+      "needItem": "Please enter at least one project.",
+      "generateFailed": "Failed to generate portfolio suggestions. Please review your input and try again later."
+    },
+    "input": {
+      "title": "Enter your projects",
+      "description": "Paste your projects (GitHub / live demos, etc.) and the app will generate the top 3 to highlight plus suggested descriptions.",
+      "projectLabel": "Project {index}",
+      "titlePlaceholder": "Title (e.g. AI Skill Map Generator)",
+      "urlPlaceholder": "URL (e.g. https://github.com/username/project)",
+      "descPlaceholder": "Optional: short description and key technologies",
+      "addButton": "Add another project"
+    },
+    "generateButton": {
+      "generating": "AI is organising...",
+      "default": "Generate portfolio suggestions"
+    },
+    "result": {
+      "top3Title": "Top 3 projects to highlight",
+      "sellingPointsTitle": "Selling points",
+      "reflectionTitle": "Reflection",
+      "markdownTitle": "Markdown output",
+      "copyDone": "Copied!",
+      "copyButton": "Copy Markdown"
+    }
+  },
+  "skillCoach": {
+    "errors": {
+      "fallback": "An error occurred. Please try again later."
+    },
+    "hero": {
+      "title": "Ask the AI career coach",
+      "body": "You can ask things like “Adjust this 30-day plan so I can do it in 1 hour on weekdays” or other questions about learning plans and career concerns."
+    },
+    "chat": {
+      "empty": "No messages yet. Ask anything you’d like to explore.",
+      "inputPlaceholder": "Example: What should I start next week to grow as a backend engineer?",
+      "send": "Send"
+    }
+  },
+  "ui": {
+    "errorAlert": {
+      "title": {
+        "error": "An error occurred",
+        "warning": "Please note",
+        "info": "Information"
+      },
+      "hintTitle": "💡 If the problem persists, try the following:",
+      "hintItems": "Reload the page|Wait a little and try again|If it continues, please report it on GitHub Issues"
+    },
+    "breadcrumb": {
+      "ariaLabel": "Breadcrumb"
+    }
+  },
+  "skillChart": {
+    "datasetLabel": "Skill level",
+    "tooltipLabel": "Level: {value} / 5",
+    "ariaChart": "Radar chart of skill levels",
+    "ariaList": "List of skill levels"
+  },
+  "roadmap": {
+    "noPlan": "The AI roadmap has not been generated yet.",
+    "30day": {
+      "title": "30-day roadmap",
+      "subtitle": "What to focus on in the short term"
+    },
+    "90day": {
+      "title": "90-day roadmap",
+      "subtitle": "Medium-term career direction"
+    }
+  },
+  "timeSim": {
+    "errors": {
+      "simulateFailed": "Failed to run the study time simulation. Please check your inputs and try again later.",
+      "skillMapNotFound": "Your diagnosis result could not be found. The underlying skill map may have been deleted. Please run the diagnosis again and then try the time simulation.",
+      "aiFailed": "An AI error occurred while running the study time simulation. Please wait a bit and try again."
+    },
+    "hero": {
+      "title": "Study time simulator",
+      "body": "Enter how many hours you can study on weekdays and weekends plus the duration, and the AI will recompute both a realistic and an ideal learning plan."
+    },
+    "form": {
+      "weekdayLabel": "Study time per weekday (hours)",
+      "weekendLabel": "Study time per weekend day (hours)",
+      "monthsLabel": "Duration (months)"
+    },
+    "button": {
+      "simulating": "AI is recalculating your plan...",
+      "simulate": "Rebuild the plan with these settings"
+    },
+    "result": {
+      "realistic": "Realistic plan",
+      "ideal": "Ideal plan",
+      "notes": "Notes"
+    }
+  },
+  "layout": {
+    "nav": {
+      "home": "Home",
+      "dashboard": "Dashboard",
+      "about": "About",
+      "portfolio": "Portfolio",
+      "legal": "Usage & terms"
+    },
+    "aria": {
+      "skipToMain": "Skip to main content",
+      "logo": "AI Skill Map Generator home",
+      "mainNav": "Main navigation",
+      "mobileNav": "Mobile navigation",
+      "github": "Open GitHub repository (new tab)"
+    }
+  },
+  "errorBoundary": {
+    "title": "An unexpected error has occurred",
+    "body": "Sorry, something went wrong. Please reload the page or try again in a moment.",
+    "buttons": {
+      "retry": "Retry",
+      "reload": "Reload page"
+    }
+  },
+  "auth": {
+    "login": {
+      "titleLogin": "Welcome back",
+      "titleSignup": "Nice to meet you",
+      "subtitleLogin": "Sign in with your email and password",
+      "subtitleSignup": "Create a new account",
+      "tabLogin": "Sign in",
+      "tabSignup": "Sign up",
+      "googleButton": "Continue with Google",
+      "googleNote": "We will create or link an account using your Google email.",
+      "divider": "Or sign in with email",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "passwordPlaceholderLogin": "••••••••",
+      "passwordPlaceholderSignup": "Recommended: at least 8 characters",
+      "submitLogin": "Sign in",
+      "submitSignup": "Sign up and continue",
+      "submittingLogin": "Signing in...",
+      "submittingSignup": "Creating account...",
+      "forgotPassword": "Forgot your password?",
+      "resetTitle": "Reset your password",
+      "resetPlaceholder": "Email address to receive reset link",
+      "resetCancel": "Cancel",
+      "resetSubmit": "Send reset link",
+      "deleteAccountText": "If you want to delete your account, please visit the",
+      "deleteAccountLink": "account deletion page",
+      "backToHome": "← Back to home",
+      "errorMissing": "Please enter both email and password.",
+      "errorLogin": "Sign-in failed. Please check your email and password.",
+      "errorSignup": "Sign-up failed. Please check your input and try again later.",
+      "errorResetMissing": "Please enter the email address you want to reset the password for.",
+      "infoResetSent": "We’ve sent a password reset email. Please check your inbox and spam folder.",
+      "errorResetFailed": "Failed to send password reset email. Please try again later.",
+      "errorGoogle": "Google sign-in failed. Please try again later."
+    },
+    "button": {
+      "guestLoginPrimary": "Sign in / Create account",
+      "guestLoginMobile": "Sign in",
+      "loggedInLabel": "Signed in",
+      "menuDashboard": "Dashboard",
+      "menuSettings": "Account settings",
+      "menuLogout": "Sign out",
+      "defaultUserLabel": "User"
+    }
+  }
+}
+
+
+

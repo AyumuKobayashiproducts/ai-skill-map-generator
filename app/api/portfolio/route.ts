@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
-import { createOpenAIClient } from "@/lib/openaiClient";
+import { safeChatCompletion } from "@/lib/openaiRetry";
+import { logUsageServer } from "@/lib/usageServerLogger";
 import type { PortfolioGeneratorResult } from "@/types/skill";
 import { PortfolioRequestSchema } from "@/types/api";
+import { getRequestLocale } from "@/lib/apiLocale";
+import { getApiError } from "@/lib/apiErrors";
 
 export async function POST(request: Request) {
   try {
     const { items } = PortfolioRequestSchema.parse(await request.json());
-
-    const openai = createOpenAIClient();
 
     const lines: string[] = [
       "あなたはソフトウェアエンジニアのポートフォリオ作成を支援するコーチです。",
@@ -48,16 +49,20 @@ export async function POST(request: Request) {
 
     const prompt = lines.filter(Boolean).join("\n");
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content: "あなたは候補者のポートフォリオを分かりやすく整理するメンターです。"
-        },
-        { role: "user", content: prompt }
-      ]
+    const completion = await safeChatCompletion({
+      feature: "portfolio",
+      params: {
+        model: "gpt-4.1-mini",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "あなたは候補者のポートフォリオを分かりやすく整理するメンターです。"
+          },
+          { role: "user", content: prompt }
+        ]
+      }
     });
 
     const raw = completion.choices[0]?.message?.content ?? "{}";
@@ -68,11 +73,20 @@ export async function POST(request: Request) {
       markdown: parsed.markdown ?? ""
     };
 
+    void logUsageServer("portfolio_success", {
+      itemCount: items.length
+    });
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("Portfolio API error", error);
+    void logUsageServer("portfolio_error", {
+      message: error instanceof Error ? error.message : String(error)
+    });
+    const locale = getRequestLocale(request);
+    const { code, message } = getApiError("PORTFOLIO_OPENAI_ERROR", locale);
     return NextResponse.json(
-      { error: "ポートフォリオ生成中にエラーが発生しました。" },
+      { error: message, code },
       { status: 500 }
     );
   }
