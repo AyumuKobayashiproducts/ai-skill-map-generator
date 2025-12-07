@@ -7,7 +7,6 @@ import { ToastProvider } from "@/components/ui/toast";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { LanguageSwitcher } from "@/src/components/LanguageSwitcher";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
 import Script from "next/script";
 
 // メタデータ（OGP対応）
@@ -82,15 +81,14 @@ export const viewport: Viewport = {
 };
 
 const navLinks = [
-  { href: "/", key: "home", emoji: "🏠" },
-  { href: "/dashboard", key: "dashboard", emoji: "📊" },
-  { href: "/about", key: "about", emoji: "ℹ️" },
-  { href: "/portfolio", key: "portfolio", emoji: "📁" },
-  { href: "/legal", key: "legal", emoji: "📜" }
+  { href: "/", key: "home", emoji: "🏠", label: "ホーム" },
+  { href: "/dashboard", key: "dashboard", emoji: "📊", label: "ダッシュボード" },
+  { href: "/about", key: "about", emoji: "ℹ️", label: "このアプリについて" },
+  { href: "/portfolio", key: "portfolio", emoji: "📁", label: "ポートフォリオ整理" },
+  { href: "/legal", key: "legal", emoji: "📜", label: "利用について" }
 ] as const;
 
-export default async function RootLayout({ children }: { children: ReactNode }) {
-  const t = await getTranslations("layout");
+export default function RootLayout({ children }: { children: ReactNode }) {
 
   return (
     <html lang="ja" className="scroll-smooth">
@@ -124,7 +122,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                 href="#main-content"
                 className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-sky-600 focus:text-white focus:rounded-lg"
               >
-                {t("aria.skipToMain")}
+                メインコンテンツへスキップ
               </a>
 
               <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-lg">
@@ -132,7 +130,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                   <Link
                     href="/"
                     className="flex items-center gap-2.5 min-w-0 group"
-                    aria-label={t("aria.logo")}
+                    aria-label="AI Skill Map Generator トップページへ"
                   >
                     <div className="relative h-8 w-8 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-emerald-400 shadow-lg shadow-sky-400/30 group-hover:shadow-xl group-hover:shadow-sky-400/40 transition-all duration-300 group-hover:scale-105">
                       <div className="absolute inset-0 rounded-xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -145,7 +143,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                   <div className="flex items-center gap-3">
                     <nav
                       className="hidden md:flex gap-1 text-sm"
-                      aria-label={t("aria.mainNav")}
+                      aria-label="メインナビゲーション"
                     >
                       {navLinks.map((link) => (
                         <Link
@@ -153,7 +151,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                           href={link.href}
                           className="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
                         >
-                          {t(`nav.${link.key}`)}
+                          {link.label}
                         </Link>
                       ))}
                     </nav>
@@ -167,7 +165,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                 {/* Mobile navigation */}
                 <nav
                   className="md:hidden border-t border-slate-100 bg-white/90"
-                  aria-label={t("aria.mobileNav")}
+                  aria-label="モバイルナビゲーション"
                 >
                   <div className="max-w-5xl mx-auto px-3 py-2 flex gap-1.5 overflow-x-auto">
                     {navLinks.map((link) => (
@@ -177,7 +175,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                         className="whitespace-nowrap flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-[11px] text-slate-700 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-sky-400"
                       >
                         <span aria-hidden="true">{link.emoji}</span>
-                        {t(`nav.${link.key}`)}
+                        {link.label}
                       </Link>
                     ))}
                     <div className="flex items-center">
@@ -223,7 +221,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-400 rounded"
-                    aria-label={t("aria.github")}
+                        aria-label="GitHub リポジトリを開く"
                       >
                         <svg
                           className="w-4 h-4"

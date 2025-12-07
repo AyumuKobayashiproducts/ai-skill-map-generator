@@ -7,14 +7,9 @@ export const metadata: Metadata = {
   title: "AI Skill Map Generator"
 };
 
-interface LocaleHomePageProps {
-  params: { locale: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
-}
-
-export default function LocaleHomePage({ searchParams }: LocaleHomePageProps) {
-  // 現時点では HomePage コンポーネントをそのまま再利用し、
-  // 文言のローカライズは次のステップで行います。
+export default function LocaleHomePage({ searchParams }: any) {
+  // ここでは HomePage コンポーネントをそのまま再利用し、
+  // 文言のローカライズは NextIntl 側に委ねます。
   return <HomePage searchParams={searchParams} />;
 }
 
