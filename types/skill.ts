@@ -109,6 +109,15 @@ export interface OneOnOneFeedback {
   feedback: string;
   /** 改善された回答例 */
   improvedAnswer: string;
+  /** ルールベース評価の総合スコア (0-100) */
+  ruleBasedScore?: number;
+  /** ルールベース評価の内訳スコア */
+  ruleBasedScores?: {
+    length: number;
+    specificity: number;
+    structure: number;
+    starElements: number;
+  };
 }
 
 /**

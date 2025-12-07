@@ -12,6 +12,8 @@ import { ErrorAlert } from "@/components/ui/error-alert";
 import { postJson } from "@/lib/apiClient";
 import { logUsage } from "@/lib/usageLogger";
 
+type InterviewType = "general" | "technical" | "behavioral";
+
 interface OneOnOnePracticeSectionProps {
   result: SkillMapResult;
 }
@@ -45,16 +47,20 @@ export function OneOnOnePracticeSection({
   const [loading, setLoading] = useState(false);
   const [questionsLoading, setQuestionsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [interviewType, setInterviewType] = useState<InterviewType>("general");
 
   useEffect(() => {
     const loadQuestions = async () => {
       setError(null);
       setQuestionsLoading(true);
       try {
-        const data = await postJson<{ skillMapId: string }, OneOnOneQuestions>(
-          "/api/oneonone/questions",
-          { skillMapId: result.id }
-        );
+        const data = await postJson<
+          { skillMapId: string; interviewType?: InterviewType },
+          OneOnOneQuestions
+        >("/api/oneonone/questions", {
+          skillMapId: result.id,
+          interviewType
+        });
         setQuestions(data.questions ?? []);
       } catch (e) {
         console.error(e);
@@ -67,7 +73,7 @@ export function OneOnOnePracticeSection({
     };
 
     loadQuestions();
-  }, [result.id]);
+  }, [result.id, interviewType]);
 
   const currentQuestion = questions[currentIndex] ?? null;
 
@@ -86,13 +92,15 @@ export function OneOnOnePracticeSection({
           answer: string;
           strengths: string;
           weaknesses: string;
+          interviewType?: InterviewType;
         },
         OneOnOneFeedback
       >("/api/oneonone/feedback", {
         question: currentQuestion,
         answer,
         strengths: result.strengths,
-        weaknesses: result.weaknesses
+        weaknesses: result.weaknesses,
+        interviewType
       });
       setFeedback(data);
     } catch (e) {
@@ -127,6 +135,55 @@ export function OneOnOnePracticeSection({
         <p className="text-xs text-slate-600 leading-relaxed">
           評価面談でよく聞かれる質問に対して回答を考え、AI マネージャーからフィードバックと模範回答をもらえます。
         </p>
+
+        {/* 面接タイプ選択 */}
+        <div className="flex flex-wrap gap-2 text-[11px]">
+          {[
+            {
+              id: "general" as InterviewType,
+              label: "総合",
+              desc: "自己紹介・志望動機など",
+              emoji: "🗣️"
+            },
+            {
+              id: "technical" as InterviewType,
+              label: "技術",
+              desc: "技術選定・課題解決",
+              emoji: "🧪"
+            },
+            {
+              id: "behavioral" as InterviewType,
+              label: "行動 (STAR)",
+              desc: "行動・成果エピソード",
+              emoji: "📚"
+            }
+          ].map((t) => {
+            const active = interviewType === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => {
+                  setInterviewType(t.id);
+                  setCurrentIndex(0);
+                  setFeedback(null);
+                  setAnswer("");
+                }}
+                className={`flex-1 min-w-[96px] px-3 py-2 rounded-lg border text-left transition-all ${
+                  active
+                    ? "border-violet-400 bg-white shadow-sm text-violet-700"
+                    : "border-slate-200 bg-white/70 text-slate-600 hover:border-slate-300"
+                }`}
+              >
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <span aria-hidden="true">{t.emoji}</span>
+                  <span className="font-semibold">{t.label}</span>
+                </div>
+                <p className="text-[10px] text-slate-500">{t.desc}</p>
+              </button>
+            );
+          })}
+        </div>
 
         {error && <ErrorAlert message={error} />}
 
@@ -222,6 +279,24 @@ export function OneOnOnePracticeSection({
             {/* Feedback */}
             {feedback && (
               <div className="space-y-4 pt-4 border-t border-slate-100 animate-fade-in-up">
+                {typeof feedback.ruleBasedScore === "number" && (
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-semibold text-slate-700">
+                        総合スコア（自己評価）
+                      </p>
+                      <p className="text-[11px] text-slate-500">
+                        文字数・具体性・構造・STAR要素をもとに採点しています。
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-bold text-violet-600">
+                        {feedback.ruleBasedScore}
+                        <span className="text-xs text-slate-500"> / 100</span>
+                      </p>
+                    </div>
+                  </div>
+                )}
                 <div className="p-4 rounded-xl bg-amber-50 border border-amber-100">
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white text-sm flex-shrink-0">
