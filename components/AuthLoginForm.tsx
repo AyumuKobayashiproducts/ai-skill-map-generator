@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowserClient";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
+import { AppLogoIcon } from "@/components/AppLogo";
 
 export function AuthLoginForm() {
   const t = useTranslations("auth.login");
@@ -88,10 +89,10 @@ export function AuthLoginForm() {
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
       <div className="w-full max-w-md space-y-6 animate-fade-in-up">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-500 via-indigo-500 to-emerald-400 flex items-center justify-center text-white text-3xl shadow-xl shadow-sky-500/25 mx-auto">
-            🔐
+        {/* Header with App Logo */}
+        <div className="text-center space-y-3">
+          <div className="flex justify-center">
+            <AppLogoIcon size="lg" />
           </div>
           <h2 className="text-2xl font-bold text-slate-900">
             {mode === "login" ? t("titleLogin") : t("titleSignup")}

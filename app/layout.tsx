@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthButton } from "@/components/AuthButton";
@@ -6,6 +7,7 @@ import { PwaRegister } from "@/components/PwaRegister";
 import { ToastProvider } from "@/components/ui/toast";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { LanguageSwitcher } from "@/src/components/LanguageSwitcher";
+import { AppLogo } from "@/components/AppLogo";
 import Link from "next/link";
 import Script from "next/script";
 
@@ -127,20 +129,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
               <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-lg">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
-                  <Link
-                    href="/"
-                    className="flex items-center gap-2.5 min-w-0 group"
-                    aria-label="AI Skill Map Generator トップページへ"
-                  >
-                    <div className="relative h-8 w-8 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-emerald-400 shadow-lg shadow-sky-400/30 group-hover:shadow-xl group-hover:shadow-sky-400/40 transition-all duration-300 group-hover:scale-105">
-                      <div className="absolute inset-0 rounded-xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                    <h1 className="truncate text-base sm:text-lg font-bold tracking-tight text-slate-900">
-                      AI Skill Map
-                      <span className="hidden sm:inline text-slate-600 font-medium"> Generator</span>
-                    </h1>
-                  </Link>
-                  <div className="flex items-center gap-3">
+                  {/* ロゴ（SM アイコン + テキスト） */}
+                  <AppLogo size="sm" />
+
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    {/* デスクトップナビゲーション */}
                     <nav
                       className="hidden md:flex gap-1 text-sm"
                       aria-label="メインナビゲーション"
@@ -155,14 +148,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                         </Link>
                       ))}
                     </nav>
-                    <div className="hidden sm:block">
-                      <LanguageSwitcher />
-                    </div>
+
+                    {/* 言語切り替えボタン（DocuFlow 風のコンパクト表示） */}
+                    <Suspense fallback={null}>
+                      <LanguageSwitcher compact />
+                    </Suspense>
+
                     <AuthButton />
                   </div>
                 </div>
 
-                {/* Mobile navigation */}
+                {/* モバイルナビゲーション */}
                 <nav
                   className="md:hidden border-t border-slate-100 bg-white/90"
                   aria-label="モバイルナビゲーション"
@@ -178,9 +174,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                         {link.label}
                       </Link>
                     ))}
-                    <div className="flex items-center">
-                      <LanguageSwitcher />
-                    </div>
                   </div>
                 </nav>
               </header>
@@ -207,11 +200,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
+                      {/* フッターロゴ（小さめ） */}
                       <div className="flex items-center gap-2">
                         <div
-                          className="h-5 w-5 rounded-lg bg-gradient-to-tr from-sky-500 via-indigo-500 to-emerald-400"
+                          className="h-6 w-6 rounded-lg bg-gradient-to-br from-sky-400 via-indigo-500 to-emerald-400 flex items-center justify-center text-[8px] font-black text-white shadow-sm"
                           aria-hidden="true"
-                        />
+                        >
+                          SM
+                        </div>
                         <span className="text-sm font-medium text-slate-700">
                           AI Skill Map Generator
                         </span>
