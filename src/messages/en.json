@@ -42,7 +42,7 @@
     "features": {
       "title": "What this tool can do",
       "subtitle": "A single diagnosis gives you most of what you need to start your job search.",
-      "items": "Generate a skill map and a simple “class/job” profile for you|Propose 30-day / 90-day roadmaps and a concrete task for today|Highlight matching score and missing skills for target job posts|Provide 1on1-style interview practice with AI feedback|整理 and export your portfolio projects as Markdown"
+      "items": "Generate a skill map and a simple “class/job” profile for you|Propose 30-day / 90-day roadmaps and a concrete task for today|Highlight matching score and missing skills for target job posts|Provide 1on1-style interview practice with AI feedback|Organise and export your portfolio projects as Markdown"
     },
     "formHeader": {
       "title": "Diagnosis form",
@@ -560,7 +560,7 @@
         "price": "Free",
         "badge": "What you see now",
         "description": "For the portfolio version, all features are available for free. In a real product, I would likely add some limits on usage volume.",
-        "features": "Diagnosis (skill map / roadmap / risk analysis)|Job matching & portfolio整理|1on1 practice (with history and score trends)"
+        "features": "Diagnosis (skill map / roadmap / risk analysis)|Job matching & portfolio inventory|1on1 practice (with history and score trends)"
       },
       "pro": {
         "name": "Pro (concept stage)",
@@ -622,7 +622,7 @@
   "portfolio": {
     "hero": {
       "title": "Portfolio inventory generator",
-      "subtitle": "整理 your projects into a compelling portfolio",
+      "subtitle": "Organise your projects into a compelling portfolio",
       "intro": "Paste in your own projects, and the app will suggest the top 3 to highlight plus draft descriptions. Designed to help with interviews and job applications."
     }
   },
