@@ -2,8 +2,8 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { SkillForm } from "@/components/SkillForm";
 import { DemoGuideBanner } from "@/components/DemoGuideBanner";
+import { Card } from "@/components/ui/card";
 
-// 静的生成を無効化（next-intl が headers を使用するため）
 export const dynamic = "force-dynamic";
 
 interface HomePageProps {
@@ -15,211 +15,273 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const isDemo = searchParams?.demo === "1";
 
   const heroLead = t.rich("hero.lead", {
-    strong: (chunks) => <strong className="font-semibold">{chunks}</strong>
+    strong: (chunks) => <strong className="font-semibold text-gray-900">{chunks}</strong>
   });
 
   const howToBody = t.rich("guide.howToBody", {
-    strong: (chunks) => <strong className="font-semibold">{chunks}</strong>
+    strong: (chunks) => <strong className="font-semibold text-gray-900">{chunks}</strong>
   });
 
   return (
-    <div className="space-y-8">
-      <section className="space-y-4 animate-fade-in-up">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-sky-100 to-indigo-100 text-sky-700 text-xs font-semibold">
-          <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
+    <div className="space-y-12">
+      {/* Hero Section */}
+      <section className="space-y-6 animate-fade-in">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-medium">
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
           {t("badge")}
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 leading-tight">
+
+        {/* Title */}
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 leading-[1.1]">
           {t("hero.titleLine1")}
           <br />
-          <span className="gradient-text">
-            {t("hero.titleLine2")}
-          </span>
+          <span className="text-gradient">{t("hero.titleLine2")}</span>
         </h1>
-        <p className="text-base md:text-lg text-slate-600 max-w-2xl leading-relaxed">
+
+        {/* Description */}
+        <p className="text-lg text-gray-600 max-w-2xl leading-relaxed">
           {heroLead}
         </p>
-        <div className="flex flex-wrap items-center gap-3 pt-2">
-          <div className="flex items-center gap-1.5 text-xs text-slate-600">
-            <svg className="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            <span>{t("hero.badgeFree")}</span>
-          </div>
-          <div className="flex items-center gap-1.5 text-xs text-slate-600">
-            <svg className="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            <span>{t("hero.badgeMailOnly")}</span>
-          </div>
-          <div className="flex items-center gap-1.5 text-xs text-slate-600">
-            <svg className="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            <span>{t("hero.badgeFast")}</span>
-          </div>
+
+        {/* Trust badges */}
+        <div className="flex flex-wrap items-center gap-4 pt-2">
+          {[
+            { icon: CheckIcon, label: t("hero.badgeFree") },
+            { icon: CheckIcon, label: t("hero.badgeMailOnly") },
+            { icon: CheckIcon, label: t("hero.badgeFast") },
+          ].map(({ icon: Icon, label }) => (
+            <div key={label} className="flex items-center gap-2 text-sm text-gray-600">
+              <Icon className="w-4 h-4 text-success-500" />
+              <span>{label}</span>
+            </div>
+          ))}
         </div>
       </section>
 
-      <section className="space-y-4 animate-fade-in-up stagger-2">
-        <div className="flex items-center gap-2">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
-          <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
-            {t("steps.label")}
-          </p>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
+      {/* Steps Section */}
+      <section className="space-y-6 animate-fade-in-up stagger-1">
+        <div className="divider-text">
+          <span>{t("steps.label")}</span>
         </div>
+
         <div className="grid gap-4 sm:grid-cols-3">
-          {[1, 2, 3].map((step, idx) => {
+          {[0, 1, 2].map((idx) => {
             const itemTitle = t(`steps.items.${idx}.title`);
             const itemDesc = t(`steps.items.${idx}.desc`);
-            const icons = ["🎯", "✍️", "📊"] as const;
-            const icon = icons[idx] ?? "✨";
+
             return (
-            <div
-              key={step}
-              className={`group relative rounded-xl border-2 border-slate-200 bg-white px-5 py-6 shadow-sm card-hover animate-fade-in-up stagger-${idx + 3} hover:border-sky-300 hover:shadow-lg hover:shadow-sky-100 transition-all duration-300`}
-            >
-              <div className="absolute -top-4 -left-2 w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 via-indigo-500 to-purple-500 flex items-center justify-center text-white text-base font-bold shadow-lg shadow-sky-500/40 group-hover:scale-110 group-hover:shadow-xl transition-all duration-300">
-                {step}
-              </div>
-              <div className="mt-2">
-                <p className="text-base font-bold text-slate-900 flex items-center gap-2 mb-2">
-                  <span className="text-2xl">{icon}</span>
+              <Card key={idx} hover className="relative pt-8 animate-fade-in-up" style={{ animationDelay: `${(idx + 2) * 100}ms` }}>
+                {/* Step number */}
+                <div className="absolute -top-3 left-4 w-7 h-7 rounded-lg bg-gray-900 flex items-center justify-center text-white text-sm font-semibold">
+                  {idx + 1}
+                </div>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">
                   {itemTitle}
-                </p>
-                <p className="text-sm text-slate-600 leading-relaxed">
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
                   {itemDesc}
                 </p>
-              </div>
-            </div>
-          );})}
+              </Card>
+            );
+          })}
         </div>
       </section>
 
-      {/* はじめての方へガイド */}
-      <section className="animate-fade-in-up stagger-3">
-        <div className="rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-sky-50 p-5 shadow-md">
-          <div className="flex items-start gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-sky-500 flex items-center justify-center text-white text-xl flex-shrink-0">
-              👋
+      {/* Guide Section */}
+      <section className="animate-fade-in-up stagger-2">
+        <Card className="bg-gray-50 border-gray-200">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+              <InfoIcon className="w-5 h-5 text-blue-600" />
             </div>
-            <div className="flex-1">
-              <p className="text-base font-bold text-slate-900 mb-1">
-                {t("guide.title")}
-              </p>
-              <p className="text-sm text-slate-600">
-                {t("guide.description")}
-              </p>
-            </div>
-          </div>
-          <div className="space-y-3 text-sm text-slate-700">
-            <div className="flex items-start gap-3 p-3 rounded-xl bg-white/80 border border-slate-200">
-              <span className="text-lg flex-shrink-0">💡</span>
+            <div className="flex-1 space-y-3">
               <div>
-                <p className="font-semibold text-slate-900 mb-1">
-                  {t("guide.howToTitle")}
-                </p>
-                <p className="text-xs md:text-sm leading-relaxed">
-                  {howToBody}
+                <h3 className="text-base font-semibold text-gray-900">
+                  {t("guide.title")}
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  {t("guide.description")}
                 </p>
               </div>
-            </div>
-            <div className="grid gap-2 sm:grid-cols-2 text-xs">
-              <div className="flex items-start gap-2 p-2 rounded-lg bg-white/60">
-                <span className="text-sm">📊</span>
-                <div>
-                  <Link href="/dashboard" className="font-semibold text-sky-700 hover:underline">
-                    {t("guide.dashboardLink")}
-                  </Link>
-                  <span className="text-slate-600">
-                    {" "}{t("guide.dashboardText")}
-                  </span>
+              
+              <div className="p-4 rounded-lg bg-white border border-gray-200">
+                <div className="flex items-start gap-3">
+                  <LightbulbIcon className="w-5 h-5 text-warning-500 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-900 mb-1">
+                      {t("guide.howToTitle")}
+                    </p>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {howToBody}
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-start gap-2 p-2 rounded-lg bg-white/60">
-                <span className="text-sm">ℹ️</span>
-                <div>
-                  <Link href="/about" className="font-semibold text-sky-700 hover:underline">
-                    {t("guide.aboutLink")}
-                  </Link>
-                  <span className="text-slate-600">
-                    {" "}{t("guide.aboutText")}
-                  </span>
-                </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-2 p-3 rounded-lg bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors group"
+                >
+                  <ChartIcon className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">{t("guide.dashboardLink")}</span>
+                    <span className="text-xs text-gray-500 block">{t("guide.dashboardText")}</span>
+                  </div>
+                </Link>
+                <Link
+                  href="/about"
+                  className="flex items-center gap-2 p-3 rounded-lg bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors group"
+                >
+                  <InfoIcon className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">{t("guide.aboutLink")}</span>
+                    <span className="text-xs text-gray-500 block">{t("guide.aboutText")}</span>
+                  </div>
+                </Link>
               </div>
             </div>
           </div>
-        </div>
+        </Card>
       </section>
 
-      <div className="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-start animate-fade-in-up stagger-5">
-        <div className="space-y-5">
+      {/* Main Content Grid */}
+      <div className="grid gap-8 lg:grid-cols-[1fr_1.5fr] items-start animate-fade-in-up stagger-3">
+        {/* Features List */}
+        <section className="space-y-4">
           <div>
-            <p className="font-bold text-slate-900 text-base mb-1 flex items-center gap-2">
-              <span className="text-lg">✨</span>
+            <h2 className="text-lg font-semibold text-gray-900">
               {t("features.title")}
-            </p>
-            <p className="text-xs text-slate-600">
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
               {t("features.subtitle")}
             </p>
           </div>
-          <ul className="space-y-3">
+
+          <ul className="space-y-2">
             {t("features.items")
               .split("|")
-              .map((text, index) => {
-              const icons = ["🗺️", "📅", "💼", "🎤", "📄"] as const;
-              const colors = [
-                "from-sky-500 to-indigo-500",
-                "from-indigo-500 to-purple-500",
-                "from-purple-500 to-pink-500",
-                "from-pink-500 to-rose-500",
-                "from-rose-500 to-orange-500"
-              ];
-              const icon = icons[index] ?? "✨";
-              const color = colors[index] ?? "from-slate-500 to-slate-700";
-              return (
-              <li key={text} className="group flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-md transition-all duration-200">
-                <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${color} flex items-center justify-center flex-shrink-0 text-white text-base group-hover:scale-110 transition-transform shadow-sm`}>
-                  {icon}
-                </div>
-                <span className="text-sm text-slate-700 group-hover:text-slate-900 transition-colors leading-relaxed pt-1">
-                  {text}
-                </span>
-              </li>
-            );})}
+              .map((text, index) => (
+                <li
+                  key={text}
+                  className="flex items-start gap-3 p-3 rounded-lg border border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                    <FeatureIcon index={index} />
+                  </div>
+                  <span className="text-sm text-gray-700 leading-relaxed pt-1">
+                    {text}
+                  </span>
+                </li>
+              ))}
           </ul>
-        </div>
+        </section>
 
-        <div className="rounded-2xl border-2 border-slate-300 bg-white shadow-2xl shadow-slate-400/30 overflow-hidden animate-scale-in stagger-6">
-          <div className="border-b-2 border-slate-200 bg-gradient-to-r from-slate-50 via-white to-sky-50 px-5 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center text-white text-sm font-bold shadow-md">
-                ✍️
+        {/* Form Card */}
+        <Card padding="none" className="overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center">
+                <PencilIcon className="w-4 h-4 text-white" />
               </div>
-              <span className="font-bold text-slate-900 text-sm">
+              <span className="font-semibold text-gray-900">
                 {t("formHeader.title")}
               </span>
             </div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-sky-500 text-white text-xs font-semibold shadow-md">
-              <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success-50 text-success-600 text-xs font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-success-500 animate-pulse" />
               {t("formHeader.badge")}
             </span>
           </div>
-          <div className="p-5 sm:p-6 bg-gradient-to-br from-white via-slate-50 to-sky-50/30">
+          <div className="p-6 bg-gray-50/50">
             <SkillForm />
           </div>
-        </div>
+        </Card>
       </div>
+
       {isDemo && (
         <DemoGuideBanner
           step={1}
           title={t("demoGuide.title")}
-          description={
-          <>{t("demoGuide.description")}</>
-          }
+          description={<>{t("demoGuide.description")}</>}
         />
       )}
     </div>
   );
+}
+
+/* ============================================
+   Icon Components
+   ============================================ */
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 20 20">
+      <path
+        fillRule="evenodd"
+        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+
+function InfoIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  );
+}
+
+function LightbulbIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+    </svg>
+  );
+}
+
+function ChartIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+    </svg>
+  );
+}
+
+function PencilIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+    </svg>
+  );
+}
+
+function FeatureIcon({ index }: { index: number }) {
+  const icons = [
+    // Map
+    <svg key="map" className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+    </svg>,
+    // Calendar
+    <svg key="cal" className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>,
+    // Briefcase
+    <svg key="brief" className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>,
+    // Microphone
+    <svg key="mic" className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+    </svg>,
+    // Document
+    <svg key="doc" className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>,
+  ];
+
+  return icons[index] || icons[0];
 }

@@ -1,47 +1,138 @@
 "use client";
 
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+/* ============================================
+   Button Component (Vercel/Linear style)
+   ============================================ */
+
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: "default" | "outline" | "ghost";
-  size?: "default" | "sm" | "lg";
+  variant?: "primary" | "secondary" | "ghost" | "danger" | "outline";
+  size?: "sm" | "md" | "lg" | "icon";
+  loading?: boolean;
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
 }
 
-export function Button({
-  children,
-  className,
-  variant = "default",
-  size = "default",
-  ...props
-}: ButtonProps) {
-  const base =
-    "group inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 disabled:pointer-events-none active:scale-[0.97]";
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      children,
+      className,
+      variant = "primary",
+      size = "md",
+      loading = false,
+      leftIcon,
+      rightIcon,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
+    const baseStyles = cn(
+      "inline-flex items-center justify-center gap-2",
+      "font-medium text-sm",
+      "rounded-lg",
+      "transition-all duration-150 ease-out",
+      "disabled:opacity-50 disabled:cursor-not-allowed",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
+      "active:scale-[0.98]"
+    );
 
-  const variants: Record<string, string> = {
-    default:
-      "relative bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-400 text-white font-semibold shadow-lg shadow-sky-500/25 hover:shadow-xl hover:shadow-sky-500/30 hover:-translate-y-0.5 before:absolute before:inset-0 before:rounded-lg before:bg-white/20 before:opacity-0 hover:before:opacity-100 before:transition-opacity overflow-hidden",
-    outline:
-      "border-2 border-slate-200 bg-white text-slate-700 hover:border-sky-300 hover:bg-sky-50/50 hover:text-sky-700 shadow-sm",
-    ghost: 
-      "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-  };
+    const variants: Record<string, string> = {
+      primary: cn(
+        "bg-gray-900 text-white",
+        "hover:bg-gray-800",
+        "active:bg-gray-950",
+        "shadow-sm hover:shadow-md"
+      ),
+      secondary: cn(
+        "bg-white text-gray-700",
+        "border border-gray-200",
+        "hover:bg-gray-50 hover:border-gray-300",
+        "active:bg-gray-100"
+      ),
+      ghost: cn(
+        "bg-transparent text-gray-600",
+        "hover:bg-gray-100 hover:text-gray-900"
+      ),
+      danger: cn(
+        "bg-error-500 text-white",
+        "hover:bg-error-600",
+        "active:bg-error-600"
+      ),
+      outline: cn(
+        "bg-transparent text-gray-700",
+        "border border-gray-200",
+        "hover:bg-gray-50 hover:border-gray-300",
+        "active:bg-gray-100"
+      ),
+    };
 
-  const sizes: Record<string, string> = {
-    default: "h-10 px-5",
-    sm: "h-8 px-3 text-xs",
-    lg: "h-12 px-8 text-base"
-  };
+    const sizes: Record<string, string> = {
+      sm: "h-8 px-3 text-xs",
+      md: "h-10 px-4 text-sm",
+      lg: "h-12 px-6 text-base",
+      icon: "h-10 w-10 p-0",
+    };
 
+    return (
+      <button
+        ref={ref}
+        className={cn(baseStyles, variants[variant], sizes[size], className)}
+        disabled={disabled || loading}
+        {...props}
+      >
+        {loading ? (
+          <>
+            <Spinner className="w-4 h-4" />
+            <span>{children}</span>
+          </>
+        ) : (
+          <>
+            {leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
+            <span>{children}</span>
+            {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
+          </>
+        )}
+      </button>
+    );
+  }
+);
+
+Button.displayName = "Button";
+
+/* ============================================
+   Spinner Component
+   ============================================ */
+interface SpinnerProps {
+  className?: string;
+}
+
+export function Spinner({ className }: SpinnerProps) {
   return (
-    <button
-      className={cn(base, variants[variant], sizes[size], className)}
-      {...props}
+    <svg
+      className={cn("animate-spin", className)}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
     >
-      <span className="relative z-10 flex items-center gap-2">
-        {children}
-      </span>
-    </button>
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      />
+    </svg>
   );
 }

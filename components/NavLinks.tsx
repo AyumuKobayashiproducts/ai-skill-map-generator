@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
-// ルートレイアウト（NextIntlClientProvider の外）でも使われるため、
-// useTranslations を使わず locale に基づいた固定テキストを使用する
+/* ============================================
+   Navigation Labels (i18n-safe)
+   ============================================ */
 const labels = {
   ja: {
     home: "ホーム",
     dashboard: "ダッシュボード",
     about: "このアプリについて",
-    portfolio: "ポートフォリオ整理",
+    portfolio: "ポートフォリオ",
     legal: "利用について"
   },
   en: {
@@ -18,16 +20,16 @@ const labels = {
     dashboard: "Dashboard",
     about: "About",
     portfolio: "Portfolio",
-    legal: "Usage & terms"
+    legal: "Terms"
   }
 } as const;
 
 const navItems = [
-  { path: "", key: "home", emoji: "🏠" },
-  { path: "/dashboard", key: "dashboard", emoji: "📊" },
-  { path: "/about", key: "about", emoji: "ℹ️" },
-  { path: "/portfolio", key: "portfolio", emoji: "📁" },
-  { path: "/legal", key: "legal", emoji: "📜" }
+  { path: "", key: "home" },
+  { path: "/dashboard", key: "dashboard" },
+  { path: "/about", key: "about" },
+  { path: "/portfolio", key: "portfolio" },
+  { path: "/legal", key: "legal" }
 ] as const;
 
 interface NavLinksProps {
@@ -44,17 +46,30 @@ export function NavLinks({ variant }: NavLinksProps) {
   const t = labels[locale];
   const basePath = `/${locale}`;
 
+  // 現在のページを判定
+  const currentPath = segments.slice(2).join("/");
+
   if (variant === "desktop") {
     return (
       <>
         {navItems.map((item) => {
           const href = item.path ? `${basePath}${item.path}` : basePath;
           const label = t[item.key as keyof typeof t];
+          const isActive = item.path === "" 
+            ? currentPath === "" 
+            : currentPath.startsWith(item.path.slice(1));
+
           return (
             <Link
               key={item.key}
               href={href}
-              className="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
+              className={cn(
+                "px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
+                isActive
+                  ? "text-gray-900 bg-gray-100"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              )}
             >
               {label}
             </Link>
@@ -64,19 +79,28 @@ export function NavLinks({ variant }: NavLinksProps) {
     );
   }
 
-  // mobile variant
+  // Mobile variant
   return (
     <>
       {navItems.map((item) => {
         const href = item.path ? `${basePath}${item.path}` : basePath;
         const label = t[item.key as keyof typeof t];
+        const isActive = item.path === "" 
+          ? currentPath === "" 
+          : currentPath.startsWith(item.path.slice(1));
+
         return (
           <Link
             key={item.key}
             href={href}
-            className="whitespace-nowrap flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-[11px] text-slate-700 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-sky-400"
+            className={cn(
+              "whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium transition-colors",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+              isActive
+                ? "bg-gray-900 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900"
+            )}
           >
-            <span aria-hidden="true">{item.emoji}</span>
             {label}
           </Link>
         );
@@ -84,4 +108,3 @@ export function NavLinks({ variant }: NavLinksProps) {
     </>
   );
 }
-

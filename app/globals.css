@@ -1,385 +1,488 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
+/* ============================================
+   AI Skill Map Generator - Design System
+   Inspired by: Vercel, Linear, Stripe, Claude
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: "DM Sans", "Noto Sans JP", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #0f172a;
-  font-weight: 500;
-  line-height: 1.7;
-}
+/* ============================================
+   BASE LAYER
+   ============================================ */
+@layer base {
+  :root {
+    /* Color tokens */
+    --color-background: 0 0% 100%;
+    --color-foreground: 240 10% 3.9%;
+    --color-card: 0 0% 100%;
+    --color-card-foreground: 240 10% 3.9%;
+    --color-popover: 0 0% 100%;
+    --color-popover-foreground: 240 10% 3.9%;
+    --color-primary: 240 5.9% 10%;
+    --color-primary-foreground: 0 0% 98%;
+    --color-secondary: 240 4.8% 95.9%;
+    --color-secondary-foreground: 240 5.9% 10%;
+    --color-muted: 240 4.8% 95.9%;
+    --color-muted-foreground: 240 3.8% 46.1%;
+    --color-accent: 240 4.8% 95.9%;
+    --color-accent-foreground: 240 5.9% 10%;
+    --color-destructive: 0 84.2% 60.2%;
+    --color-destructive-foreground: 0 0% 98%;
+    --color-border: 240 5.9% 90%;
+    --color-input: 240 5.9% 90%;
+    --color-ring: 217.2 91.2% 59.8%;
+    --radius: 8px;
+  }
 
-p {
-  line-height: 1.8;
-}
+  * {
+    @apply border-border;
+  }
 
-/* ============================
-   アニメーション定義
-   ============================ */
+  html {
+    @apply scroll-smooth antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-variation-settings: normal;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+  /* Typography defaults */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight text-gray-900;
   }
-  to {
-    opacity: 1;
-  }
-}
 
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
+  h1 { @apply text-3xl md:text-4xl; }
+  h2 { @apply text-2xl md:text-3xl; }
+  h3 { @apply text-xl md:text-2xl; }
+  h4 { @apply text-lg md:text-xl; }
 
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
+  p {
+    @apply text-gray-600 leading-relaxed;
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
+  /* Focus states (accessible) */
+  :focus-visible {
+    @apply outline-none ring-2 ring-blue-500 ring-offset-2 ring-offset-white;
   }
-  100% {
-    background-position: 200% 0;
-  }
-}
 
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+  /* Selection */
+  ::selection {
+    @apply bg-blue-100 text-blue-900;
   }
 }
 
-@keyframes progress-fill {
-  from {
-    width: 0%;
+/* ============================================
+   COMPONENT LAYER
+   ============================================ */
+@layer components {
+  /* ------------------------------------
+     CARD SYSTEM (Stripe/Vercel style)
+     ------------------------------------ */
+  .card {
+    @apply bg-white rounded-xl border border-gray-200 shadow-card;
+  }
+
+  .card-hover {
+    @apply transition-all duration-200;
+  }
+  
+  .card-hover:hover {
+    @apply shadow-card-hover border-gray-300 -translate-y-0.5;
+  }
+
+  .card-header {
+    @apply px-6 py-4 border-b border-gray-100;
+  }
+
+  .card-body {
+    @apply p-6;
+  }
+
+  .card-footer {
+    @apply px-6 py-4 border-t border-gray-100 bg-gray-50/50;
+  }
+
+  /* ------------------------------------
+     BUTTON VARIANTS
+     ------------------------------------ */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2
+           font-medium text-sm
+           rounded-lg
+           transition-all duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply bg-gray-900 text-white
+           hover:bg-gray-800
+           active:bg-gray-950
+           shadow-button hover:shadow-button-hover;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-gray-700 border border-gray-200
+           hover:bg-gray-50 hover:border-gray-300
+           active:bg-gray-100;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-gray-600
+           hover:bg-gray-100 hover:text-gray-900;
+  }
+
+  .btn-danger {
+    @apply bg-error-500 text-white
+           hover:bg-error-600
+           active:bg-error-600;
+  }
+
+  .btn-sm { @apply h-8 px-3 text-xs; }
+  .btn-md { @apply h-10 px-4 text-sm; }
+  .btn-lg { @apply h-12 px-6 text-base; }
+  .btn-icon { @apply h-10 w-10 p-0; }
+
+  /* ------------------------------------
+     INPUT SYSTEM
+     ------------------------------------ */
+  .input {
+    @apply w-full h-10 px-3
+           bg-white text-gray-900
+           border border-gray-200 rounded-lg
+           placeholder:text-gray-400
+           transition-colors duration-150
+           hover:border-gray-300
+           focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none;
+  }
+
+  .input-error {
+    @apply border-error-500 focus:border-error-500 focus:ring-error-500/20;
+  }
+
+  .textarea {
+    @apply w-full px-3 py-2
+           bg-white text-gray-900
+           border border-gray-200 rounded-lg
+           placeholder:text-gray-400
+           transition-colors duration-150
+           hover:border-gray-300
+           focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none
+           resize-none;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-gray-700 mb-1.5;
+  }
+
+  .helper-text {
+    @apply text-xs text-gray-500 mt-1.5;
+  }
+
+  /* ------------------------------------
+     BADGE SYSTEM
+     ------------------------------------ */
+  .badge {
+    @apply inline-flex items-center gap-1
+           px-2 py-0.5
+           text-xs font-medium
+           rounded-full;
+  }
+
+  .badge-default {
+    @apply bg-gray-100 text-gray-700;
+  }
+
+  .badge-blue {
+    @apply bg-blue-50 text-blue-700;
+  }
+
+  .badge-green {
+    @apply bg-success-50 text-success-600;
+  }
+
+  .badge-yellow {
+    @apply bg-warning-50 text-warning-600;
+  }
+
+  .badge-red {
+    @apply bg-error-50 text-error-600;
+  }
+
+  /* ------------------------------------
+     SECTION LAYOUT
+     ------------------------------------ */
+  .section {
+    @apply space-y-6;
+  }
+
+  .section-header {
+    @apply flex items-center justify-between gap-4;
+  }
+
+  .section-title {
+    @apply text-lg font-semibold text-gray-900;
+  }
+
+  .section-description {
+    @apply text-sm text-gray-500 mt-1;
+  }
+
+  /* ------------------------------------
+     DIVIDER
+     ------------------------------------ */
+  .divider {
+    @apply h-px bg-gray-200 my-6;
+  }
+
+  .divider-text {
+    @apply flex items-center gap-4 text-xs text-gray-400 uppercase tracking-wider;
+  }
+
+  .divider-text::before,
+  .divider-text::after {
+    @apply flex-1 h-px bg-gray-200 content-[''];
+  }
+
+  /* ------------------------------------
+     SKELETON / LOADING
+     ------------------------------------ */
+  .skeleton {
+    @apply bg-gray-200 rounded animate-pulse;
+  }
+
+  .skeleton-text {
+    @apply h-4 rounded;
+  }
+
+  .skeleton-circle {
+    @apply rounded-full;
+  }
+
+  /* ------------------------------------
+     SPINNER
+     ------------------------------------ */
+  .spinner {
+    @apply w-5 h-5 border-2 border-gray-200 border-t-gray-900 rounded-full animate-spin;
+  }
+
+  .spinner-sm { @apply w-4 h-4; }
+  .spinner-lg { @apply w-6 h-6; }
+
+  /* ------------------------------------
+     NAVIGATION
+     ------------------------------------ */
+  .nav-link {
+    @apply text-sm text-gray-600 font-medium
+           px-3 py-2 rounded-lg
+           transition-colors duration-150
+           hover:bg-gray-100 hover:text-gray-900;
+  }
+
+  .nav-link-active {
+    @apply bg-gray-100 text-gray-900;
+  }
+
+  /* ------------------------------------
+     STAT CARD
+     ------------------------------------ */
+  .stat-card {
+    @apply card p-6 space-y-2;
+  }
+
+  .stat-label {
+    @apply text-sm text-gray-500 font-medium;
+  }
+
+  .stat-value {
+    @apply text-2xl font-semibold text-gray-900 tabular-nums;
+  }
+
+  .stat-change {
+    @apply text-sm font-medium;
+  }
+
+  .stat-change-positive {
+    @apply text-success-600;
+  }
+
+  .stat-change-negative {
+    @apply text-error-600;
+  }
+
+  /* ------------------------------------
+     EMPTY STATE
+     ------------------------------------ */
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-12 text-center;
+  }
+
+  .empty-state-icon {
+    @apply w-12 h-12 text-gray-300 mb-4;
+  }
+
+  .empty-state-title {
+    @apply text-base font-medium text-gray-900 mb-1;
+  }
+
+  .empty-state-description {
+    @apply text-sm text-gray-500 max-w-sm;
+  }
+
+  /* ------------------------------------
+     PROGRESS BAR
+     ------------------------------------ */
+  .progress {
+    @apply h-2 bg-gray-100 rounded-full overflow-hidden;
+  }
+
+  .progress-bar {
+    @apply h-full bg-blue-500 rounded-full transition-all duration-500 ease-out;
+  }
+
+  /* ------------------------------------
+     TAB SYSTEM
+     ------------------------------------ */
+  .tabs {
+    @apply flex gap-1 border-b border-gray-200;
+  }
+
+  .tab {
+    @apply px-4 py-2 text-sm font-medium text-gray-500
+           border-b-2 border-transparent -mb-px
+           transition-colors duration-150
+           hover:text-gray-700;
+  }
+
+  .tab-active {
+    @apply text-gray-900 border-gray-900;
+  }
+
+  /* ------------------------------------
+     TOOLTIP (CSS only)
+     ------------------------------------ */
+  .tooltip-wrapper {
+    @apply relative;
+  }
+
+  .tooltip {
+    @apply absolute z-50 px-2 py-1
+           text-xs text-white bg-gray-900 rounded
+           opacity-0 invisible
+           transition-all duration-150
+           whitespace-nowrap;
+  }
+
+  .tooltip-wrapper:hover .tooltip {
+    @apply opacity-100 visible;
+  }
+
+  .tooltip-top { @apply bottom-full left-1/2 -translate-x-1/2 mb-2; }
+  .tooltip-bottom { @apply top-full left-1/2 -translate-x-1/2 mt-2; }
+}
+
+/* ============================================
+   UTILITY LAYER
+   ============================================ */
+@layer utilities {
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent;
+  }
+
+  /* Subtle background */
+  .bg-subtle {
+    @apply bg-gray-50;
+  }
+
+  /* Container max widths */
+  .container-sm { @apply max-w-2xl mx-auto px-4; }
+  .container-md { @apply max-w-4xl mx-auto px-4; }
+  .container-lg { @apply max-w-6xl mx-auto px-4; }
+  .container-xl { @apply max-w-7xl mx-auto px-4; }
+
+  /* Hide scrollbar */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Stagger animations */
+  .stagger-1 { animation-delay: 50ms; }
+  .stagger-2 { animation-delay: 100ms; }
+  .stagger-3 { animation-delay: 150ms; }
+  .stagger-4 { animation-delay: 200ms; }
+  .stagger-5 { animation-delay: 250ms; }
+  .stagger-6 { animation-delay: 300ms; }
+
+  /* Focus ring */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2;
+  }
+
+  /* Truncate multi-line */
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-/* ============================
-   アニメーションユーティリティ
-   ============================ */
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out forwards;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.4s ease-out forwards;
-}
-
-.animate-slide-in-right {
-  animation: slideInRight 0.5s ease-out forwards;
-}
-
-.animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s infinite;
-}
-
-.animate-progress-fill {
-  animation: progress-fill 1s ease-out forwards;
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* staggered animation delays */
-.stagger-1 { animation-delay: 0.1s; opacity: 0; }
-.stagger-2 { animation-delay: 0.2s; opacity: 0; }
-.stagger-3 { animation-delay: 0.3s; opacity: 0; }
-.stagger-4 { animation-delay: 0.4s; opacity: 0; }
-.stagger-5 { animation-delay: 0.5s; opacity: 0; }
-.stagger-6 { animation-delay: 0.6s; opacity: 0; }
-
-/* ============================
-   カスタムコンポーネントスタイル
-   ============================ */
-
-/* プログレスバー */
-.progress-bar {
-  @apply relative h-2 rounded-full bg-slate-200 overflow-hidden;
-}
-
-.progress-bar-fill {
-  @apply absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-400;
-  animation: progress-fill 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.progress-bar-shimmer {
-  @apply absolute inset-0;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-/* カード hover エフェクト */
-.card-hover {
-  @apply transition-all duration-300;
-}
-
-.card-hover:hover {
-  @apply shadow-lg shadow-slate-200/80 -translate-y-0.5;
-}
-
-/* グラデーションテキスト */
-.gradient-text {
-  @apply bg-gradient-to-r from-sky-600 via-indigo-600 to-emerald-500 bg-clip-text text-transparent;
-}
-
-/* グラスモーフィズム効果 */
-.glass {
-  @apply bg-white/70 backdrop-blur-md border border-white/20;
-}
-
-/* タブ active indicator */
-.tab-active {
-  @apply relative;
-}
-
-.tab-active::after {
-  content: '';
-  @apply absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-sky-500;
-}
-
-/* スコアリング */
-.score-circle {
-  @apply relative w-24 h-24 rounded-full flex items-center justify-center;
-  background: conic-gradient(
-    from 0deg,
-    #38bdf8 0%,
-    #6366f1 50%,
-    #10b981 100%
-  );
-}
-
-.score-circle::before {
-  content: '';
-  @apply absolute inset-1 rounded-full bg-white;
-}
-
-.score-circle-value {
-  @apply relative z-10 text-2xl font-bold text-slate-900;
-}
-
-/* セクション区切り */
-.section-divider {
-  @apply relative h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent my-8;
-}
-
-/* バッジ with glow */
-.badge-glow {
-  @apply relative;
-}
-
-.badge-glow::before {
-  content: '';
-  @apply absolute inset-0 rounded-full bg-sky-400/20 blur-md -z-10;
-}
-
-/* フォーカス状態の改善 */
-input:focus,
-textarea:focus,
-select:focus {
-  @apply outline-none ring-2 ring-sky-400/50 border-sky-400;
-}
-
-/* スケルトンローダー */
-.skeleton {
-  @apply bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 bg-[length:200%_100%] animate-shimmer rounded;
-}
-
-/* ツールチップ */
-.tooltip {
-  @apply invisible opacity-0 absolute z-50 px-2 py-1 text-xs text-white bg-slate-800 rounded transition-all duration-200;
-}
-
-.tooltip-trigger:hover .tooltip {
-  @apply visible opacity-100;
-}
-
-/* ============================
-   スクロールアニメーション
-   ============================ */
-
-/* スムーズスクロール */
-html {
-  scroll-behavior: smooth;
-}
-
-/* スクロールで表示されるアニメーション */
-@keyframes scrollReveal {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.scroll-reveal {
-  opacity: 0;
-  animation: scrollReveal 0.6s ease-out forwards;
-  animation-play-state: paused;
-}
-
-.scroll-reveal.is-visible {
-  animation-play-state: running;
-}
-
-/* ============================
-   インタラクティブ要素
-   ============================ */
-
-/* リンクホバーアンダーライン */
-.link-underline {
-  @apply relative;
-}
-
-.link-underline::after {
-  content: '';
-  @apply absolute bottom-0 left-0 w-0 h-0.5 bg-sky-500 transition-all duration-300;
-}
-
-.link-underline:hover::after {
-  @apply w-full;
-}
-
-/* ボタンリップルエフェクト */
-.ripple {
-  @apply relative overflow-hidden;
-}
-
-.ripple::after {
-  content: '';
-  @apply absolute inset-0 bg-white/30 scale-0 rounded-full transition-transform duration-500;
-}
-
-.ripple:active::after {
-  @apply scale-150;
-  transition: transform 0s;
-}
-
-/* グロー効果 */
-.glow-on-hover {
-  @apply relative;
-}
-
-.glow-on-hover::before {
-  content: '';
-  @apply absolute -inset-1 bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-500 rounded-xl opacity-0 blur-lg transition-opacity duration-300 -z-10;
-}
-
-.glow-on-hover:hover::before {
-  @apply opacity-50;
-}
-
-/* ============================
-   カスタムスクロールバー
-   ============================ */
-
-/* Webkit browsers */
+/* ============================================
+   SCROLLBAR (subtle)
+   ============================================ */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-slate-100 rounded-full;
+  @apply bg-transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 rounded-full transition-colors;
+  @apply bg-gray-300 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-400;
+  @apply bg-gray-400;
 }
 
-/* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 #f1f5f9;
+  scrollbar-color: #d4d4d8 transparent;
 }
 
-/* ============================
-   セレクション
-   ============================ */
-
-::selection {
-  @apply bg-sky-200 text-sky-900;
-}
-
-/* ============================
-   アクセシビリティ
-   ============================ */
-
-/* フォーカスリングの改善 */
-:focus-visible {
-  @apply outline-2 outline-offset-2 outline-sky-500;
-}
-
-/* モーション軽減対応 */
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -387,5 +490,6 @@ html {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
