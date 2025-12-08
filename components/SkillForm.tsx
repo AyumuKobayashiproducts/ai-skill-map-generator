@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
 import { postJson, isApiClientError } from "@/lib/apiClient";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowserClient";
 import { logUsage } from "@/lib/usageLogger";
+import type { Locale } from "@/src/i18n/config";
 
 const goalOptions = [
   { value: "frontend_specialist", emoji: "🎨" },
@@ -17,28 +18,49 @@ const goalOptions = [
   { value: "unsure", emoji: "🤔" }
 ] as const;
 
-// サンプル職務経歴（next-intl は配列をサポートしないためコンポーネント内で定義）
-const SAMPLE_TEXTS: string[] = [
-  `フロントエンドエンジニアとして3年勤務。
+// サンプル職務経歴（next-intl は配列をサポートしないためコンポーネント内でロケール別に定義）
+const SAMPLE_TEXTS_BY_LOCALE: Record<Locale, string[]> = {
+  ja: [
+    `フロントエンドエンジニアとして3年勤務。
 React / Next.js / TypeScript を使った SPA / SSR 開発の経験があります。
 状態管理は React Query / Zustand、スタイリングは Tailwind CSS が多いです。
 バックエンドは Node.js（Express）や Supabase の Edge Functions を簡単に書ける程度です。
 CI/CD は GitHub Actions、デプロイは Vercel を利用しています。
 今後はよりアーキテクチャ設計やパフォーマンスチューニング、AI 連携にも強くなりたいです。`,
-  `受託開発会社でフルスタックエンジニアとして4年勤務。
+    `受託開発会社でフルスタックエンジニアとして4年勤務。
 フロントエンドは React / Vue、バックエンドは Node.js / NestJS、DB は PostgreSQL を主に使用しています。
 要件定義〜設計〜実装〜テスト〜リリースまで一通り経験し、小規模プロジェクトでは4〜5名のチームリードも担当しました。
 最近は Next.js / Prisma / Supabase を使ったモダンな SaaS 開発に興味があります。
 インフラは AWS（EC2 / RDS / ECS）での構築経験があり、Terraform によるIaCも簡単なものなら扱えます。`,
-  `自社サービスでバックエンドエンジニアとして2年勤務。
+    `自社サービスでバックエンドエンジニアとして2年勤務。
 主に Node.js（Express）と Go を使った REST API / バッチ処理の開発・運用を担当しています。
 Redis / RabbitMQ を使った非同期処理や、New Relic / Datadog を使ったモニタリング・パフォーマンス改善も経験しました。
 最近はフロントエンドとの連携を意識して、API 設計や OpenAPI ベースの型共有にも取り組んでいます。
 今後はアーキテクチャ設計やドメインモデリングにも関わり、テックリードとしてチームを引っ張れるようになりたいです。`
-];
+  ],
+  en: [
+    `Worked as a frontend engineer for about 3 years.
+Mainly building SPAs / SSR apps with React, Next.js and TypeScript.
+For state management I often use React Query / Zustand, and Tailwind CSS for styling.
+On the backend side I can write simple APIs with Node.js (Express) and Supabase Edge Functions.
+CI/CD is set up with GitHub Actions and deployments are done via Vercel.
+I’d like to deepen my skills in architecture design, performance tuning and AI integration going forward.`,
+    `Worked as a full‑stack engineer for 4 years at a contract development company.
+Frontend experience with React / Vue, backend with Node.js / NestJS, mainly using PostgreSQL as the database.
+Have been involved end‑to‑end from requirements / design through implementation, testing and release, and led 4–5 person teams on small projects.
+Recently I’m interested in building modern SaaS products using Next.js / Prisma / Supabase.
+I also have experience with AWS (EC2 / RDS / ECS) infrastructure and light Terraform‑based IaC.`,
+    `Worked as a backend engineer for 2 years on an in‑house product.
+Mainly responsible for REST APIs and batch jobs using Node.js (Express) and Go.
+Have experience with asynchronous processing using Redis / RabbitMQ and with monitoring & performance tuning using New Relic / Datadog.
+Recently I’ve been focusing on better API design and OpenAPI‑based type sharing with the frontend.
+In the future I’d like to be involved in architecture design and domain modeling and eventually grow into a tech lead role.`
+  ]
+};
 
 export function SkillForm() {
   const t = useTranslations("skillForm");
+  const locale = useLocale() as Locale;
   const [text, setText] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
   const [goal, setGoal] = useState<string>("frontend_specialist");
@@ -50,7 +72,7 @@ export function SkillForm() {
   const [userLoaded, setUserLoaded] = useState(false);
   const router = useRouter();
 
-  const samples = SAMPLE_TEXTS;
+  const samples = SAMPLE_TEXTS_BY_LOCALE[locale] ?? SAMPLE_TEXTS_BY_LOCALE.ja;
 
   const fillSample = () => {
     const next = (sampleIndex + 1) % samples.length;
