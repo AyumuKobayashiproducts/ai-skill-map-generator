@@ -42,7 +42,7 @@
 ---
 
 <p align="center">
-  <img src="./public/screenshots/home.png" alt="AI Skill Map Generator - Home" width="800" />
+  <img src="./public/screenshots/home.png" alt="AI Skill Map Generator – Home (EN UI)" width="800" />
 </p>
 
 ---
@@ -78,19 +78,19 @@ Try the full flow in under 60 seconds:
 <table>
   <tr>
     <td align="center" width="33%">
-      <img src="./public/screenshots/home.png" alt="Home" width="280" />
+      <img src="./public/screenshots/home.png" alt="Home (EN UI)" width="280" />
       <br /><strong>🎯 3-Step Diagnosis</strong>
-      <br /><small>Goal → Skills → Result in ~60s</small>
+      <br /><small>Paste your experience → get a skill map</small>
     </td>
     <td align="center" width="33%">
-      <img src="./public/screenshots/dashboard.png" alt="Dashboard" width="280" />
-      <br /><strong>📊 Progress Dashboard</strong>
-      <br /><small>Track skill growth over time</small>
+      <img src="./public/screenshots/dashboard.png" alt="Dashboard (EN UI)" width="280" />
+      <br /><strong>📊 Progress dashboard</strong>
+      <br /><small>See how your scores evolve over time</small>
     </td>
     <td align="center" width="33%">
-      <img src="./public/screenshots/about.png" alt="About" width="280" />
-      <br /><strong>ℹ️ Technical Overview</strong>
-      <br /><small>Explain your tech choices</small>
+      <img src="./public/screenshots/about.png" alt="About this app (EN UI)" width="280" />
+      <br /><strong>ℹ️ Product & tech overview</strong>
+      <br /><small>Show how the system is designed</small>
     </td>
   </tr>
 </table>
