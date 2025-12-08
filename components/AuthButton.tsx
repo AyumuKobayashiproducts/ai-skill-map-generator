@@ -4,16 +4,43 @@ import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowserClient";
 import { Button } from "@/components/ui/button";
 
+// ルートレイアウト（NextIntlClientProvider の外）でも使われるため、
+// useTranslations を使わず locale に基づいた固定テキストを使用する
+const labels = {
+  ja: {
+    guestLoginPrimary: "ログイン / 登録",
+    guestLoginMobile: "ログイン",
+    loggedInLabel: "ログイン中",
+    menuDashboard: "ダッシュボード",
+    menuSettings: "アカウント設定",
+    menuLogout: "ログアウト",
+    defaultUserLabel: "ユーザー"
+  },
+  en: {
+    guestLoginPrimary: "Login / Sign up",
+    guestLoginMobile: "Login",
+    loggedInLabel: "Logged in",
+    menuDashboard: "Dashboard",
+    menuSettings: "Account Settings",
+    menuLogout: "Logout",
+    defaultUserLabel: "User"
+  }
+} as const;
+
 export function AuthButton() {
-  const t = useTranslations("auth.button");
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [initializing, setInitializing] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
+
+  // locale の判定
+  const segments = (pathname ?? "").split("/");
+  const firstSegment = segments[1] ?? "";
+  const locale: "ja" | "en" = firstSegment === "en" ? "en" : "ja";
+  const t = labels[locale];
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
@@ -48,15 +75,12 @@ export function AuthButton() {
     );
   }
 
-  const segments = (pathname ?? "").split("/");
-  const firstSegment = segments[1] ?? "";
-  const locale = firstSegment === "en" ? "en" : "ja";
   const loginHref = `/${locale}/auth/login`;
 
   const displayEmail =
     user?.email && user.email.length > 20
       ? `${user.email.slice(0, 17)}...`
-      : user?.email ?? t("defaultUserLabel");
+      : user?.email ?? t.defaultUserLabel;
 
   const initials = user?.email 
     ? user.email.slice(0, 2).toUpperCase() 
@@ -92,7 +116,7 @@ export function AuthButton() {
             <div className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50 z-50 overflow-hidden animate-scale-in">
               <div className="p-3 border-b border-slate-100 bg-slate-50">
                 <p className="text-xs text-slate-500">
-                  {t("loggedInLabel")}
+                  {t.loggedInLabel}
                 </p>
                 <p className="text-sm font-medium text-slate-900 truncate mt-0.5">
                   {displayEmail}
@@ -105,7 +129,7 @@ export function AuthButton() {
                   className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 hover:bg-slate-100 transition-colors"
                 >
                   <span>📊</span>
-                  {t("menuDashboard")}
+                  {t.menuDashboard}
                 </Link>
                 <Link
                   href="/auth/delete"
@@ -113,7 +137,7 @@ export function AuthButton() {
                   className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 hover:bg-slate-100 transition-colors"
                 >
                   <span>⚙️</span>
-                  {t("menuSettings")}
+                  {t.menuSettings}
                 </Link>
                 <button
                   type="button"
@@ -121,7 +145,7 @@ export function AuthButton() {
                   className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-red-600 hover:bg-red-50 transition-colors"
                 >
                   <span>🚪</span>
-                  {t("menuLogout")}
+                  {t.menuLogout}
                 </button>
               </div>
             </div>
@@ -135,10 +159,10 @@ export function AuthButton() {
     <Link href={loginHref}>
       <Button type="button" size="sm">
         <span className="hidden sm:inline">
-          {t("guestLoginPrimary")}
+          {t.guestLoginPrimary}
         </span>
         <span className="sm:hidden">
-          {t("guestLoginMobile")}
+          {t.guestLoginMobile}
         </span>
       </Button>
     </Link>
