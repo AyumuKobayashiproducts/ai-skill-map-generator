@@ -14,6 +14,14 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const t = await getTranslations("home");
   const isDemo = searchParams?.demo === "1";
 
+  const heroLead = t.rich("hero.lead", {
+    strong: (chunks) => <strong className="font-semibold">{chunks}</strong>
+  });
+
+  const howToBody = t.rich("guide.howToBody", {
+    strong: (chunks) => <strong className="font-semibold">{chunks}</strong>
+  });
+
   return (
     <div className="space-y-8">
       <section className="space-y-4 animate-fade-in-up">
@@ -29,10 +37,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </span>
         </h1>
         <p className="text-base md:text-lg text-slate-600 max-w-2xl leading-relaxed">
-          {/* lead 文は一部太字を含むため、dangerouslySetInnerHTML で処理 */}
-          <span
-            dangerouslySetInnerHTML={{ __html: t("hero.lead") }}
-          />
+          {heroLead}
         </p>
         <div className="flex flex-wrap items-center gap-3 pt-2">
           <div className="flex items-center gap-1.5 text-xs text-slate-600">
@@ -115,10 +120,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 <p className="font-semibold text-slate-900 mb-1">
                   {t("guide.howToTitle")}
                 </p>
-                <p
-                  className="text-xs md:text-sm leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: t("guide.howToBody") }}
-                />
+                <p className="text-xs md:text-sm leading-relaxed">
+                  {howToBody}
+                </p>
               </div>
             </div>
             <div className="grid gap-2 sm:grid-cols-2 text-xs">
