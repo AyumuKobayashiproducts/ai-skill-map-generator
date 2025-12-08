@@ -692,11 +692,9 @@
       "checkingLogin": "Checking sign-in status…",
       "title": "AI is generating your diagnosis...",
       "eta": "Estimated time: about 30–60 seconds",
-      "steps": [
-        { "label": "Summarising your work history" },
-        { "label": "Classifying skills" },
-        { "label": "Generating roadmap" }
-      ],
+      "step0": "Summarising your work history",
+      "step1": "Classifying skills",
+      "step2": "Generating roadmap",
       "button": "AI is analysing... ({step}/3)"
     },
     "locked": {

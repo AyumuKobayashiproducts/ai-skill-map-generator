@@ -327,51 +327,49 @@ export function SkillForm() {
             </div>
           </div>
           <div className="space-y-2">
-            {((t("loading.steps") as unknown) as { step?: number; label: string }[]).map(
-              (item, index) => {
-                const step = item.step ?? index;
-                const iconMap = ["📝", "🔍", "🗺️"] as const;
-                const icon = iconMap[index] ?? "✨";
-                return (
-                  <div
-                    key={step}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-500 ${
-                      loadingStep >= step
-                        ? "bg-white border-2 border-sky-300 shadow-sm"
-                        : "bg-white/50 border border-slate-200"
+            {[0, 1, 2].map((step) => {
+              const iconMap = ["📝", "🔍", "🗺️"] as const;
+              const icon = iconMap[step] ?? "✨";
+              const label = t(`loading.step${step}` as "loading.step0" | "loading.step1" | "loading.step2");
+              return (
+                <div
+                  key={step}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-500 ${
+                    loadingStep >= step
+                      ? "bg-white border-2 border-sky-300 shadow-sm"
+                      : "bg-white/50 border border-slate-200"
+                  }`}
+                >
+                  <span
+                    className={`text-lg transition-transform duration-300 ${
+                      loadingStep >= step ? "scale-110" : ""
                     }`}
                   >
-                    <span
-                      className={`text-lg transition-transform duration-300 ${
-                        loadingStep >= step ? "scale-110" : ""
-                      }`}
+                    {icon}
+                  </span>
+                  <span
+                    className={`text-xs font-medium transition-colors ${
+                      loadingStep >= step ? "text-sky-700" : "text-slate-500"
+                    }`}
+                  >
+                    {label}
+                  </span>
+                  {loadingStep >= step && (
+                    <svg
+                      className="w-4 h-4 text-emerald-500 ml-auto"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
                     >
-                      {icon}
-                    </span>
-                    <span
-                      className={`text-xs font-medium transition-colors ${
-                        loadingStep >= step ? "text-sky-700" : "text-slate-500"
-                      }`}
-                    >
-                      {item.label}
-                    </span>
-                    {loadingStep >= step && (
-                      <svg
-                        className="w-4 h-4 text-emerald-500 ml-auto"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    )}
-                  </div>
-                );
-              }
-            )}
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
