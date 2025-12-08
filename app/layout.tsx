@@ -7,9 +7,9 @@ import { PwaRegister } from "@/components/PwaRegister";
 import { ToastProvider } from "@/components/ui/toast";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AppLogo } from "@/components/AppLogo";
-import Link from "next/link";
+import { NavLinks } from "@/components/NavLinks";
 import Script from "next/script";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale } from "next-intl/server";
 
 // LanguageSwitcher は usePathname を使うため、SSR を無効にして動的インポート
 const LanguageSwitcher = dynamic(
@@ -90,16 +90,6 @@ export const viewport: Viewport = {
  
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const locale = await getLocale();
-  const t = await getTranslations("layout");
-
-  const basePath = `/${locale}`;
-  const navLinks = [
-    { href: basePath, key: "home", emoji: "🏠", label: t("nav.home") },
-    { href: `${basePath}/dashboard`, key: "dashboard", emoji: "📊", label: t("nav.dashboard") },
-    { href: `${basePath}/about`, key: "about", emoji: "ℹ️", label: t("nav.about") },
-    { href: `${basePath}/portfolio`, key: "portfolio", emoji: "📁", label: t("nav.portfolio") },
-    { href: `${basePath}/legal`, key: "legal", emoji: "📜", label: t("nav.legal") }
-  ] as const;
 
   return (
     <html lang={locale} className="scroll-smooth">
@@ -132,9 +122,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
               <a
                 href="#main-content"
                 className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-sky-600 focus:text-white focus:rounded-lg"
-                aria-label={t("aria.skipToMain")}
               >
-                {t("aria.skipToMain")}
+                Skip to main content
               </a>
 
               <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-lg">
@@ -144,16 +133,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
                   <div className="flex items-center gap-2 sm:gap-3">
                     {/* デスクトップナビゲーション */}
-                    <nav className="hidden md:flex gap-1 text-sm" aria-label={t("aria.mainNav")}>
-                      {navLinks.map((link) => (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          className="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
+                    <nav className="hidden md:flex gap-1 text-sm" aria-label="Main navigation">
+                      <NavLinks variant="desktop" />
                     </nav>
 
                     {/* 言語切り替えボタン（DocuFlow 風のコンパクト表示） */}
@@ -166,19 +147,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                 {/* モバイルナビゲーション */}
                 <nav
                   className="md:hidden border-t border-slate-100 bg-white/90"
-                  aria-label={t("aria.mobileNav")}
+                  aria-label="Mobile navigation"
                 >
                   <div className="max-w-5xl mx-auto px-3 py-2 flex gap-1.5 overflow-x-auto">
-                    {navLinks.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className="whitespace-nowrap flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-[11px] text-slate-700 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-sky-400"
-                      >
-                        <span aria-hidden="true">{link.emoji}</span>
-                        {link.label}
-                      </Link>
-                    ))}
+                    <NavLinks variant="mobile" />
                   </div>
                 </nav>
               </header>
