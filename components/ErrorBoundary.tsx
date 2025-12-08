@@ -3,7 +3,6 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { reportError } from "@/lib/errorReporter";
-import { useTranslations } from "next-intl";
 
 interface Props {
   children: ReactNode;
@@ -22,18 +21,18 @@ interface FallbackProps {
 }
 
 function LocalizedErrorFallback({ error, onReset, onReload }: FallbackProps) {
-  const t = useTranslations("errorBoundary");
-
   return (
     <div className="flex flex-col items-center justify-center min-h-[400px] p-8 text-center">
       <div className="w-16 h-16 rounded-2xl bg-red-100 flex items-center justify-center text-3xl mb-4">
         😵
       </div>
       <h2 className="text-xl font-bold text-slate-900 mb-2">
-        {t("title")}
+        {/* シンプルな二言語メッセージ（next-intl のコンテキスト外でも安全に表示するため） */}
+        予期せぬエラーが発生しました
       </h2>
       <p className="text-sm text-slate-600 mb-6 max-w-md">
-        {t("body")}
+        ページの表示中に問題が発生しました。ページを再読み込みするか、
+        しばらく時間をおいてからもう一度お試しください。
       </p>
       {process.env.NODE_ENV === "development" && error && (
         <pre className="text-xs text-red-600 bg-red-50 p-4 rounded-lg mb-4 max-w-lg overflow-auto text-left">
@@ -44,10 +43,10 @@ function LocalizedErrorFallback({ error, onReset, onReload }: FallbackProps) {
       )}
       <div className="flex gap-3">
         <Button variant="outline" onClick={onReset}>
-          {t("buttons.retry")}
+          再試行
         </Button>
         <Button onClick={onReload}>
-          {t("buttons.reload")}
+          ページを再読み込み
         </Button>
       </div>
     </div>
