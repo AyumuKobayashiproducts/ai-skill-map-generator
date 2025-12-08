@@ -90,6 +90,11 @@ export const viewport: Viewport = {
  
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const locale = await getLocale();
+  const isEn = locale === "en";
+
+  // ロケールに応じたラベル
+  const skipLabel = isEn ? "Skip to main content" : "メインコンテンツへスキップ";
+  const githubAriaLabel = isEn ? "Open GitHub repository (new tab)" : "GitHub リポジトリを開く（新しいタブ）";
 
   return (
     <html lang={locale} className="scroll-smooth">
@@ -123,7 +128,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                 href="#main-content"
                 className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-sky-600 focus:text-white focus:rounded-lg"
               >
-                Skip to main content
+                {skipLabel}
               </a>
 
               <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-lg">
@@ -194,7 +199,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-400 rounded"
-                        aria-label="GitHub リポジトリを開く"
+                        aria-label={githubAriaLabel}
                       >
                         <svg
                           className="w-4 h-4"
