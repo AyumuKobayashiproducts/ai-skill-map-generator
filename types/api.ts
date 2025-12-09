@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { Locale } from "@/src/i18n/config";
 
 export const SkillCategoriesSchema = z.object({
   frontend: z.number().int().min(0).max(5).optional(),
@@ -17,7 +18,8 @@ export const GenerateRequestSchema = z.object({
   text: z.string().min(1),
   repoUrl: z.string().url().optional(),
   goal: z.string().optional(),
-  userId: UuidSchema.optional()
+  userId: UuidSchema.optional(),
+  locale: z.custom<Locale>().optional()
 });
 
 export const GenerateResponseSchema = z.object({

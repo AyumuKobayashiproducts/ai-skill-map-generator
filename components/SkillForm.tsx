@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ErrorAlert } from "@/components/ui/error-alert";
@@ -71,6 +71,8 @@ export function SkillForm() {
   const [userId, setUserId] = useState<string | null>(null);
   const [userLoaded, setUserLoaded] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isDemo = searchParams.get("demo") === "screenshot";
 
   const samples = SAMPLE_TEXTS_BY_LOCALE[locale] ?? SAMPLE_TEXTS_BY_LOCALE.ja;
 
@@ -99,7 +101,7 @@ export function SkillForm() {
     e.preventDefault();
     setError(null);
 
-    if (!userId) {
+    if (!userId && !isDemo) {
       setError(t("errors.loginRequired"));
       return;
     }
@@ -117,13 +119,20 @@ export function SkillForm() {
     try {
       void logUsage("generate_skill_map_clicked");
       const data = await postJson<
-        { text: string; repoUrl?: string; goal: string; userId?: string | null },
+        {
+          text: string;
+          repoUrl?: string;
+          goal: string;
+          userId?: string | null;
+          locale?: Locale;
+        },
         { id: string }
       >("/api/generate", {
         text,
         repoUrl: repoUrl || undefined,
         goal,
-        userId: userId ?? undefined
+        userId: userId ?? undefined,
+        locale
       });
       clearTimeout(stepTimer1);
       clearTimeout(stepTimer2);
@@ -160,7 +169,7 @@ export function SkillForm() {
   }
 
   // 未ログイン時はフォーム全体をロック
-  if (!userId) {
+  if (!userId && !isDemo) {
     return (
       <div className="space-y-4 p-4 rounded-xl bg-gradient-to-br from-slate-50 to-sky-50 border border-slate-200">
         <div className="flex items-center gap-3">

@@ -18,6 +18,99 @@ export default async function ResultPage({ params, searchParams }: ResultPagePro
   const locale = await getLocale();
   const supabase = createSupabaseClient();
 
+  // PORTFOLIO SCREENSHOT MOCK DATA
+  if (params.id === "mock-en") {
+    const mockResult: SkillMapResult = {
+      id: "mock-en",
+      rawInput: "Mock input",
+      categories: {
+        frontend: 4,
+        backend: 3,
+        infra: 2,
+        ai: 5,
+        tools: 4
+      },
+      strengths: "You have strong frontend skills and are adopting AI tools effectively.",
+      weaknesses: "Infrastructure knowledge is limited compared to application layers.",
+      nextSkills: ["Terraform", "Kubernetes", "GraphQL"],
+      roadmap30: "## Week 1-2: Advanced React Patterns\n- Master Composition\n- Performance Optimization\n\n## Week 3-4: GraphQL\n- Apollo Client\n- Schema Design",
+      roadmap90: "## Month 2: Infrastructure\n- AWS Basics\n- Docker/K8s\n\n## Month 3: System Design\n- Microservices\n- Event-driven Architecture",
+      chartData: {
+        labels: ["Frontend", "Backend", "Infra", "AI", "Tools"],
+        datasets: [
+          {
+            label: "Your Skill Level",
+            data: [4, 3, 2, 5, 4],
+            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            borderColor: "rgba(54, 162, 235, 1)",
+            borderWidth: 2,
+          }
+        ]
+      }
+    };
+    
+    // Mock previous data for comparison
+    const previousCategories = {
+      frontend: 3,
+      backend: 3,
+      infra: 1,
+      ai: 2,
+      tools: 3
+    };
+
+    return (
+      <div className="space-y-6">
+        <nav className="flex items-center gap-2 text-sm animate-fade-in">
+          <Link 
+            href={`/${locale}/dashboard`} 
+            className="text-slate-500 hover:text-slate-700 transition-colors"
+          >
+            {t("breadcrumb.dashboard")}
+          </Link>
+          <span className="text-slate-400">/</span>
+          <span className="text-slate-900 font-medium">
+            {t("breadcrumb.result")}
+          </span>
+        </nav>
+
+        <div className="animate-fade-in-up">
+          <div className="rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 via-sky-50 to-indigo-50 p-6 shadow-xl">
+            <div className="flex items-center gap-4 mb-3">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 via-sky-500 to-indigo-500 flex items-center justify-center text-white text-3xl shadow-lg shadow-emerald-500/30">
+                🎉
+              </div>
+              <div className="flex-1">
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-1">
+                  {t("hero.title")}
+                </h2>
+                <p className="text-sm md:text-base text-slate-600">
+                  {t("hero.subtitle")}
+                </p>
+              </div>
+            </div>
+            {/* Badges */}
+            <div className="mt-4 flex flex-wrap gap-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 border border-emerald-300 text-emerald-700 text-xs font-semibold">
+                <span>✓</span> {t("hero.badges.analysisDone")}
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 border border-sky-300 text-sky-700 text-xs font-semibold">
+                <span>✓</span> {t("hero.badges.roadmapDone")}
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 border border-indigo-300 text-indigo-700 text-xs font-semibold">
+                <span>✓</span> {t("hero.badges.savedToDashboard")}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <SkillResultView
+          result={mockResult}
+          previousCategories={previousCategories}
+        />
+      </div>
+    );
+  }
+
   const { data, error } = await supabase
     .from("skill_maps")
     .select("*")

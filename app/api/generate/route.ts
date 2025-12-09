@@ -6,61 +6,120 @@ import type { SkillCategories, SkillMapResult } from "@/types/skill";
 import { GenerateRequestSchema, GenerateResponseSchema } from "@/types/api";
 import { getRequestLocale } from "@/lib/apiLocale";
 import { getApiError } from "@/lib/apiErrors";
+import type { Locale } from "@/src/i18n/config";
 
 export async function POST(request: Request) {
   try {
     const body = GenerateRequestSchema.parse(await request.json());
+    const requestLocale: Locale =
+      (body.locale as Locale | undefined) ?? getRequestLocale(request);
     const { text, repoUrl, goal, userId } = body;
 
-    // OpenAI への日本語プロンプト
-    const promptLines = [
-      "あなたは Web 系エンジニア・フロントエンド/バックエンド志望者向けのキャリアコーチです。",
-      "以下のユーザーのスキル・職務経歴の説明を読み、指定した JSON 形式だけを返してください。",
-      "",
-      "JSON のフォーマット:",
-      "{",
-      '  "categories": {',
-      '    "frontend": number,',
-      '    "backend": number,',
-      '    "infra": number,',
-      '    "ai": number,',
-      '    "tools": number',
-      "  },",
-      '  "strengths": string,',
-      '  "weaknesses": string,',
-      '  "nextSkills": string[],',
-      '  "roadmap30": string,',
-      '  "roadmap90": string,',
-      '  "chartData": {',
-      '    "labels": string[],',
-      '    "data": number[]',
-      "  }",
-      "}",
-      "",
-      "制約:",
-      "- 余計な説明文は出さず、必ず有効な JSON のみを返してください。",
-      "- レベルは 1〜5 の整数で出力してください。",
-      "- nextSkills には、次に学ぶと良い具体的な技術名（例: TypeScript, Next.js, React Query など）を3〜7個含めてください。",
-      ""
-    ];
+    let promptLines: string[];
 
-    if (repoUrl) {
-      promptLines.push(
-        `参考用の GitHub リポジトリ URL: ${repoUrl}`,
-        "リポジトリの中身を直接読むことはできない前提ですが、URL から推測できる範囲で役割や技術スタックを考慮して構いません。",
+    if (requestLocale === "en") {
+      // English prompt for OpenAI
+      promptLines = [
+        "You are a career coach for web engineers (frontend / backend / fullstack).",
+        "Read the user's skills and work history description below and return ONLY a JSON object in the specified format.",
+        "",
+        "JSON format:",
+        "{",
+        '  "categories": {',
+        '    "frontend": number,',
+        '    "backend": number,',
+        '    "infra": number,',
+        '    "ai": number,',
+        '    "tools": number',
+        "  },",
+        '  "strengths": string,',
+        '  "weaknesses": string,',
+        '  "nextSkills": string[],',
+        '  "roadmap30": string,',
+        '  "roadmap90": string,',
+        '  "chartData": {',
+        '    "labels": string[],',
+        '    "data": number[]',
+        "  }",
+        "}",
+        "",
+        "Constraints:",
+        "- Do NOT output any extra explanation text. Return a single valid JSON object only.",
+        "- Levels must be integers between 1 and 5.",
+        "- nextSkills should contain 3–7 concrete technology names that would be good next steps (e.g. TypeScript, Next.js, React Query).",
+        "- Write all strings (strengths, weaknesses, roadmaps, etc.) in natural, easy-to-read English suitable for junior–mid web engineers.",
         ""
-      );
-    }
+      ];
 
-    if (goal) {
-      promptLines.push(
-        `ユーザーの希望するキャリアゴール: ${goal}`,
-        "このゴールに近づけることを意識して、カテゴリごとのレベルや nextSkills、ロードマップの内容を少し調整してください。",
+      if (repoUrl) {
+        promptLines.push(
+          `Reference GitHub repository URL: ${repoUrl}`,
+          "You cannot actually read the repository contents, but you may infer a reasonable tech stack and role from the URL.",
+          ""
+        );
+      }
+
+      if (goal) {
+        promptLines.push(
+          `User's target career goal: ${goal}`,
+          "Slightly bias the category levels, nextSkills and roadmap content so that they move closer to this goal.",
+          ""
+        );
+      }
+
+      promptLines.push("User input (may be Japanese or English):", text);
+    } else {
+      // Japanese prompt (existing behaviour)
+      promptLines = [
+        "あなたは Web 系エンジニア・フロントエンド/バックエンド志望者向けのキャリアコーチです。",
+        "以下のユーザーのスキル・職務経歴の説明を読み、指定した JSON 形式だけを返してください。",
+        "",
+        "JSON のフォーマット:",
+        "{",
+        '  "categories": {',
+        '    "frontend": number,',
+        '    "backend": number,',
+        '    "infra": number,',
+        '    "ai": number,',
+        '    "tools": number',
+        "  },",
+        '  "strengths": string,',
+        '  "weaknesses": string,',
+        '  "nextSkills": string[],',
+        '  "roadmap30": string,',
+        '  "roadmap90": string,',
+        '  "chartData": {',
+        '    "labels": string[],',
+        '    "data": number[]',
+        "  }",
+        "}",
+        "",
+        "制約:",
+        "- 余計な説明文は出さず、必ず有効な JSON のみを返してください。",
+        "- レベルは 1〜5 の整数で出力してください。",
+        "- nextSkills には、次に学ぶと良い具体的な技術名（例: TypeScript, Next.js, React Query など）を3〜7個含めてください。",
+        "- strengths, weaknesses, roadmap などのテキストは自然な日本語で書いてください。",
         ""
-      );
-    }
+      ];
 
-    promptLines.push("ユーザー入力:", text);
+      if (repoUrl) {
+        promptLines.push(
+          `参考用の GitHub リポジトリ URL: ${repoUrl}`,
+          "リポジトリの中身を直接読むことはできない前提ですが、URL から推測できる範囲で役割や技術スタックを考慮して構いません。",
+          ""
+        );
+      }
+
+      if (goal) {
+        promptLines.push(
+          `ユーザーの希望するキャリアゴール: ${goal}`,
+          "このゴールに近づけることを意識して、カテゴリごとのレベルや nextSkills、ロードマップの内容を少し調整してください。",
+          ""
+        );
+      }
+
+      promptLines.push("ユーザー入力:", text);
+    }
 
     const prompt = promptLines.join("\n");
 
@@ -74,7 +133,9 @@ export async function POST(request: Request) {
           {
             role: "system",
             content:
-              "あなたは経験豊富なキャリアコーチ兼エンジニアリングマネージャーです。"
+              requestLocale === "en"
+                ? "You are an experienced engineering manager and career coach for web engineers. Always answer in English unless explicitly told otherwise."
+                : "あなたは経験豊富なキャリアコーチ兼エンジニアリングマネージャーです。"
           },
           {
             role: "user",
