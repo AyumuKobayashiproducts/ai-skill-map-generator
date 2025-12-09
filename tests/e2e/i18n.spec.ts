@@ -4,19 +4,24 @@ test.describe("i18n", () => {
   test("switches between Japanese and English on home page", async ({ page }) => {
     await page.goto("/ja");
 
+    // 日本語版のヒーロータイトルが表示されていること
     await expect(
-      page.getByText("ホーム画面：診断のスタート地点", { exact: false })
+      page.getByRole("heading", {
+        name: /職務経歴を入力するだけで、/u
+      })
     ).toBeVisible();
 
-    await page.getByRole("link", { name: "EN" }).click();
+    // ヘッダー右上の言語切り替えリンクをクリック（日本語UI上では accessible name が 'Switch to English'）
+    await page.getByRole("link", { name: "Switch to English" }).click();
 
+    // 英語版のヒーロータイトルが表示されていること
     await expect(
-      page.getByText("Home: starting point of the diagnosis", { exact: false })
+      page.getByRole("heading", {
+        name: /Just paste your experience,/i
+      })
     ).toBeVisible();
 
     await expect(page).toHaveURL(/\/en(\?.*)?$/);
   });
 });
-
-
 
