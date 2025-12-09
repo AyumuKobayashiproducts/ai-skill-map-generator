@@ -5,6 +5,7 @@ import type { SkillCategories } from "@/types/skill";
 import { StoryRequestSchema } from "@/types/api";
 import { getRequestLocale } from "@/lib/apiLocale";
 import { getApiError } from "@/lib/apiErrors";
+import type { Locale } from "@/src/i18n/config";
 
 export async function POST(request: Request) {
   try {
@@ -12,20 +13,36 @@ export async function POST(request: Request) {
     const strengths: string | undefined = body.strengths;
     const weaknesses: string | undefined = body.weaknesses;
     const categories: SkillCategories | undefined = body.categories;
+    const locale: Locale =
+      (body.locale as Locale | undefined) ?? getRequestLocale(request);
 
-    const prompt = [
-      "以下の情報から、ユーザーのキャリアやスキル感を表す短いプロフィールストーリーを日本語で作成してください。",
-      "・文章量は 3〜5 文程度で、ポジティブで読みやすいトーンにしてください。",
-      strengths ? `強み: ${strengths}` : "",
-      weaknesses ? `弱み: ${weaknesses}` : "",
-      categories
-        ? `カテゴリ別スコア: frontend=${categories.frontend ?? 0}, backend=${categories.backend ?? 0}, infra=${categories.infra ?? 0}, ai=${categories.ai ?? 0}, tools=${categories.tools ?? 0}`
-        : "",
-      "",
-      "ストーリーだけを出力してください。"
-    ]
-      .filter(Boolean)
-      .join("\n");
+    const promptLines: string[] =
+      locale === "en"
+        ? [
+            "Based on the following information, write a short profile story that describes the user's career and skills in natural English.",
+            "・Length: around 3–5 sentences.",
+            "・Tone: positive, specific and easy to understand for hiring managers.",
+            strengths ? `Strengths: ${strengths}` : "",
+            weaknesses ? `Areas to improve: ${weaknesses}` : "",
+            categories
+              ? `Category scores: frontend=${categories.frontend ?? 0}, backend=${categories.backend ?? 0}, infra=${categories.infra ?? 0}, ai=${categories.ai ?? 0}, tools=${categories.tools ?? 0}`
+              : "",
+            "",
+            "Output only the story text."
+          ]
+        : [
+            "以下の情報から、ユーザーのキャリアやスキル感を表す短いプロフィールストーリーを日本語で作成してください。",
+            "・文章量は 3〜5 文程度で、ポジティブで読みやすいトーンにしてください。",
+            strengths ? `強み: ${strengths}` : "",
+            weaknesses ? `弱み: ${weaknesses}` : "",
+            categories
+              ? `カテゴリ別スコア: frontend=${categories.frontend ?? 0}, backend=${categories.backend ?? 0}, infra=${categories.infra ?? 0}, ai=${categories.ai ?? 0}, tools=${categories.tools ?? 0}`
+              : "",
+            "",
+            "ストーリーだけを出力してください。"
+          ];
+
+    const prompt = promptLines.filter(Boolean).join("\n");
 
     const completion = await safeChatCompletion({
       feature: "story",
@@ -34,7 +51,10 @@ export async function POST(request: Request) {
         messages: [
           {
             role: "system",
-            content: "あなたは候補者の魅力を引き出す職務経歴書コーチです。"
+            content:
+              locale === "en"
+                ? "You are a resume coach who helps candidates present their strengths clearly in English."
+                : "あなたは候補者の魅力を引き出す職務経歴書コーチです。"
           },
           { role: "user", content: prompt }
         ]

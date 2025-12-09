@@ -43,7 +43,8 @@ export const ReadinessRequestSchema = z.object({
   riskObsolescence: z.number().min(0).max(100).optional(),
   riskBusFactor: z.number().min(0).max(100).optional(),
   riskAutomation: z.number().min(0).max(100).optional(),
-  prepScore: z.number().min(0).max(10).optional()
+  prepScore: z.number().min(0).max(10).optional(),
+  locale: z.custom<Locale>().optional()
 });
 
 // --------- job-match ----------
@@ -134,7 +135,8 @@ export const CoachRequestSchema = z.object({
 export const StoryRequestSchema = z.object({
   strengths: z.string().optional(),
   weaknesses: z.string().optional(),
-  categories: SkillCategoriesSchema.optional()
+  categories: SkillCategoriesSchema.optional(),
+  locale: z.custom<Locale>().optional()
 });
 
 // --------- usage log ----------

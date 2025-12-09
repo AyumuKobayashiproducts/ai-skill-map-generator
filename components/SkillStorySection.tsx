@@ -6,7 +6,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ErrorAlert } from "@/components/ui/error-alert";
 import { Button } from "@/components/ui/button";
 import { postJson, isApiClientError } from "@/lib/apiClient";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import type { Locale } from "@/src/i18n/config";
 
 interface SkillStorySectionProps {
   result: SkillMapResult;
@@ -27,6 +28,7 @@ function SkeletonLines() {
 
 export function SkillStorySection({ result }: SkillStorySectionProps) {
   const t = useTranslations("skillStory");
+  const locale = useLocale() as Locale;
   const [story, setStory] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,12 +44,14 @@ export function SkillStorySection({ result }: SkillStorySectionProps) {
             strengths: string;
             weaknesses: string;
             categories: SkillMapResult["categories"];
+            locale?: Locale;
           },
           { story: string }
         >("/api/story", {
           strengths: result.strengths,
           weaknesses: result.weaknesses,
-          categories: result.categories
+          categories: result.categories,
+          locale
         });
         setStory(data.story);
       } catch (e: unknown) {

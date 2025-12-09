@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import type { Locale } from "@/src/i18n/config";
 import type {
   SkillCategories,
   SkillMapResult,
@@ -163,14 +164,18 @@ export function SkillResultView({
 
   const [readiness, setReadiness] = useState<ReadinessScoreResult | null>(null);
   const [readinessError, setReadinessError] = useState<string | null>(null);
+  const locale = useLocale() as Locale;
 
   useEffect(() => {
     const fetchReadiness = async () => {
       try {
-        const data = await postJson<{ skillMapId: string }, ReadinessScoreResult>(
-          "/api/readiness",
-          { skillMapId: result.id }
-        );
+        const data = await postJson<
+          { skillMapId: string; locale?: Locale },
+          ReadinessScoreResult
+        >("/api/readiness", {
+          skillMapId: result.id,
+          locale
+        });
         setReadiness(data);
       } catch (e: unknown) {
         console.error(e);
@@ -189,7 +194,7 @@ export function SkillResultView({
     };
 
     fetchReadiness();
-  }, [result.id, t]);
+  }, [result.id, t, locale]);
 
   const handleCopyMarkdown = async () => {
     const strengthsText = result.strengths || t("overview.notProvided");

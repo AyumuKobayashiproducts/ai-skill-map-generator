@@ -5,6 +5,7 @@ import { ReadinessRequestSchema } from "@/types/api";
 import { calculateReadinessScore } from "@/lib/readiness";
 import { getRequestLocale } from "@/lib/apiLocale";
 import { getApiError } from "@/lib/apiErrors";
+import type { Locale } from "@/src/i18n/config";
 
 export async function POST(request: Request) {
   try {
@@ -15,8 +16,12 @@ export async function POST(request: Request) {
       riskObsolescence,
       riskBusFactor,
       riskAutomation,
-      prepScore: prepScoreInput
+      prepScore: prepScoreInput,
+      locale: bodyLocale
     } = body;
+
+    const locale: Locale =
+      (bodyLocale as Locale | undefined) ?? getRequestLocale(request);
 
     const supabase = createSupabaseClient();
     const { data, error } = await supabase
@@ -36,14 +41,17 @@ export async function POST(request: Request) {
 
     const categories = (data.categories ?? {}) as SkillCategories;
 
-    const result = calculateReadinessScore({
-      categories,
-      jobMatchScore,
-      riskObsolescence,
-      riskBusFactor,
-      riskAutomation,
-      prepScore: prepScoreInput
-    });
+    const result = calculateReadinessScore(
+      {
+        categories,
+        jobMatchScore,
+        riskObsolescence,
+        riskBusFactor,
+        riskAutomation,
+        prepScore: prepScoreInput
+      },
+      locale
+    );
 
     return NextResponse.json(result);
   } catch (error) {

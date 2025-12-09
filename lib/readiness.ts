@@ -1,4 +1,5 @@
 import type { SkillCategories, ReadinessScoreResult } from "@/types/skill";
+import type { Locale } from "@/src/i18n/config";
 
 export interface ReadinessParams {
   categories: SkillCategories;
@@ -10,7 +11,10 @@ export interface ReadinessParams {
 }
 
 // 転職準備スコア計算ロジックを純粋関数として切り出し
-export function calculateReadinessScore(params: ReadinessParams): ReadinessScoreResult {
+export function calculateReadinessScore(
+  params: ReadinessParams,
+  locale: Locale = "ja"
+): ReadinessScoreResult {
   const {
     categories,
     jobMatchScore,
@@ -60,18 +64,34 @@ export function calculateReadinessScore(params: ReadinessParams): ReadinessScore
   let level: ReadinessScoreResult["level"] = "medium";
   let comment: string;
 
-  if (total >= 75) {
-    level = "high";
-    comment =
-      "今すぐにでも転職活動を始められる準備レベルです。興味のある求人に応募しつつ、面接対策を並行して進めると良さそうです。";
-  } else if (total >= 45) {
-    level = "medium";
-    comment =
-      "転職活動を始める前提としては悪くありませんが、もう少しスキルの底上げやアウトプットの整理をしておくと安心です。30日プランを意識して準備を進めましょう。";
+  if (locale === "en") {
+    if (total >= 75) {
+      level = "high";
+      comment =
+        "You look ready to start a job search right away. You can begin applying to selected roles while continuing interview practice in parallel.";
+    } else if (total >= 45) {
+      level = "medium";
+      comment =
+        "You’re in a workable position to start a job search, but it’s safer to strengthen your skills a bit more and organise your portfolio. Use the 30‑day roadmap as a concrete preparation plan.";
+    } else {
+      level = "low";
+      comment =
+        "You’re still in the foundation-building phase. Rather than rushing into applications, it’s better to spend 1–2 months focusing on skill growth and portfolio improvements first.";
+    }
   } else {
-    level = "low";
-    comment =
-      "まだ土台作りの段階です。すぐに転職活動を始めるよりも、まずは 1〜2 ヶ月かけてスキル強化とポートフォリオ整備に集中するのがおすすめです。";
+    if (total >= 75) {
+      level = "high";
+      comment =
+        "今すぐにでも転職活動を始められる準備レベルです。興味のある求人に応募しつつ、面接対策を並行して進めると良さそうです。";
+    } else if (total >= 45) {
+      level = "medium";
+      comment =
+        "転職活動を始める前提としては悪くありませんが、もう少しスキルの底上げやアウトプットの整理をしておくと安心です。30日プランを意識して準備を進めましょう。";
+    } else {
+      level = "low";
+      comment =
+        "まだ土台作りの段階です。すぐに転職活動を始めるよりも、まずは 1〜2 ヶ月かけてスキル強化とポートフォリオ整備に集中するのがおすすめです。";
+    }
   }
 
   return { score: total, level, comment };
