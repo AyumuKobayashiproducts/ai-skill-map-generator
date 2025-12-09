@@ -56,9 +56,61 @@
 
 ---
 
-<p align="center">
-  <img src="./public/screenshots/home.png" alt="AI Skill Map Generator – Home (EN UI)" width="800" />
-</p>
+## 🖼️ Screenshots Gallery
+
+<table>
+  <tr>
+    <td align="center" colspan="2">
+      <img src="./public/screenshots/home.png" alt="Home – Input your experience" width="100%" />
+      <br /><strong>🏠 Home</strong> — Paste your work experience, get AI-powered career insights in 60 seconds
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./public/screenshots/result-overview.png" alt="Result – Skill Radar Chart" width="100%" />
+      <br /><strong>📊 Skill Radar</strong> — 5-axis visualization of your skill levels
+    </td>
+    <td align="center" width="50%">
+      <img src="./public/screenshots/result-career.png" alt="Result – Career & Jobs Tab" width="100%" />
+      <br /><strong>💼 Career & Jobs</strong> — Job readiness score + matching
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="./public/screenshots/dashboard.png" alt="Dashboard – History" width="100%" />
+      <br /><strong>📈 Dashboard</strong> — Track your growth over time
+    </td>
+    <td align="center" width="50%">
+      <img src="./public/screenshots/about.png" alt="About Page" width="100%" />
+      <br /><strong>ℹ️ About</strong> — Transparent tech stack & design decisions
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+      <img src="./public/screenshots/portfolio.png" alt="Portfolio Generator" width="100%" />
+      <br /><strong>📁 Portfolio Generator</strong> — Turn your projects into polished markdown summaries
+    </td>
+  </tr>
+</table>
+
+### 📱 Mobile Experience
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="./public/screenshots/portfolio/5_mobile_dashboard.png" alt="Mobile Dashboard" width="280" />
+      <br /><small>Dashboard on mobile</small>
+    </td>
+    <td align="center" width="33%">
+      <img src="./public/screenshots/portfolio/2_skill_input.png" alt="Mobile Skill Input" width="280" />
+      <br /><small>Skill input form</small>
+    </td>
+    <td align="center" width="33%">
+      <img src="./public/screenshots/portfolio/4_i18n_toggle.png" alt="Language Toggle" width="280" />
+      <br /><small>EN/JP language switcher</small>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -98,35 +150,18 @@ I built this project to **simulate what it's like to be a solo founder or the fi
 
 ### What to try:
 
-1. **🏠 Home**: Click "Insert sample text" → Generate → See how 60-second promise is delivered
-2. **📊 Dashboard**: View history, track how scores evolve over multiple diagnoses
-3. **🎤 1-on-1 Practice**: Pick an interview type → Answer questions → Get AI feedback with rule-based scoring
-4. **💼 Job Match**: Paste a job description → See skill gap analysis with match percentage
-5. **🌐 Language Toggle**: Switch between EN/JP in the header — everything changes, nothing breaks
+| Step | What to do | What you'll see |
+|------|------------|-----------------|
+| 1️⃣ | Click **"Insert sample text"** on Home | Pre-filled experience text |
+| 2️⃣ | Click **"Generate Skill Map"** | AI analyzes in ~30 seconds |
+| 3️⃣ | Explore **📊 Overview** tab | Radar chart + comparison |
+| 4️⃣ | Click **💼 Career & Jobs** tab | Job readiness score |
+| 5️⃣ | Toggle **JP ↔ EN** in header | Full UI language switch |
+| 6️⃣ | Visit **Dashboard** | See diagnosis history |
 
 ---
 
 ## ✨ Features
-
-<table>
-  <tr>
-    <td align="center" width="33%">
-      <img src="./public/screenshots/home.png" alt="Home (EN UI)" width="280" />
-      <br /><strong>🎯 3-Step Diagnosis</strong>
-      <br /><small>Paste your experience → AI analyzes → Get actionable roadmap</small>
-    </td>
-    <td align="center" width="33%">
-      <img src="./public/screenshots/dashboard.png" alt="Dashboard (EN UI)" width="280" />
-      <br /><strong>📊 Progress Dashboard</strong>
-      <br /><small>Track your growth over time with visual history</small>
-    </td>
-    <td align="center" width="33%">
-      <img src="./public/screenshots/about.png" alt="About (EN UI)" width="280" />
-      <br /><strong>ℹ️ Transparent Design</strong>
-      <br /><small>Show users how the system works (builds trust)</small>
-    </td>
-  </tr>
-</table>
 
 ### Core Capabilities
 
@@ -136,9 +171,25 @@ I built this project to **simulate what it's like to be a solo founder or the fi
 | 📈 **Learning Roadmap** | 30-day and 90-day personalized plans | Structured prompt with user goal context |
 | 💼 **Job Matching** | Compare skills against job descriptions | Text similarity + gap analysis in one prompt |
 | ⚠️ **Career Risk** | Quantify obsolescence/automation risk | Multi-factor scoring with weighted averages |
-| 🎤 **1-on-1 Practice** | Mock interviews with feedback | Hybrid scoring: rule-based + AI feedback |
+| 🎤 **1-on-1 Practice** | Mock interviews with feedback | **Hybrid scoring**: rule-based + AI feedback |
 | 📋 **Portfolio Gen** | Markdown export of projects | Template-based generation with i18n |
 | ⏰ **Time Simulator** | Adjust roadmap to available hours | Client-side recalculation, no extra API call |
+
+### User Flow
+
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│    HOME     │ →  │   ANALYZE   │ →  │   RESULT    │ →  │  DASHBOARD  │
+│ Input exp.  │    │  AI (30s)   │    │  5 tabs     │    │  History    │
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+                                            │
+                    ┌───────────────────────┼───────────────────────┐
+                    ▼                       ▼                       ▼
+             ┌─────────────┐        ┌─────────────┐        ┌─────────────┐
+             │  📊 Radar   │        │  💼 Jobs    │        │  🎤 1-on-1  │
+             │   Chart     │        │   Match     │        │  Practice   │
+             └─────────────┘        └─────────────┘        └─────────────┘
+```
 
 ---
 
