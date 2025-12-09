@@ -5,12 +5,11 @@ test("ホーム画面が表示され、スキル入力フォームが存在す�
   await page.goto("/");
 
   await expect(
-    page.getByRole("heading", {
-      name: /スキルとキャリアを.*一枚のマップ.*に。/
-    })
+    // ロケールに依存せず、トップのヒーロー見出し（h1）が見えていることだけ確認
+    page.getByRole("heading", { level: 1 })
   ).toBeVisible();
 
-  // CI 環境では未ログイン想定のため、「ログインが必要です」のメッセージが表示されていれば OK とする
+  // CI / E2E では未ログイン想定のため、「ログインが必要です」のロックカードが表示されていれば OK
   await expect(
     page.getByText("ログインが必要です", { exact: false })
   ).toBeVisible();

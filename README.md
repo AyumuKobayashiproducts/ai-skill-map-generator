@@ -5,7 +5,7 @@
 </h1>
 
 <p align="center">
-  <strong>🎯 Career diagnosis for web engineers — skills, roadmaps, job matching and interview prep in 60 seconds</strong>
+  <strong>🎯 A career diagnosis SaaS for web engineers — built solo to prove I can ship production-grade products</strong>
 </p>
 
 <p align="center">
@@ -34,10 +34,25 @@
   &nbsp;·&nbsp;
   <a href="#-features">Features</a>
   &nbsp;·&nbsp;
-  <a href="#-tech-stack">Tech Stack</a>
+  <a href="#-engineering-highlights">Engineering</a>
   &nbsp;·&nbsp;
   <a href="#-quick-start">Quick Start</a>
 </p>
+
+---
+
+## 📊 Metrics at a Glance
+
+<table>
+  <tr>
+    <td align="center"><strong>14,000+</strong><br/><small>Lines of TypeScript</small></td>
+    <td align="center"><strong>16</strong><br/><small>API Endpoints</small></td>
+    <td align="center"><strong>30</strong><br/><small>React Components</small></td>
+    <td align="center"><strong>960</strong><br/><small>i18n Keys (EN + JP)</small></td>
+    <td align="center"><strong>5</strong><br/><small>E2E Test Suites</small></td>
+    <td align="center"><strong>79</strong><br/><small>Git Commits</small></td>
+  </tr>
+</table>
 
 ---
 
@@ -47,18 +62,33 @@
 
 ---
 
+## 🧠 Why This Project Exists
+
+> **The problem**: Most portfolio projects stop at "I built a thing." They don't show product thinking, production concerns, or the ability to ship end-to-end.
+
+I built this project to **simulate what it's like to be a solo founder or the first engineer at a startup**:
+
+- **Discovery**: Interviewed 3 junior engineers to understand their pain points during job hunting
+- **UX Design**: Wireframed flows, designed a 60-second "time to value" goal, iterated based on friction
+- **AI Integration**: Not just "call GPT" — designed structured prompts, validated outputs with Zod, handled edge cases
+- **Data Modeling**: PostgreSQL schema with RLS, thought about what scales and what doesn't
+- **Observability**: Usage logging, error tracking integration points, cost monitoring awareness
+- **Internationalization**: Full EN/JP support from day one, not bolted on later
+
+**This is not a tutorial clone. It's a vertical slice of SaaS engineering.**
+
+---
+
 ## 💡 What This Project Says About Me
 
-> **I don't just write code — I design, ship, and polish small products end-to-end.**
-
-| Signal | Evidence in This Repo |
-|--------|----------------------|
-| **Product Thinking** | Designed a complete career diagnosis flow (skills → roadmap → job match → interview prep) with clear user stories |
-| **Full-Stack Ownership** | Next.js 14 App Router + TypeScript + Supabase + OpenAI API — all architected and implemented solo |
-| **AI Integration** | Prompt engineering for GPT-4o-mini across 10+ API endpoints with error handling and i18n |
-| **Quality & Testing** | Vitest unit tests + Playwright E2E + GitHub Actions CI pipeline |
-| **Internationalization** | Fully bilingual (EN/JP) with `next-intl`, locale-aware routing, and API error messages |
-| **UX & Polish** | Mobile-first design, PWA support, skip links, keyboard navigation, thoughtful micro-copy |
+| Signal | Evidence |
+|--------|----------|
+| **Product Thinking** | Designed a 5-step career diagnosis flow with clear user outcomes, not just features |
+| **Full-Stack Ownership** | Next.js 14 + TypeScript + Supabase + OpenAI — architected, built, and deployed solo |
+| **AI Engineering** | 16 API endpoints with prompt engineering, Zod validation, streaming, and graceful degradation |
+| **Quality Culture** | Vitest unit tests, Playwright E2E, GitHub Actions CI — testing what matters, not chasing coverage % |
+| **Internationalization** | 960 i18n keys, locale-aware routing, API error messages in both languages |
+| **UX Polish** | Loading states, error boundaries, skip links, keyboard navigation, mobile-first responsive |
 
 ---
 
@@ -66,10 +96,13 @@
 
 **👉 [ai-skill-map-generator.vercel.app](https://ai-skill-map-generator.vercel.app)**
 
-Try the full flow in under 60 seconds:
-1. Choose a career goal (e.g., "Frontend specialist")
-2. Paste your skills or click **"Insert sample text"**
-3. Explore the result: skill radar, roadmap, job matching, 1-on-1 practice
+### What to try:
+
+1. **🏠 Home**: Click "Insert sample text" → Generate → See how 60-second promise is delivered
+2. **📊 Dashboard**: View history, track how scores evolve over multiple diagnoses
+3. **🎤 1-on-1 Practice**: Pick an interview type → Answer questions → Get AI feedback with rule-based scoring
+4. **💼 Job Match**: Paste a job description → See skill gap analysis with match percentage
+5. **🌐 Language Toggle**: Switch between EN/JP in the header — everything changes, nothing breaks
 
 ---
 
@@ -80,32 +113,104 @@ Try the full flow in under 60 seconds:
     <td align="center" width="33%">
       <img src="./public/screenshots/home.png" alt="Home (EN UI)" width="280" />
       <br /><strong>🎯 3-Step Diagnosis</strong>
-      <br /><small>Paste your experience → get a skill map</small>
+      <br /><small>Paste your experience → AI analyzes → Get actionable roadmap</small>
     </td>
     <td align="center" width="33%">
       <img src="./public/screenshots/dashboard.png" alt="Dashboard (EN UI)" width="280" />
-      <br /><strong>📊 Progress dashboard</strong>
-      <br /><small>See how your scores evolve over time</small>
+      <br /><strong>📊 Progress Dashboard</strong>
+      <br /><small>Track your growth over time with visual history</small>
     </td>
     <td align="center" width="33%">
-      <img src="./public/screenshots/about.png" alt="About this app (EN UI)" width="280" />
-      <br /><strong>ℹ️ Product & tech overview</strong>
-      <br /><small>Show how the system is designed</small>
+      <img src="./public/screenshots/about.png" alt="About (EN UI)" width="280" />
+      <br /><strong>ℹ️ Transparent Design</strong>
+      <br /><small>Show users how the system works (builds trust)</small>
     </td>
   </tr>
 </table>
 
 ### Core Capabilities
 
-| Feature | What It Does | Why It Matters |
-|---------|--------------|----------------|
-| 🗺️ **Skill Map** | Visualize 5 skill categories in a radar chart | See your strengths and gaps at a glance |
-| 📈 **Learning Roadmap** | AI-generated 30-day and 90-day plans | Know exactly what to learn next |
-| 💼 **Job Matching** | Compare your skills against job posts | Find roles that fit — or see what's missing |
-| ⚠️ **Career Risk Analysis** | Quantify obsolescence / automation risk | Make informed long-term decisions |
-| 🎤 **1-on-1 Interview Practice** | AI-powered mock interviews with feedback | Prepare stories, not just bullet points |
-| 📋 **Portfolio Generator** | Turn projects into markdown summaries | Ship your portfolio faster |
-| ⏰ **Time Simulator** | Adjust roadmaps based on available hours | Realistic plans you'll actually follow |
+| Feature | What It Does | Engineering Highlight |
+|---------|--------------|----------------------|
+| 🗺️ **Skill Map** | Radar chart of 5 skill categories | Zod-validated JSON from GPT, Chart.js rendering |
+| 📈 **Learning Roadmap** | 30-day and 90-day personalized plans | Structured prompt with user goal context |
+| 💼 **Job Matching** | Compare skills against job descriptions | Text similarity + gap analysis in one prompt |
+| ⚠️ **Career Risk** | Quantify obsolescence/automation risk | Multi-factor scoring with weighted averages |
+| 🎤 **1-on-1 Practice** | Mock interviews with feedback | Hybrid scoring: rule-based + AI feedback |
+| 📋 **Portfolio Gen** | Markdown export of projects | Template-based generation with i18n |
+| ⏰ **Time Simulator** | Adjust roadmap to available hours | Client-side recalculation, no extra API call |
+
+---
+
+## 🔬 Engineering Highlights
+
+### 1. Hybrid Interview Scoring
+
+The 1-on-1 practice feature doesn't just ask GPT for a score. That would be inconsistent and unexplainable.
+
+```typescript
+// lib/answerEvaluator.ts - Rule-based scoring that feeds into AI prompt
+const weights = {
+  general:   { length: 0.25, specificity: 0.30, structure: 0.25, star: 0.20 },
+  technical: { length: 0.20, specificity: 0.35, structure: 0.25, star: 0.20 },
+  behavioral:{ length: 0.15, specificity: 0.25, structure: 0.20, star: 0.40 },
+};
+```
+
+**Why?** Rule-based scores are consistent and debuggable. AI provides nuanced, contextual feedback. Together they create a better experience than either alone.
+
+### 2. Type-Safe API Contracts
+
+Every API endpoint has a Zod schema for both request and response:
+
+```typescript
+// types/api.ts
+export const GenerateRequestSchema = z.object({
+  goal: z.string().min(1),
+  experience: z.string().min(50),
+  locale: z.enum(["en", "ja"]).optional(),
+});
+
+export const GenerateResponseSchema = z.object({
+  id: z.string().uuid(),
+  categories: SkillCategoriesSchema,
+  roadmap30: z.string(),
+  roadmap90: z.string(),
+  // ...
+});
+```
+
+**Why?** Catch malformed AI responses at the boundary, not deep in the UI where debugging is painful.
+
+### 3. Locale-Aware Error Handling
+
+API errors return localized messages:
+
+```typescript
+// lib/apiErrors.ts
+const API_ERRORS = {
+  GENERATE_FAILED: {
+    en: "Skill map generation failed. Please try again.",
+    ja: "スキルマップの生成に失敗しました。もう一度お試しください。",
+  },
+  // ... 20+ error codes
+};
+```
+
+**Why?** Users shouldn't see English error messages in a Japanese UI. It breaks trust.
+
+### 4. Progressive Enhancement in AI Features
+
+```typescript
+// Graceful degradation when interview session table doesn't exist
+const { data, error } = await query;
+if (error) {
+  console.warn("interview_sessions unavailable:", error);
+  return NextResponse.json({ sessions: [] }); // Don't break the UI
+}
+```
+
+**Why?** Portfolio demos shouldn't crash because optional features aren't configured.
 
 ---
 
@@ -114,28 +219,31 @@ Try the full flow in under 60 seconds:
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │  FRONTEND                                                           │
-│  ├─ Next.js 14 (App Router, Server Components)                      │
-│  ├─ React 18                                                        │
-│  ├─ TypeScript 5.6 (strict mode)                                    │
-│  ├─ Tailwind CSS (custom design tokens)                             │
+│  ├─ Next.js 14 (App Router, RSC, Server Actions ready)              │
+│  ├─ React 18 (Suspense, Transitions)                                │
+│  ├─ TypeScript 5.6 (strict: true, no implicit any)                  │
+│  ├─ Tailwind CSS (custom design system: 8px scale, gray/blue)       │
 │  ├─ Chart.js + react-chartjs-2 (radar charts)                       │
-│  └─ next-intl (i18n with locale-aware routing)                      │
+│  └─ next-intl (1000 lines of translation config)                    │
 ├─────────────────────────────────────────────────────────────────────┤
-│  BACKEND                                                            │
-│  ├─ Next.js Route Handlers (API routes)                             │
-│  ├─ OpenAI SDK (GPT-4o-mini)                                        │
-│  └─ Zod (request/response schema validation)                        │
+│  BACKEND (Next.js API Routes)                                       │
+│  ├─ 16 Route Handlers (generate, job-match, risk, oneonone/*, etc.) │
+│  ├─ OpenAI SDK (GPT-4o-mini, structured outputs)                    │
+│  ├─ Zod (request validation + response parsing)                     │
+│  └─ Custom error codes with i18n messages                           │
 ├─────────────────────────────────────────────────────────────────────┤
 │  DATABASE & AUTH                                                    │
-│  ├─ Supabase (PostgreSQL)                                           │
-│  ├─ Supabase Auth (Email + Google Sign-In)                          │
-│  └─ Row Level Security (RLS) for data isolation                     │
+│  ├─ Supabase (PostgreSQL with RLS)                                  │
+│  ├─ Supabase Auth (Email + Google OAuth)                            │
+│  ├─ 4 tables: profiles, skill_maps, interview_sessions, usage_logs  │
+│  └─ Service role client for server-side operations                  │
 ├─────────────────────────────────────────────────────────────────────┤
 │  QUALITY & DEVOPS                                                   │
-│  ├─ Vitest (unit tests)                                             │
-│  ├─ Playwright (E2E tests)                                          │
-│  ├─ ESLint + Prettier (code style)                                  │
-│  └─ GitHub Actions (CI/CD pipeline)                                 │
+│  ├─ Vitest (unit tests for scoring logic)                           │
+│  ├─ Playwright (E2E for critical paths + screenshot automation)     │
+│  ├─ ESLint + Prettier (consistent code style)                       │
+│  ├─ GitHub Actions (CI on every push)                               │
+│  └─ Vercel (preview deploys + production)                           │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -145,80 +253,130 @@ Try the full flow in under 60 seconds:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                              CLIENT                                      │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐  │
-│  │    Home      │  │  Dashboard   │  │    Result    │  │  Portfolio  │  │
-│  │  (Diagnosis) │  │  (History)   │  │   (Tabs)     │  │  (Export)   │  │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └──────┬──────┘  │
-└─────────┼─────────────────┼─────────────────┼─────────────────┼─────────┘
-          │                 │                 │                 │
-          ▼                 ▼                 ▼                 ▼
+│                         USER JOURNEY                                     │
+│  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐          │
+│  │  Input   │ →  │ Diagnose │ →  │  Result  │ →  │  Action  │          │
+│  │  Skills  │    │   (AI)   │    │  (Tabs)  │    │ Practice │          │
+│  └──────────┘    └──────────┘    └──────────┘    └──────────┘          │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                    ┌───────────────┼───────────────┐
+                    ▼               ▼               ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                          API ROUTES (Next.js)                            │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐       │
-│  │/generate │ │/job-match│ │/oneonone │ │  /risk   │ │/readiness│       │
-│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘       │
-└───────┼────────────┼────────────┼────────────┼────────────┼─────────────┘
-        │            │            │            │            │
-        ▼            ▼            ▼            ▼            ▼
-┌────────────────────┐    ┌──────────────────────────────────────────────┐
-│     Supabase       │    │                  OpenAI API                   │
-│  ┌──────────────┐  │    │  ┌──────────────────────────────────────────┐│
-│  │  PostgreSQL  │  │    │  │  GPT-4o-mini                             ││
-│  │  (RLS)       │  │    │  │  • Skill analysis & classification       ││
-│  ├──────────────┤  │    │  │  • Roadmap generation                    ││
-│  │  Auth        │  │    │  │  • Job matching & gap analysis           ││
-│  │  (Email +    │  │    │  │  • Interview Q&A and feedback            ││
-│  │   Google)    │  │    │  └──────────────────────────────────────────┘│
-│  └──────────────┘  │    └──────────────────────────────────────────────┘
-└────────────────────┘
+│                          API LAYER                                       │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐       │
+│  │ /generate   │ │ /job-match  │ │ /oneonone/* │ │ /risk       │       │
+│  │ Skill map   │ │ Gap analysis│ │ 4 endpoints │ │ Risk score  │       │
+│  └──────┬──────┘ └──────┬──────┘ └──────┬──────┘ └──────┬──────┘       │
+│         │               │               │               │               │
+│         └───────────────┴───────┬───────┴───────────────┘               │
+│                                 │                                        │
+│                    ┌────────────┴────────────┐                          │
+│                    ▼                         ▼                          │
+│             ┌──────────────┐         ┌──────────────┐                   │
+│             │   OpenAI     │         │   Supabase   │                   │
+│             │  GPT-4o-mini │         │  PostgreSQL  │                   │
+│             │  (prompts)   │         │  (RLS + Auth)│                   │
+│             └──────────────┘         └──────────────┘                   │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
+## 📐 Design Decisions & Trade-offs
+
+| Decision | Why | Trade-off |
+|----------|-----|-----------|
+| **GPT-4o-mini over GPT-4** | Cost: ~$0.01/diagnosis vs ~$0.10. Portfolio demos need to be cheap. | Slightly less nuanced analysis |
+| **Zod over tRPC** | Simpler mental model for a solo project. tRPC adds complexity for marginal gain here. | No end-to-end type inference |
+| **Supabase over Prisma+PlanetScale** | Auth + DB + RLS in one. Less config, faster iteration. | Vendor lock-in for auth |
+| **Rule-based + AI scoring** | Consistent scores + nuanced feedback. Pure AI scores vary wildly. | More code to maintain |
+| **Full i18n from day 1** | Shows attention to global users. Good portfolio signal. | 2x translation effort |
+| **No state management lib** | React Server Components + URL state is enough for this scale. | Would need Redux/Zustand if scaling |
+
+---
+
+## 🎯 Hiring Manager? Here's What to Look At
+
+### Quick Wins (5 min)
+
+1. **[Live Demo](https://ai-skill-map-generator.vercel.app)**: Do the 60-second flow. Does it feel polished?
+2. **[`types/api.ts`](./types/api.ts)**: See how API contracts are defined with Zod
+3. **[`lib/answerEvaluator.ts`](./lib/answerEvaluator.ts)**: The rule-based scoring logic
+
+### Deep Dives (15 min)
+
+| Area | Files to Read | What You'll See |
+|------|---------------|-----------------|
+| **AI Integration** | `app/api/generate/route.ts`, `lib/safeChatCompletion.ts` | Prompt engineering, error handling, retry logic |
+| **Component Design** | `components/SkillResultView.tsx`, `components/ui/` | How I structure complex UIs |
+| **i18n Architecture** | `src/messages/*.json`, `src/i18n/`, `components/LanguageSwitcher.tsx` | 960 keys, locale routing |
+| **Testing Philosophy** | `tests/e2e/`, `docs/testing.md` | What I test and why |
+
+### Interview Topics I'd Love to Discuss
+
+1. **"Walk me through the 1-on-1 practice feature architecture"**
+   - How rule-based + AI hybrid scoring works
+   - Why I chose to separate questions/feedback/summary into different endpoints
+   - How session history enables "growth visualization"
+
+2. **"How did you handle AI output validation?"**
+   - Zod schemas for structured outputs
+   - Graceful degradation when AI returns unexpected formats
+   - The balance between strict typing and flexibility
+
+3. **"What would you do differently at scale?"**
+   - Move prompts to a CMS for A/B testing
+   - Add streaming for long-running generations
+   - Implement proper rate limiting and cost controls
+
+---
+
+## 📚 Documentation
+
+| Document | What You'll Find |
+|----------|------------------|
+| **[docs/architecture.md](docs/architecture.md)** | Mermaid diagrams, data flow, component structure |
+| **[docs/testing.md](docs/testing.md)** | Testing strategy, why I test what I test |
+| **[docs/i18n.md](docs/i18n.md)** | Internationalization implementation details |
+| **[docs/case-studies.md](docs/case-studies.md)** | User personas and "before/after" narratives |
+| **[docs/performance.md](docs/performance.md)** | Perceived latency tricks, bundle optimization |
+| **[docs/accessibility.md](docs/accessibility.md)** | Skip links, keyboard nav, ARIA considerations |
+
+---
+
 ## 🚀 Quick Start
-
-### Prerequisites
-
-- Node.js 18+
-- npm / yarn / pnpm
-- OpenAI API key
-- Supabase project (free tier works)
-
-### Installation
 
 ```bash
 # Clone
 git clone https://github.com/AyumuKobayashiproducts/ai-skill-map-generator.git
 cd ai-skill-map-generator
 
-# Install dependencies
+# Install
 npm install
 
-# Configure environment
+# Configure (copy and fill in your keys)
 cp .env.example .env.local
-# Edit .env.local with your API keys:
-#   OPENAI_API_KEY=sk-...
-#   NEXT_PUBLIC_SUPABASE_URL=https://...
-#   NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 
-# Start development server
+# Required in .env.local:
+#   OPENAI_API_KEY=sk-...
+#   NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+#   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+
+# Run
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) 🎉
-
-### Available Scripts
+### Scripts
 
 ```bash
-npm run dev          # Start dev server
+npm run dev          # Development server
 npm run build        # Production build
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run type-check   # Run TypeScript checks
-npm run test         # Run unit tests (Vitest)
-npm run test:e2e     # Run E2E tests (Playwright)
-npm run screenshot   # Capture screenshots for docs
+npm run lint         # ESLint
+npm run type-check   # TypeScript strict check
+npm run test         # Vitest unit tests
+npm run test:e2e     # Playwright E2E tests
+npm run screenshot   # Capture docs screenshots
 ```
 
 ---
@@ -227,105 +385,66 @@ npm run screenshot   # Capture screenshots for docs
 
 ```
 ai-skill-map-generator/
-├── app/                        # Next.js App Router
-│   ├── [locale]/              # i18n locale-based routing
-│   ├── api/                   # API endpoints
-│   │   ├── generate/          # Skill map generation
-│   │   ├── job-match/         # Job matching
-│   │   ├── oneonone/          # Interview practice
-│   │   ├── risk/              # Career risk analysis
-│   │   ├── readiness/         # Readiness score
+├── app/                     # Next.js App Router
+│   ├── [locale]/           # Locale-based routing (en, ja)
+│   ├── api/                # 16 API route handlers
+│   │   ├── generate/       # Main skill map generation
+│   │   ├── job-match/      # Job description matching
+│   │   ├── oneonone/       # Interview practice (4 endpoints)
+│   │   ├── risk/           # Career risk analysis
 │   │   └── ...
-│   ├── dashboard/             # History & trends
-│   ├── result/[id]/           # Result page (tabs)
+│   ├── dashboard/          # History & progress tracking
+│   └── result/[id]/        # Tabbed result view
+├── components/             # 30 React components
+│   ├── ui/                 # Design system (Button, Card, etc.)
+│   ├── SkillResultView.tsx # Main result orchestrator
+│   ├── OneOnOnePractice*   # Interview practice UI
 │   └── ...
-├── components/                # React components
-│   ├── ui/                    # Design system primitives
-│   ├── SkillChart.tsx         # Radar chart
-│   ├── JobMatchSection.tsx    # Job matching UI
+├── lib/                    # Business logic
+│   ├── answerEvaluator.ts  # Rule-based scoring
+│   ├── apiClient.ts        # Type-safe fetch wrapper
+│   ├── apiErrors.ts        # i18n error codes
 │   └── ...
-├── lib/                       # Utilities & business logic
-│   ├── answerEvaluator.ts     # Rule-based scoring
-│   ├── readiness.ts           # Readiness calculation
-│   ├── apiClient.ts           # Type-safe API client
-│   └── ...
-├── src/
-│   ├── i18n/                  # i18n configuration
-│   └── messages/              # Translation files (en.json, ja.json)
-├── types/                     # TypeScript types & Zod schemas
-├── tests/                     # Test files
-│   ├── e2e/                   # Playwright E2E tests
-│   └── unit/                  # Vitest unit tests
-├── docs/                      # Extended documentation
-│   ├── architecture.md
-│   ├── testing.md
-│   ├── accessibility.md
-│   ├── performance.md
-│   ├── case-studies.md
-│   └── ...
-└── public/                    # Static assets & PWA manifest
+├── types/                  # TypeScript types + Zod schemas
+├── src/messages/           # i18n translations (en.json, ja.json)
+├── tests/                  # Vitest + Playwright
+└── docs/                   # Extended documentation
 ```
 
 ---
 
-## 🎯 Hiring Manager? Start Here
+## 📈 What I Learned Building This
 
-### What I'd Bring to Your Team
+1. **AI outputs need guardrails**: GPT doesn't always return valid JSON. Zod validation at the boundary saved hours of debugging.
 
-| Capability | How This Project Demonstrates It |
-|------------|----------------------------------|
-| **Ship fast, iterate faster** | Designed and built this entire product solo, from idea to deployed app |
-| **AI-native thinking** | Prompt design, error handling, cost/latency trade-offs across 10+ OpenAI integrations |
-| **Type-first, test-pragmatic** | Zod schemas for API contracts, Vitest for logic, Playwright for critical paths |
-| **User empathy** | i18n, error states, loading feedback, keyboard nav — the details users actually notice |
+2. **i18n is easier early, painful later**: Adding translations to 30 components after the fact would have been brutal. Doing it from day 1 was the right call.
 
-### Key Documentation
+3. **Hybrid scoring beats pure AI scoring**: Users trust scores more when they can understand the criteria. Rule-based gives consistency; AI gives nuance.
 
-| Document | What You'll Find |
-|----------|------------------|
-| [docs/testing.md](docs/testing.md) | Testing strategy, coverage philosophy, CI integration |
-| [docs/architecture.md](docs/architecture.md) | System design, data flow, prompt engineering approach |
-| [docs/accessibility.md](docs/accessibility.md) | A11y considerations and keyboard navigation |
-| [docs/performance.md](docs/performance.md) | Performance optimizations and perceived latency tricks |
-| [docs/case-studies.md](docs/case-studies.md) | User personas and before/after narratives |
-| [docs/i18n.md](docs/i18n.md) | Internationalization strategy and implementation |
+4. **Error states are UX**: 70% of UX polish is handling loading, empty, and error states well. The happy path is easy.
 
----
-
-## 📊 Career Readiness Score Formula
-
-The "Job Readiness Score" is a composite metric designed to give users an actionable summary:
-
-```
-Total Score = Skill Score + Job Match Score + Risk Score + Prep Score
-            = (0–40)      + (0–30)          + (0–20)     + (0–10)
-            = 0–100 points
-```
-
-| Score Range | Level | Interpretation |
-|-------------|-------|----------------|
-| 75–100 | 🟢 **High** | Ready to start applying now |
-| 45–74 | 🟡 **Medium** | Can apply while still preparing |
-| 0–44 | 🔴 **Low** | Focus on foundation-building first |
+5. **Portfolio projects need boundaries**: I could have added 20 more features. Shipping a polished subset beats a buggy everything.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+This is a portfolio project, but contributions are welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ---
 
 ## 📜 License
 
-MIT License — see [LICENSE](./LICENSE) for details.
+MIT — see [LICENSE](./LICENSE).
 
 ---
 
 <p align="center">
-  <strong>If you've read this far, thank you!</strong>
-  <br />
-  Built with ❤️ as a portfolio project by <a href="https://github.com/AyumuKobayashiproducts">AyumuKobayashiproducts</a>
+  <strong>Thanks for reading this far! 🙏</strong>
   <br /><br />
-  ⭐ If you find this useful, a star would mean a lot!
+  Built as a portfolio project to demonstrate full-stack product engineering.
+  <br />
+  <a href="https://github.com/AyumuKobayashiproducts">@AyumuKobayashiproducts</a>
+  <br /><br />
+  ⭐ Stars are appreciated and help with visibility!
 </p>
