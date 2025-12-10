@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import type { ReactNode } from "react";
+import { Metadata } from "next";
+import { ReactNode } from "react";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { locales, type Locale } from "@/src/i18n/config";

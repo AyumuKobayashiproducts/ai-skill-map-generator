@@ -18,4 +18,5 @@ export function createOpenAIClient() {
   });
 }
 
-
+// Singleton instance for convenience
+export const openai = apiKey ? new OpenAI({ apiKey }) : null;
